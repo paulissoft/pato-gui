@@ -132,8 +132,10 @@ def determine_POM(argv):
         ''' 
         Test that the file is a pom.xml file.
         '''
-        if os.path.basename(file) != 'pom.xml':
-            raise argparse.ArgumentError('The basename of file "%s" should be "pom.xml"' % file)
+        if os.path.basename(file) == 'pom.xml' and os.path.isfile(file):
+            pass
+        else:
+            raise argparse.ArgumentError('File "%s" should exist and its base name must be "pom.xml"' % file)
         return file
 
     logging.info('determine_POM()')
