@@ -17,7 +17,7 @@ import json
 import about
 
 
-logging.basicConfig(force=True, filename='oracle-tools-gui.log', encoding='utf-8', level=logging.INFO)
+# logging.basicConfig(force=True, filename='oracle-tools-gui.log', encoding='utf-8', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 DEFAULT_SIZE = (1200, 800)
@@ -48,12 +48,17 @@ def is_POM_file(file):
     return retval
 
 
-@Gooey(default_size=DEFAULT_SIZE,
+@Gooey(program='Get POM file',
+       show_success_modal=False,
+       show_failure_modal=False,
+       show_restart_button=True,
+       disable_progress_bar_animation=True,
+       default_size=DEFAULT_SIZE,
        menu=MENU,
        terminal_font_family=TERMINAL_FONT_FAMILY)
 def get_POM_file(argv):
     logger.info('get_POM_file(%s)' % (argv))
-    parser = GooeyParser()
+    parser = GooeyParser(description='Get a POM file to work with')
     parser.add_argument('file', help='The POM file', widget="FileChooser")
     args = parser.parse_args(argv)
     logger.info('args: %s' % (args))
@@ -62,23 +67,24 @@ def get_POM_file(argv):
     logger.info('return')
 
 
-@Gooey(required_cols=3,
+@Gooey(program='Run POM file',
+       show_success_modal=True,
+       show_failure_modal=True,
+       show_restart_button=True,
+       required_cols=3,
        default_size=DEFAULT_SIZE,
        menu=MENU,
        terminal_font_family=TERMINAL_FONT_FAMILY)
-def get_POM_settings(argv):
-    assert len(argv) == 1
-
-    pom_file = argv[0]
-    logger.info('get_POM_settings(%s)' % (argv))
-    parser = GooeyParser()
+def run_POM_file(pom_file):
+    logger.info('run_POM_file(%s)' % (pom_file))
+    parser = GooeyParser(description='Get the POM settings to work with and run the POM file')
     dbs, profiles = process_POM(pom_file)
     # 4 positional arguments
-    parser.add_argument('profile', help='The action to perform', widget='Dropdown', choices=profiles)
-    parser.add_argument('db', help='The database to log on to', widget='Dropdown', choices=dbs)
+    parser.add_argument('action', help='The action to perform', widget='Dropdown', choices=sorted(profiles))
+    parser.add_argument('db', help='The database to log on to', widget='Dropdown', choices=sorted(dbs))
     parser.add_argument('db-password', help='The database password', widget="PasswordField")
-    parser.add_argument('file', default=pom_file, help='The POM file (DO NOT CHANGE!)')
-    args = parser.parse_args(argv)
+    parser.add_argument('file', default=pom_file, help='The POM file')
+    args = parser.parse_args(list(pom_file))
     logger.info('args: %s' % (args))
     if not is_POM_file(args.file):
         raise Exception('File %s is not a POM file' % (args.file))
@@ -98,8 +104,18 @@ def process_POM(pom_file):
         profiles = set()
 
         input.append('0')
-        mvn = subprocess.Popen("mvn --file %s -N help:all-profiles help:evaluate" % (pom_file), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, text=True)
+        cmd = f"mvn --file {pom_file} -N help:all-profiles help:evaluate"
+        mvn = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, text=True)
         stdout, stderr = mvn.communicate('\n'.join(input))
+
+        if mvn.returncode == 0:
+            pass
+        else:
+            returncode = mvn.returncode
+            error = ''
+            for ch in stderr:
+                error += ch
+            raise Exception(f'The command "{cmd}" failed with return code {returncode} and error:\n{error}')
 
         # Profile Id: db-install (Active: false , Source: pom)
         next_line_contains_answer = False
@@ -126,7 +142,7 @@ def process_POM(pom_file):
                     next_line_contains_answer = False
                 line = ''
         return answers, profiles
-    
+
     logger.info('process_POM()')
     properties, profiles = determine_POM_settings(pom_file, ['db.config.dir'])
     apex_profiles = {'apex-import', 'apex-export'}
@@ -138,7 +154,7 @@ def process_POM(pom_file):
         pom_parent = 'db'
     assert pom_parent, 'Profiles (%s) must be a super set of either the Apex (%s) or database (%s) profiles' % (profiles, apex_profiles, db_profiles)
     assert properties['db.config.dir'], 'The property db.config.dir must have been set in order to choose a database (on of its subdirectories)'
-    
+
     p = Path(properties['db.config.dir'])
     dbs = []
     try:
@@ -158,10 +174,16 @@ if __name__ == '__main__':
         if len(argv) <= 1:
             if len(argv) == 0:
                 argv.append(get_POM_file(argv))
-            get_POM_settings(argv)
+            run_POM_file(argv[-1])
         else:
-            pass
+            assert len(argv) == 4
+            profile, db, db_password, file = argv[0], argv[1], argv[2], argv[3]
+            cmd = f'mvn -P{profile} -Ddb={db} -Ddb.password={db_password} --file {file}'
+            logger.info('cmd: %s' % (cmd))
+            subprocess.run(cmd, check=True, shell=True)
     except Exception as error:
         logger.exception(error)
-    logger.info('exit')
-    logging.shutdown()
+        raise
+    finally:
+        logger.info('exit')
+        logging.shutdown()

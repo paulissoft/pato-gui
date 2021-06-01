@@ -35,16 +35,17 @@ else
 endif
 
 PYINSTALLER_OPTIONS := --clean --noconfirm
+PROGRAM := oracle-tools-gui
 
 help: ## This help.
 	@perl -ne 'printf(qq(%-30s  %s\n), $$1, $$2) if (m/^([a-zA-Z_-]+):.*##\s*(.*)$$/)' $(MAKEFILE_LIST)
 
-spec: oracle-tools-gui.spec ## Build specification.
+spec: $(PROGRAM).spec ## Build specification.
 
-oracle-tools-gui.spec: oracle-tools-gui.py
+$(PROGRAM).spec: $(PROGRAM).py
 	pyinstaller $(PYINSTALLER_OPTIONS) $?
 
-dist: oracle-tools-gui.spec ## Build distribution.
+dist: $(PROGRAM).spec ## Build distribution.
 	pyinstaller $(PYINSTALLER_OPTIONS) $?
 
 clean: ## Cleanup output files.
