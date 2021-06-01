@@ -2,6 +2,7 @@
 
 """
 
+# Python modules
 import sys
 import os
 import argparse
@@ -10,26 +11,17 @@ import re
 from pathlib import Path
 import logging
 from gooey import Gooey, GooeyParser
+import json
 
+# local module(s)
 import about
 
 
-def run_POM(argv):
-    logging.info('run_POM()')
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--profile', dest='profile', required=True, help='The action to perform')
-    parser.add_argument('--db', dest='db', required=True, help='The database to log on to')
-    parser.add_argument('--db-password', dest='db_password', required=True, help='The database password')
-    parser.add_argument('file', help='The POM file')
-    logging.info('argv: %s' % (argv))
-    args = parser.parse_args(argv)
-    logging.info('return: %s' % (args))
-    cmd = 'mvn --file %s -P%s -Ddb=%s -Ddb.password=%s' % (args.file, args.profile, args.db, args.db_password)
-    subprocess.call(cmd, shell=True)
+logging.basicConfig(force=True, filename='oracle-tools-gui.log', encoding='utf-8', level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-
-@Gooey(default_size=(1200, 800),
-       menu=[{
+DEFAULT_SIZE = (1200, 800)
+MENU = [{
            'name': 'Help',
            'items': [{
                'type': 'AboutDialog',
@@ -46,18 +38,51 @@ def run_POM(argv):
                'menuTitle': 'Documentation',
                'url': about.__help_url__
            }]
-       }],
-       terminal_font_family='Courier New')
-def run_POM_gui(argv, pom_file, dbs, profiles):
-    logging.info('run_POM_gui(%s, %s, %s, %s)' % (argv, pom_file, dbs, profiles))
+       }]
+TERMINAL_FONT_FAMILY = 'Courier New'
+
+
+def is_POM_file(file):
+    retval = os.path.isfile(file) and os.path.basename(file) == 'pom.xml'
+    logger.info('is_POM_file(%s): %s' % (file, retval))
+    return retval
+
+
+@Gooey(default_size=DEFAULT_SIZE,
+       menu=MENU,
+       terminal_font_family=TERMINAL_FONT_FAMILY)
+def get_POM_file(argv):
+    logger.info('get_POM_file(%s)' % (argv))
     parser = GooeyParser()
-    parser.add_argument('--profile', dest='profile', required=True, help='The action to perform', choices=sorted(profiles))
-    parser.add_argument('--db', dest='db', required=True, help='The database to log on to', choices=sorted(dbs))
-    parser.add_argument('--db-password', dest='db_password', required=True, help='The database password', widget="PasswordField")
-    parser.add_argument('file', default=pom_file, help='The POM file (DO NOT CHANGE!)')
-    logging.info('argv: %s' % (argv))
+    parser.add_argument('file', help='The POM file', widget="FileChooser")
     args = parser.parse_args(argv)
-    logging.info('return: %s' % (args))
+    logger.info('args: %s' % (args))
+    if not is_POM_file(args.file):
+        raise Exception('File %s is not a POM file' % (args.file))
+    logger.info('return')
+
+
+@Gooey(required_cols=3,
+       default_size=DEFAULT_SIZE,
+       menu=MENU,
+       terminal_font_family=TERMINAL_FONT_FAMILY)
+def get_POM_settings(argv):
+    assert len(argv) == 1
+
+    pom_file = argv[0]
+    logger.info('get_POM_settings(%s)' % (argv))
+    parser = GooeyParser()
+    dbs, profiles = process_POM(pom_file)
+    # 4 positional arguments
+    parser.add_argument('profile', help='The action to perform', widget='Dropdown', choices=profiles)
+    parser.add_argument('db', help='The database to log on to', widget='Dropdown', choices=dbs)
+    parser.add_argument('db-password', help='The database password', widget="PasswordField")
+    parser.add_argument('file', default=pom_file, help='The POM file (DO NOT CHANGE!)')
+    args = parser.parse_args(argv)
+    logger.info('args: %s' % (args))
+    if not is_POM_file(args.file):
+        raise Exception('File %s is not a POM file' % (args.file))
+    logger.info('return')
 
 
 def process_POM(pom_file):
@@ -83,10 +108,10 @@ def process_POM(pom_file):
             if ch != "\n":
                 line += ch
             else:
-                logging.debug("line: %s" % (line))
+                logger.debug("line: %s" % (line))
                 m = re.search("Profile Id: ([a-zA-Z0-9_-]+) \(Active: .*, Source: pom\)", line)
                 if m:
-                    logging.info("adding profile: %s" % (m.group(1)))
+                    logger.info("adding profile: %s" % (m.group(1)))
                     profiles.add(m.group(1))
                 elif not next_line_contains_answer:
                     m = re.search('Enter the Maven expression', line)
@@ -96,13 +121,13 @@ def process_POM(pom_file):
                     if line == 'null object or invalid expression':
                         line = None
                     property = property_keys.pop()
-                    logging.info("adding property %s = %s" % (property, line))
+                    logger.info("adding property %s = %s" % (property, line))
                     answers[property] = line
                     next_line_contains_answer = False
                 line = ''
         return answers, profiles
     
-    logging.info('process_POM()')
+    logger.info('process_POM()')
     properties, profiles = determine_POM_settings(pom_file, ['db.config.dir'])
     apex_profiles = {'apex-import', 'apex-export'}
     db_profiles = {'db-generate-ddl-full', 'db-install', 'db-generate-ddl-incr', 'db-test'}
@@ -122,42 +147,21 @@ def process_POM(pom_file):
         pass
     assert len(dbs) > 0, 'The directory %s must have subdirectories, where each one contains information for one database (and Apex) instance' % (properties['db.config.dir'])
     profiles = db_profiles if pom_parent == 'db' else apex_profiles
-    logging.info('return: (%s, %s)' % (dbs, profiles))
+    logger.info('return: (%s, %s)' % (dbs, profiles))
     return dbs, profiles
 
 
-def determine_POM(argv):
-
-    def pom(file):
-        ''' 
-        Test that the file is a pom.xml file.
-        '''
-        if os.path.basename(file) == 'pom.xml' and os.path.isfile(file):
-            pass
-        else:
-            raise argparse.ArgumentError('File "%s" should exist and its base name must be "pom.xml"' % file)
-        return file
-
-    logging.info('determine_POM()')
-    parser = argparse.ArgumentParser()
-    parser.add_argument('file', help='The POM file', type=pom)
-    logging.info('argv: %s' % (argv))
-    args = parser.parse_args(argv)
-    logging.info('args: %s' % (args))
-    pom_file = args.file
-    logging.info('return: %s' % (pom_file))
-    return pom_file
-
-
 if __name__ == '__main__':
-    logging.basicConfig(encoding='utf-8', level=logging.WARNING)
-    logging.info('sys.argv: %s' % (sys.argv))
-    # first argument is Python script: skip it
-    # strip also -- arguments
-    argv = [argc for argc in sys.argv[1:] if argc != '--']
-    if len(argv) <= 1:
-        pom_file = determine_POM(argv)
-        dbs, profiles = process_POM(pom_file)
-        run_POM_gui(argv, pom_file, dbs, profiles)
-    else:
-        run_POM(argv)
+    logger.info('__main__(%s)' % (sys.argv))
+    try:
+        argv = [argc for argc in sys.argv[1:] if argc != '--']
+        if len(argv) <= 1:
+            if len(argv) == 0:
+                argv.append(get_POM_file(argv))
+            get_POM_settings(argv)
+        else:
+            pass
+    except Exception as error:
+        logger.exception(error)
+    logger.info('exit')
+    logging.shutdown()
