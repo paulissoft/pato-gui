@@ -42,28 +42,30 @@ MENU = [{
 TERMINAL_FONT_FAMILY = 'Courier New'
 
 
-def is_POM_file(file):
-    retval = os.path.isfile(file) and os.path.basename(file) == 'pom.xml'
-    logger.info('is_POM_file(%s): %s' % (file, retval))
-    return retval
-
-
 @Gooey(program='Get POM file',
        show_success_modal=False,
-       show_failure_modal=False,
+       show_failure_modal=True,
        show_restart_button=True,
        disable_progress_bar_animation=True,
+       clear_before_run=True,
        default_size=DEFAULT_SIZE,
        menu=MENU,
        terminal_font_family=TERMINAL_FONT_FAMILY)
 def get_POM_file(argv):
     logger.info('get_POM_file(%s)' % (argv))
     parser = GooeyParser(description='Get a POM file to work with')
-    parser.add_argument('file', help='The POM file', widget="FileChooser")
+    parser.add_argument(
+        'file',
+        help='The POM file',
+        widget="FileChooser",
+        gooey_options={
+            'validator':{
+                'test': "user_input[-7:] == 'pom.xml'",
+                'message': 'This is not a POM file'
+            }
+        })
     args = parser.parse_args(argv)
     logger.info('args: %s' % (args))
-    if not is_POM_file(args.file):
-        raise Exception('File %s is not a POM file' % (args.file))
     logger.info('return')
 
 
@@ -71,6 +73,8 @@ def get_POM_file(argv):
        show_success_modal=True,
        show_failure_modal=True,
        show_restart_button=True,
+       disable_progress_bar_animation=False,
+       clear_before_run=True,
        required_cols=3,
        default_size=DEFAULT_SIZE,
        menu=MENU,
@@ -78,16 +82,26 @@ def get_POM_file(argv):
 def run_POM_file(pom_file):
     logger.info('run_POM_file(%s)' % (pom_file))
     parser = GooeyParser(description='Get the POM settings to work with and run the POM file')
-    dbs, profiles = process_POM(pom_file)
+    dbs, profiles, db_username = process_POM(pom_file)
+    db_password_help = f'The database password'
+    if db_username:
+        db_password_help += ' for ' + db_username
     # 4 positional arguments
     parser.add_argument('action', help='The action to perform', widget='Dropdown', choices=sorted(profiles))
     parser.add_argument('db', help='The database to log on to', widget='Dropdown', choices=sorted(dbs))
-    parser.add_argument('db-password', help='The database password', widget="PasswordField")
-    parser.add_argument('file', default=pom_file, help='The POM file')
+    parser.add_argument('db-password', help=db_password_help, widget="PasswordField")
+    parser.add_argument(
+        'file',
+        default=pom_file,
+        help='The POM file (DO NOT CHANGE!)',
+        gooey_options={
+            'validator':{
+                'test': "hash(user_input) == {}".format(hash(pom_file)),
+                'message': 'Did you change the POM file?'
+            }
+        })
     args = parser.parse_args(list(pom_file))
     logger.info('args: %s' % (args))
-    if not is_POM_file(args.file):
-        raise Exception('File %s is not a POM file' % (args.file))
     logger.info('return')
 
 
@@ -144,7 +158,7 @@ def process_POM(pom_file):
         return answers, profiles
 
     logger.info('process_POM()')
-    properties, profiles = determine_POM_settings(pom_file, ['db.config.dir'])
+    properties, profiles = determine_POM_settings(pom_file, ['db.config.dir', 'db.username'])
     apex_profiles = {'apex-import', 'apex-export'}
     db_profiles = {'db-generate-ddl-full', 'db-install', 'db-generate-ddl-incr', 'db-test'}
     pom_parent = ''
@@ -163,8 +177,9 @@ def process_POM(pom_file):
         pass
     assert len(dbs) > 0, 'The directory %s must have subdirectories, where each one contains information for one database (and Apex) instance' % (properties['db.config.dir'])
     profiles = db_profiles if pom_parent == 'db' else apex_profiles
-    logger.info('return: (%s, %s)' % (dbs, profiles))
-    return dbs, profiles
+    db_username = properties['db.username']
+    logger.info('return: (%s, %s, %s)' % (dbs, profiles, db_username))
+    return dbs, profiles, db_username
 
 
 if __name__ == '__main__':
