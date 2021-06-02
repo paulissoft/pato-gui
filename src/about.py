@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-__title__ = 'Oracle Tools'
+__title__ = 'Oracle Tools GUI'
 __author__ = "Gert-Jan Paulissen"
 __email__ = "paulissoft@gmail.com"
 __version_info__ = ('1', '0', '0')

@@ -1,5 +1,5 @@
 """
-
+The Oracle Tools GUI for launching Maven builds based on Oracle Tools.
 """
 
 # Python modules
@@ -18,12 +18,17 @@ import about
 
 
 # logging.basicConfig(force=True, filename='oracle-tools-gui.log', encoding='utf-8', level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 DEFAULT_SIZE = (1200, 800)
 MENU = [{
            'name': 'Help',
            'items': [{
+               'type': 'Link',
+               'menuTitle': 'Documentation',
+               'url': about.__help_url__
+           }, {
                'type': 'AboutDialog',
                'menuTitle': 'About',
                'name': 'Oracle Tools',
@@ -33,10 +38,6 @@ MENU = [{
                'website': about.__url__,
                'author(s)': about.__author__,
                'license': about.__license__
-           }, {
-               'type': 'Link',
-               'menuTitle': 'Documentation',
-               'url': about.__help_url__
            }]
        }]
 TERMINAL_FONT_FAMILY = 'Courier New'
@@ -80,16 +81,21 @@ def get_POM_file(argv):
        menu=MENU,
        terminal_font_family=TERMINAL_FONT_FAMILY)
 def run_POM_file(pom_file):
+    def db_order(db):
+        for i, e in enumerate(['dev', 'tst', 'test', 'acc', 'prod', 'prd']):
+            if e in db.lower():
+                return i
+        return 0
+
     logger.info('run_POM_file(%s)' % (pom_file))
     parser = GooeyParser(description='Get the POM settings to work with and run the POM file')
-    dbs, profiles, db_username = process_POM(pom_file)
-    db_password_help = f'The database password'
-    if db_username:
-        db_password_help += ' for ' + db_username
+    dbs, profiles, db_proxy_username = process_POM(pom_file)
+    db_proxy_password_help = f'The password for database account {db_proxy_username}'
     # 4 positional arguments
     parser.add_argument('action', help='The action to perform', choices=profiles, default=profiles[0])
-    parser.add_argument('db', help='The database to log on to', choices=dbs, default=dbs[0])
-    parser.add_argument('db-password', help=db_password_help, widget="PasswordField")
+    dbs_sorted = sorted(dbs, key=db_order)
+    parser.add_argument('db', help='The database to log on to', choices=dbs_sorted, default=dbs_sorted[0])
+    parser.add_argument('db-proxy-password', help=db_proxy_password_help, widget="PasswordField")
     parser.add_argument(
         'file',
         default=pom_file,
@@ -134,12 +140,12 @@ def process_POM(pom_file):
                 line += ch
             else:
                 logger.debug("line: %s" % (line))
-                m = re.search("Profile Id: ([a-zA-Z0-9_-.]+) \(Active: .*, Source: pom\)", line)
+                m = re.search("Profile Id: ([a-zA-Z0-9_.-]+) \(Active: .*, Source: pom\)", line)
                 if m:
                     logger.info("adding profile: %s" % (m.group(1)))
                     profiles.add(m.group(1))
                 else:
-                    m = re.match('\[echoproperties\] ([a-zA-Z0-9_-.]+)=(.+)$')
+                    m = re.match('\[echoproperties\] ([a-zA-Z0-9_.-]+)=(.+)$', line)
                     if m:
                         logger.info("adding property %s = %s" % (m.group(1), m.group(2)))
                         properties[m.group(1)] = m.group(2)
@@ -165,9 +171,12 @@ def process_POM(pom_file):
     except:
         pass
     assert len(dbs) > 0, 'The directory %s must have subdirectories, where each one contains information for one database (and Apex) instance' % (properties['db.config.dir'])
-    db_username = properties['db.username']
-    logger.info('return: (%s, %s, %s)' % (dbs, profiles, db_username))
-    return dbs, profiles, db_username
+
+    db_proxy_username = properties['db.proxy.username']
+    assert db_proxy_username, 'The Maven property db.proxy.username (the database proxy acount) must be set'
+
+    logger.info('return: (%s, %s, %s)' % (dbs, profiles, db_proxy_username))
+    return dbs, profiles, db_proxy_username
 
 
 if __name__ == '__main__':
@@ -180,8 +189,8 @@ if __name__ == '__main__':
             run_POM_file(argv[-1])
         else:
             assert len(argv) == 4
-            profile, db, db_password, file = argv[0], argv[1], argv[2], argv[3]
-            cmd = f'mvn -P{profile} -Ddb={db} -Ddb.password={db_password} --file {file}'
+            profile, db, db_proxy_password, file = argv[0], argv[1], argv[2], argv[3]
+            cmd = f'mvn -P{profile} -Ddb={db} -Ddb.proxy.password={db_proxy_password} --file {file}'
             logger.info('cmd: %s' % (cmd))
             subprocess.run(cmd, check=True, shell=True)
     except Exception as error:
