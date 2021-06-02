@@ -87,8 +87,8 @@ def run_POM_file(pom_file):
     if db_username:
         db_password_help += ' for ' + db_username
     # 4 positional arguments
-    parser.add_argument('action', help='The action to perform', widget='Dropdown', choices=sorted(profiles))
-    parser.add_argument('db', help='The database to log on to', widget='Dropdown', choices=sorted(dbs))
+    parser.add_argument('action', help='The action to perform', choices=profiles, default=profiles[0])
+    parser.add_argument('db', help='The database to log on to', choices=dbs, default=dbs[0])
     parser.add_argument('db-password', help=db_password_help, widget="PasswordField")
     parser.add_argument(
         'file',
@@ -110,17 +110,13 @@ def process_POM(pom_file):
     Process a single POM file and setup the GUI.
     The POM file must be either based on an Oracle Tools parent POM for the database or Apex.
     """
-    def determine_POM_settings(pom_file, properties):
-        property_keys = [p for p in sorted(properties)]
-        expressions = ['${' + p + '}' for p in reversed(property_keys)]  # since we are using pop later on
-        input = expressions
-        answers = {}
+    def determine_POM_settings(pom_file):
+        properties = {}
         profiles = set()
 
-        input.append('0')
-        cmd = f"mvn --file {pom_file} -N help:all-profiles help:evaluate"
+        cmd = f"mvn --file {pom_file} -N help:all-profiles -Pconf-inquiry compile"
         mvn = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, text=True)
-        stdout, stderr = mvn.communicate('\n'.join(input))
+        stdout, stderr = mvn.communicate()
 
         if mvn.returncode == 0:
             pass
@@ -132,41 +128,34 @@ def process_POM(pom_file):
             raise Exception(f'The command "{cmd}" failed with return code {returncode} and error:\n{error}')
 
         # Profile Id: db-install (Active: false , Source: pom)
-        next_line_contains_answer = False
         line = ''
         for ch in stdout:
             if ch != "\n":
                 line += ch
             else:
                 logger.debug("line: %s" % (line))
-                m = re.search("Profile Id: ([a-zA-Z0-9_-]+) \(Active: .*, Source: pom\)", line)
+                m = re.search("Profile Id: ([a-zA-Z0-9_-.]+) \(Active: .*, Source: pom\)", line)
                 if m:
                     logger.info("adding profile: %s" % (m.group(1)))
                     profiles.add(m.group(1))
-                elif not next_line_contains_answer:
-                    m = re.search('Enter the Maven expression', line)
+                else:
+                    m = re.match('\[echoproperties\] ([a-zA-Z0-9_-.]+)=(.+)$')
                     if m:
-                        next_line_contains_answer = True
-                elif not re.match('\[INFO\]', line):
-                    if line == 'null object or invalid expression':
-                        line = None
-                    property = property_keys.pop()
-                    logger.info("adding property %s = %s" % (property, line))
-                    answers[property] = line
-                    next_line_contains_answer = False
+                        logger.info("adding property %s = %s" % (m.group(1), m.group(2)))
+                        properties[m.group(1)] = m.group(2)
                 line = ''
-        return answers, profiles
+        return properties, profiles
 
     logger.info('process_POM()')
-    properties, profiles = determine_POM_settings(pom_file, ['db.config.dir', 'db.username'])
-    apex_profiles = {'apex-import', 'apex-export'}
-    db_profiles = {'db-generate-ddl-full', 'db-install', 'db-generate-ddl-incr', 'db-test'}
-    pom_parent = ''
-    if profiles.issuperset(apex_profiles):
-        pom_parent = 'apex'
-    elif profiles.issuperset(db_profiles):
-        pom_parent = 'db'
-    assert pom_parent, 'Profiles (%s) must be a super set of either the Apex (%s) or database (%s) profiles' % (profiles, apex_profiles, db_profiles)
+    properties, profiles = determine_POM_settings(pom_file)
+    apex_profiles = ['apex-export', 'apex-import']
+    db_profiles = ['db-install', 'db-test', 'db-generate-ddl-full', 'db-generate-ddl-incr']
+    if profiles.issuperset(set(apex_profiles)):
+        profiles = apex_profiles
+    elif profiles.issuperset(set(db_profiles)):
+        profiles = db_profiles
+    else:
+        raise Exception('Profiles (%s) must be a super set of either the Apex (%s) or database (%s) profiles' % (profiles, set(apex_profiles), set(db_profiles)))
     assert properties['db.config.dir'], 'The property db.config.dir must have been set in order to choose a database (on of its subdirectories)'
 
     p = Path(properties['db.config.dir'])
@@ -176,7 +165,6 @@ def process_POM(pom_file):
     except:
         pass
     assert len(dbs) > 0, 'The directory %s must have subdirectories, where each one contains information for one database (and Apex) instance' % (properties['db.config.dir'])
-    profiles = db_profiles if pom_parent == 'db' else apex_profiles
     db_username = properties['db.username']
     logger.info('return: (%s, %s, %s)' % (dbs, profiles, db_username))
     return dbs, profiles, db_username
