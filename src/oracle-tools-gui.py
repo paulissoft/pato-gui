@@ -12,6 +12,8 @@ from pathlib import Path
 import logging
 from gooey import Gooey, GooeyParser
 import json
+from shutil import which
+from pkg_resources import packaging
 
 # local module(s)
 import about
@@ -41,7 +43,29 @@ MENU = [{
            }]
        }]
 TERMINAL_FONT_FAMILY = 'Courier New'
+EXTRA_MAVEN_COMMAND_LINE_OPTIONS = '--extra-maven-command-line-options'
 
+
+def check_environment():
+    programs = [
+        ['mvn', '-version',  '3.3.1', r'Apache Maven ([0-9.]+)'],
+        ['perl', '--version', '5.16.0', r'\(v([0-9.]+)\)'],
+        ['sql', '-V', '18.0.0.0', r'SQLcl: Release ([0-9.]+)']
+    ]
+    
+    for i, p in enumerate(programs):
+        proc = subprocess.run(p[0] + ' ' + p[1], shell=True, capture_output=True, text=True)
+        assert proc.returncode == 0, proc.stderr
+        logger.info('proc: {}'.format(proc))
+        expected_version = p[2]
+        regex = p[3]
+
+        m = re.search(regex, proc.stdout)
+        assert m, 'Could not find {} in {}'.format(regex, proc.stdout)
+        
+        actual_version = m.group(1)
+        assert packaging.version.parse(actual_version) >= packaging.version.parse(expected_version), f'Version of program "{p[0]}" is "{actual_version}" which is less than the expected version "{expected_version}"'
+                
 
 @Gooey(program='Get POM file',
        show_success_modal=False,
@@ -54,7 +78,7 @@ TERMINAL_FONT_FAMILY = 'Courier New'
        terminal_font_family=TERMINAL_FONT_FAMILY)
 def get_POM_file(argv):
     logger.info('get_POM_file(%s)' % (argv))
-    parser = GooeyParser(description='Get a POM file to work with')
+    parser = GooeyParser(description='Get a Maven POM file to work with')
     parser.add_argument(
         'file',
         help='The POM file',
@@ -80,34 +104,83 @@ def get_POM_file(argv):
        default_size=DEFAULT_SIZE,
        menu=MENU,
        terminal_font_family=TERMINAL_FONT_FAMILY)
-def run_POM_file(pom_file):
+def run_POM_file_gui(pom_file):
     def db_order(db):
         for i, e in enumerate(['dev', 'tst', 'test', 'acc', 'prod', 'prd']):
             if e in db.lower():
                 return i
         return 0
 
-    logger.info('run_POM_file(%s)' % (pom_file))
-    parser = GooeyParser(description='Get the POM settings to work with and run the POM file')
-    dbs, profiles, db_proxy_username = process_POM(pom_file)
+    logger.info('run_POM_file_gui(%s)' % (pom_file))
+    
+    dbs, profiles, db_proxy_username, db_username = process_POM(pom_file)
     db_proxy_password_help = f'The password for database account {db_proxy_username}'
-    # 4 positional arguments
-    parser.add_argument('action', help='The action to perform', choices=profiles, default=profiles[0])
+    db_password_help = f'The password for database account {db_username}'
     dbs_sorted = sorted(dbs, key=db_order)
-    parser.add_argument('db', help='The database to log on to', choices=dbs_sorted, default=dbs_sorted[0])
-    parser.add_argument('db-proxy-password', help=db_proxy_password_help, widget="PasswordField")
-    parser.add_argument(
-        'file',
+
+    parser = GooeyParser(description='Get the Maven POM settings to work with and run the Maven POM file')
+
+    group0 = parser.add_argument_group('Database Information', 'Choose the database connection')
+    group0.add_argument('--db', required=True, choices=dbs_sorted, default=dbs_sorted[0], help='The database to log on to')
+    if db_proxy_username:
+        group0.add_argument('--db-proxy-password', required=True, widget="PasswordField", help=db_proxy_password_help)
+    else:
+        group0.add_argument('--db-password', required=True, widget="PasswordField", help=db_password_help)
+    
+    group1 = parser.add_argument_group('Other Information', 'Choose action to perform and (optionally) extra Maven command line options')    
+    group1.add_argument('--action', required=True, choices=profiles, default=profiles[0], help='The action to perform')
+    group1.add_argument(EXTRA_MAVEN_COMMAND_LINE_OPTIONS, required=False, help='Extra Maven command line options')
+    
+    group2 = parser.add_argument_group('Information to be supplied to Maven', 'DO NOT CHANGE!')    
+    group2.add_argument(
+        '--file',
+        required=True,
         default=pom_file,
-        help='The POM file (DO NOT CHANGE!)',
         gooey_options={
             'validator':{
                 'test': "hash(user_input) == {}".format(hash(pom_file)),
                 'message': 'Did you change the POM file?'
             }
-        })
+        },
+        help='The POM file (DO NOT CHANGE!)'
+    )
     args = parser.parse_args(list(pom_file))
     logger.info('args: %s' % (args))
+    logger.info('return')
+
+
+def run_POM_file(argv):
+    logger.info('run_POM_file(%s)' % (argv))
+    parser = argparse.ArgumentParser(description='Get the POM settings to work with and run the POM file')
+    db_proxy_password_help = f'The password for database proxy account'
+    db_password_help = f'The password for database account'
+    # 4 positional arguments
+    parser.add_argument('--action', help='The action to perform')
+    parser.add_argument('--db', help='The database to log on to')
+    parser.add_argument('--db-proxy-password', default='', required=False, help=db_proxy_password_help)
+    parser.add_argument('--db-password', default='', required=False, help=db_password_help)
+    parser.add_argument('--file', help='The POM file')
+    args, extra_maven_command_line_options = parser.parse_known_args(argv)
+    logger.info('args: %s; extra_maven_command_line_options: %s' % (args, extra_maven_command_line_options))
+    try:
+        extra_maven_command_line_options.remove(EXTRA_MAVEN_COMMAND_LINE_OPTIONS)
+    except:
+        pass
+    cmd = 'mvn --file {2} -P{0} -Ddb={1}'.format(args.action, args.db, args.file)
+    if args.db_proxy_password:
+        cmd += ' -Ddb.proxy.password={}'.format(args.db_proxy_password)
+    elif args.db_password:
+        cmd += ' -Ddb.password={}'.format(args.db_password)
+    if len(extra_maven_command_line_options) > 0:
+        cmd += ' ' + ' '.join(extra_maven_command_line_options)
+
+    sql_home = os.path.dirname(os.path.dirname(which('sql')))
+    logger.info('sql_home: {}'.format(sql_home))
+
+    cmd += f' -Dsql.home="{sql_home}"'
+
+    logger.info('cmd: %s' % (cmd))
+    subprocess.run(cmd, check=True, shell=True)
     logger.info('return')
 
 
@@ -162,9 +235,12 @@ def process_POM(pom_file):
         profiles = db_profiles
     else:
         raise Exception('Profiles (%s) must be a super set of either the Apex (%s) or database (%s) profiles' % (profiles, set(apex_profiles), set(db_profiles)))
-    assert properties['db.config.dir'], 'The property db.config.dir must have been set in order to choose a database (on of its subdirectories)'
+    # C\:\\dev\\bc\\oracle-tools\\conf\\src => C:\dev\bc\oracle-tools\conf\src =>
+    db_config_dir = properties.get('db.config.dir', '').replace('\\:', ':').replace('\\\\', '\\')
+    assert db_config_dir, 'The property db.config.dir must have been set in order to choose a database (on of its subdirectories)'
+    logger.info('db_config_dir: ' + db_config_dir)
 
-    p = Path(properties['db.config.dir'])
+    p = Path(db_config_dir)
     dbs = []
     try:
         dbs = [d.name for d in filter(Path.is_dir, p.iterdir())]
@@ -172,11 +248,12 @@ def process_POM(pom_file):
         pass
     assert len(dbs) > 0, 'The directory %s must have subdirectories, where each one contains information for one database (and Apex) instance' % (properties['db.config.dir'])
 
-    db_proxy_username = properties['db.proxy.username']
-    assert db_proxy_username, 'The Maven property db.proxy.username (the database proxy acount) must be set'
+    db_proxy_username = properties.get('db.proxy.username', '')
+    db_username = properties.get('db.username', '')
+    assert db_proxy_username or db_username, f'The database acount (Maven property db.proxy.username {db_proxy_username} or db.username {db_username}) must be set'
 
-    logger.info('return: (%s, %s, %s)' % (dbs, profiles, db_proxy_username))
-    return dbs, profiles, db_proxy_username
+    logger.info('return: (%s, %s, %s, %s)' % (dbs, profiles, db_proxy_username, db_username))
+    return dbs, profiles, db_proxy_username, db_username
 
 
 if __name__ == '__main__':
@@ -184,15 +261,12 @@ if __name__ == '__main__':
     try:
         argv = [argc for argc in sys.argv[1:] if argc != '--']
         if len(argv) <= 1:
+            check_environment()
             if len(argv) == 0:
                 argv.append(get_POM_file(argv))
-            run_POM_file(argv[-1])
+            run_POM_file_gui(argv[-1])
         else:
-            assert len(argv) == 4
-            profile, db, db_proxy_password, file = argv[0], argv[1], argv[2], argv[3]
-            cmd = f'mvn -P{profile} -Ddb={db} -Ddb.proxy.password={db_proxy_password} --file {file}'
-            logger.info('cmd: %s' % (cmd))
-            subprocess.run(cmd, check=True, shell=True)
+            run_POM_file(argv)
     except Exception as error:
         logger.exception(error)
         raise
