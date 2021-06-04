@@ -16,7 +16,7 @@ import pkg_resources
 
 
 # items to test
-__all__ = ['logger', 'db_order', 'initialize', 'check_environment', 'process_POM']
+__all__ = ['db_order', 'initialize', 'check_environment', 'process_POM']
 
 
 logger = None
@@ -30,7 +30,7 @@ def db_order(db):
 
 
 def initialize():
-    global logger, debug
+    global logger
 
     argv = [argc for argc in sys.argv[1:] if argc != '--']
 
@@ -44,7 +44,7 @@ def initialize():
         check_environment()
     if '-d' in argv:
         argv.remove('-d')
-    return argv
+    return argv, logger
 
 
 def check_environment():

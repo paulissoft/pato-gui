@@ -11,7 +11,10 @@ from shutil import which
 
 # local module(s)
 from utils import about
-from utils.pom import logger, db_order, initialize, process_POM
+from utils.pom import db_order, initialize, process_POM
+
+
+logger = None
 
 
 DEFAULT_SIZE = (1200, 800)
@@ -149,7 +152,9 @@ def run_POM_file(argv):
 
 
 def main():
-    argv = initialize()
+    global logger
+
+    argv, logger = initialize()
     if len(argv) <= 2:
         if len(argv) == 0:
             argv.append(get_POM_file(argv))
