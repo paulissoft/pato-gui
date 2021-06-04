@@ -1,5 +1,5 @@
-import about
-from oracle_tools_gui import db_order, initialize, check_environment
+from utils import about
+from utils.pom import db_order
 
 
 def test_about():

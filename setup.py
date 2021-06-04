@@ -12,7 +12,7 @@ from distutils.core import setup
 # To prevent importing about and thereby breaking the coverage info we use this
 # exec hack
 about = {}
-with open('src/about.py', mode='r', encoding="utf-8") as fp:
+with open('src/utils/about.py', mode='r', encoding="utf-8") as fp:
     exec(fp.read(), about)
 
 
@@ -66,8 +66,8 @@ if __name__ == '__main__':
         url=about['__url__'],
         license=about['__license__'],
         keywords=["Oracle", "Tools", "GUI"],
-        #packages=find_packages('src'),
-        #package_dir={'': 'src'},
+        packages=find_packages('src'),
+        package_dir={'': 'src'},
         #namespace_packages=[about['__package_name__']],
         long_description=readme + changes,
         long_description_content_type='text/markdown',

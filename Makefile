@@ -6,7 +6,7 @@ MYPY = mypy
 PIP = $(PYTHON) -m pip
 PROJECT = oracle-tools-gui
 
-.PHONY: clean install test dist distclean tag
+.PHONY: clean install test mypy pytest dist distclean tag
 
 help: ## This help.
 	@perl -ne 'printf(qq(%-30s  %s\n), $$1, $$2) if (m/^([a-zA-Z_-]+):.*##\s*(.*)$$/)' $(MAKEFILE_LIST)
@@ -22,8 +22,12 @@ install: clean ## Install the Python (test) requirements.
 	$(PIP) install -r requirements.txt
 	$(PIP) install -r test_requirements.txt
 
-test: ## Test the software.
+test: mypy pytest ## Test the software.
+
+mypy: ## Run mypy
 	$(MYPY) --show-error-codes src
+
+pytest: ## Run pytest
 	$(PYTHON) -m pytest --exitfirst
 
 dist: install test ## Build distribution.
@@ -33,7 +37,7 @@ distclean: ## Runs clean first and then cleans up dependency include files.
 	cd src && $(MAKE) distclean
 
 # This is GNU specific I guess
-VERSION = $(shell $(PYTHON) src/about.py)
+VERSION = $(shell $(PYTHON) src/utils/about.py)
 
 TAG = v$(VERSION)
 
