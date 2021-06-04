@@ -19,6 +19,10 @@ from pkg_resources import packaging
 import about
 
 
+# items to test
+__all__ = [ 'db_order', 'initialize', 'check_environment' ]
+
+
 DEFAULT_SIZE = (1200, 800)
 MENU = [{
            'name': 'Help',
@@ -50,7 +54,14 @@ FILE = '--file'
 logger = None
 
 
-def setup_logging():
+def db_order(db):
+    for i, e in enumerate(['dev', 'tst', 'test', 'acc', 'prod', 'prd']):
+        if e in db.lower():
+            return i
+    return db.lower()
+
+
+def initialize():
     global logger, debug
 
     argv = [argc for argc in sys.argv[1:] if argc != '--']
@@ -126,12 +137,6 @@ def get_POM_file(argv):
        menu=MENU,
        terminal_font_family=TERMINAL_FONT_FAMILY)
 def run_POM_file_gui(pom_file):
-    def db_order(db):
-        for i, e in enumerate(['dev', 'tst', 'test', 'acc', 'prod', 'prd']):
-            if e in db.lower():
-                return i
-        return 0
-
     logger.debug('run_POM_file_gui(%s)' % (pom_file))
 
     dbs, profiles, db_proxy_username, db_username = process_POM(pom_file)
@@ -276,8 +281,8 @@ def process_POM(pom_file):
     return dbs, profiles, db_proxy_username, db_username
 
 
-if __name__ == '__main__':
-    argv = setup_logging()
+def main():
+    argv = initialize()
     if len(argv) <= 2:
         if len(argv) == 0:
             argv.append(get_POM_file(argv))
@@ -285,3 +290,6 @@ if __name__ == '__main__':
     else:
         run_POM_file(argv)
 
+
+if __name__ == '__main__':
+    main()
