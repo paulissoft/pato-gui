@@ -39,6 +39,7 @@ DB = '--db'
 DB_PROXY_PASSWORD = '--db-proxy-password'
 DB_PASSWORD = '--db-password'
 FILE = '--file'
+DB_CONFIG_DIR = '--db-config-dir'
 
 
 @Gooey(program='Get POM file',
@@ -56,6 +57,7 @@ def get_POM_file(argv):
     parser.add_argument(
         'file',
         help='The POM file',
+        nargs='?',
         widget="FileChooser",
         gooey_options={
             'validator': {
@@ -63,9 +65,15 @@ def get_POM_file(argv):
                 'message': 'This is not a POM file'
             }
         })
+    parser.add_argument(
+        DB_CONFIG_DIR,
+        required=False,
+        help='The database configuration directory',
+        widget="DirChooser")
     args = parser.parse_args(argv)
     logger.debug('args: %s' % (args))
     logger.debug('return')
+    return args
 
 
 @Gooey(program='Run POM file',
@@ -78,10 +86,10 @@ def get_POM_file(argv):
        default_size=DEFAULT_SIZE,
        menu=MENU,
        terminal_font_family=TERMINAL_FONT_FAMILY)
-def run_POM_file_gui(pom_file):
+def run_POM_file_gui(pom_file, db_config_dir):
     logger.debug('run_POM_file_gui(%s)' % (pom_file))
 
-    dbs, profiles, db_proxy_username, db_username = process_POM(pom_file)
+    db_config_dir, dbs, profiles, db_proxy_username, db_username = process_POM(pom_file, db_config_dir)
     db_proxy_password_help = f'The password for database account {db_proxy_username}'
     db_password_help = f'The password for database account {db_username}'
     dbs_sorted = sorted(dbs, key=db_order)
@@ -112,6 +120,18 @@ def run_POM_file_gui(pom_file):
         },
         help='The POM file (DO NOT CHANGE!)'
     )
+    group2.add_argument(
+        DB_CONFIG_DIR,
+        required=False,
+        default=db_config_dir,
+        gooey_options={
+            'validator': {
+                'test': "hash(user_input) == {}".format(hash(db_config_dir)),
+                'message': 'Did you change the database configuration directory?'
+            }
+        },
+        help='The database configuration directory (DO NOT CHANGE!)'
+    )
 
     args = parser.parse_args(list(pom_file))
     logger.debug('args: %s' % (args))
@@ -129,13 +149,14 @@ def run_POM_file(argv):
     parser.add_argument(DB_PROXY_PASSWORD, default='', required=False, help=db_proxy_password_help)
     parser.add_argument(DB_PASSWORD, default='', required=False, help=db_password_help)
     parser.add_argument(FILE, help='The POM file')
+    parser.add_argument(DB_CONFIG_DIR, help='The database configuration directory')
     args, extra_maven_command_line_options = parser.parse_known_args(argv)
     logger.debug('args: %s; extra_maven_command_line_options: %s' % (args, extra_maven_command_line_options))
     try:
         extra_maven_command_line_options.remove(EXTRA_MAVEN_COMMAND_LINE_OPTIONS)
     except Exception:
         pass
-    cmd = 'mvn {0} {1} -P{2} -Ddb={3}'.format(FILE, args.file, args.action, args.db)
+    cmd = 'mvn {0} {1} -P{2} -Ddb.config.dir={3} -Ddb={4}'.format(FILE, args.file, args.action, args.db_config_dir, args.db)
     if len(extra_maven_command_line_options) > 0:
         cmd += ' ' + ' '.join(extra_maven_command_line_options)
     sql_home = os.path.dirname(os.path.dirname(which('sql')))
@@ -154,11 +175,11 @@ def run_POM_file(argv):
 def main():
     global logger
 
-    argv, logger = initialize()
-    if len(argv) <= 2:
-        if len(argv) == 0:
-            argv.append(get_POM_file(argv))
-        run_POM_file_gui(argv[-1])
+    argv, logger, args = initialize()
+    if len(argv) <= 4:
+        if not args.file:
+            args = get_POM_file(argv)
+        run_POM_file_gui(args.file, args.db_config_dir)
     else:
         run_POM_file(argv)
 

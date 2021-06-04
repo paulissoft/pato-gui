@@ -36,6 +36,7 @@ def initialize():
 
     parser = argparse.ArgumentParser(description='Setup logging')
     parser.add_argument('-d', dest='debug', action='store_true', help='Enable debugging')
+    parser.add_argument('--db-config-dir', help='The database configuration directory')
     parser.add_argument('file', nargs='?', help='The POM file')
     args, rest = parser.parse_known_args(argv)
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG if args.debug else logging.INFO)
@@ -44,7 +45,8 @@ def initialize():
         check_environment()
     if '-d' in argv:
         argv.remove('-d')
-    return argv, logger
+    logger.debug('argv: %s; logger: %s; args: %s' % (argv, logger, args))
+    return argv, logger, args
 
 
 def check_environment():
@@ -67,7 +69,7 @@ def check_environment():
         logger.info('Version of "{}" is "{}" and its location is "{}"'.format(p[0], actual_version, os.path.dirname(which(p[0]))))
 
 
-def process_POM(pom_file):
+def process_POM(pom_file, db_config_dir):
     """
     Process a single POM file and setup the GUI.
     The POM file must be either based on an Oracle Tools parent POM for the database or Apex.
@@ -118,8 +120,9 @@ def process_POM(pom_file):
         profiles = db_profiles
     else:
         raise Exception('Profiles (%s) must be a super set of either the Apex (%s) or database (%s) profiles' % (profiles, set(apex_profiles), set(db_profiles)))
-    # C\:\\dev\\bc\\oracle-tools\\conf\\src => C:\dev\bc\oracle-tools\conf\src =>
-    db_config_dir = properties.get('db.config.dir', '').replace('\\:', ':').replace('\\\\', '\\')
+    if not db_config_dir:
+        # C\:\\dev\\bc\\oracle-tools\\conf\\src => C:\dev\bc\oracle-tools\conf\src =>
+        db_config_dir = properties.get('db.config.dir', '').replace('\\:', ':').replace('\\\\', '\\')
     assert db_config_dir, 'The property db.config.dir must have been set in order to choose a database (on of its subdirectories)'
     logger.debug('db_config_dir: ' + db_config_dir)
 
@@ -135,5 +138,5 @@ def process_POM(pom_file):
     db_username = properties.get('db.username', '')
     assert db_proxy_username or db_username, f'The database acount (Maven property db.proxy.username {db_proxy_username} or db.username {db_username}) must be set'
 
-    logger.debug('return: (%s, %s, %s, %s)' % (dbs, profiles, db_proxy_username, db_username))
-    return dbs, profiles, db_proxy_username, db_username
+    logger.debug('return: (%s, %s, %s, %s, %s)' % (db_config_dir, dbs, profiles, db_proxy_username, db_username))
+    return db_config_dir, dbs, profiles, db_proxy_username, db_username
