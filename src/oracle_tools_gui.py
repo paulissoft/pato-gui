@@ -90,7 +90,7 @@ def run_POM_file_gui(pom_file, db_config_dir):
     logger.debug('run_POM_file_gui(%s)' % (pom_file))
 
     db_config_dir, dbs, profiles, db_proxy_username, db_username = process_POM(pom_file, db_config_dir)
-    db_proxy_password_help = f'The password for database account {db_proxy_username}'
+    db_proxy_password_help = f'The password for database proxy account {db_proxy_username}'
     db_password_help = f'The password for database account {db_username}'
     dbs_sorted = sorted(dbs, key=db_order)
 
@@ -165,10 +165,11 @@ def run_POM_file(argv):
     logger.info('Maven command to execute: %s' % (cmd))
     # now add the password
     if args.db_proxy_password:
-        cmd += ' -Ddb.proxy.password={}'.format(args.db_proxy_password)
+        os.environ['DB_PASSWORD'] = args.db_proxy_password
     elif args.db_password:
-        cmd += ' -Ddb.password={}'.format(args.db_password)
+        os.environ['DB_PASSWORD'] = args.db_password
     subprocess.run(cmd, check=True, shell=True)
+    os.environ['DB_PASSWORD'] = ''
     logger.debug('return')
 
 

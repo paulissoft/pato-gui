@@ -74,11 +74,13 @@ def process_POM(pom_file, db_config_dir):
     Process a single POM file and setup the GUI.
     The POM file must be either based on an Oracle Tools parent POM for the database or Apex.
     """
-    def determine_POM_settings(pom_file):
+    def determine_POM_settings(pom_file, db_config_dir):
         properties = {}
         profiles = set()
 
         cmd = f"mvn --file {pom_file} -N help:all-profiles -Pconf-inquiry compile"
+        if db_config_dir:
+            cmd += f" -Ddb.config.dir={db_config_dir}"
         mvn = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, text=True)
         stdout, stderr = mvn.communicate()
 
@@ -111,7 +113,7 @@ def process_POM(pom_file, db_config_dir):
         return properties, profiles
 
     logger.debug('process_POM()')
-    properties, profiles = determine_POM_settings(pom_file)
+    properties, profiles = determine_POM_settings(pom_file, db_config_dir)
     apex_profiles = ['apex-export', 'apex-import']
     db_profiles = ['db-install', 'db-test', 'db-generate-ddl-full', 'db-generate-ddl-incr']
     if profiles.issuperset(set(apex_profiles)):
