@@ -115,7 +115,8 @@ def process_POM(pom_file, db_config_dir):
     logger.debug('process_POM()')
     properties, profiles = determine_POM_settings(pom_file, db_config_dir)
     apex_profiles = ['apex-export', 'apex-import']
-    db_profiles = ['db-install', 'db-test', 'db-generate-ddl-full', 'db-generate-ddl-incr']
+    # db_profiles = ['db-install', 'db-test', 'db-generate-ddl-full', 'db-generate-ddl-incr']
+    db_profiles = ['db-info', 'db-install', 'db-test', 'db-generate-ddl-full']
     if profiles.issuperset(set(apex_profiles)):
         profiles = apex_profiles
     elif profiles.issuperset(set(db_profiles)):
