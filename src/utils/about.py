@@ -6,7 +6,7 @@ __description__ = ' '.join('''
 GUI for Oracle Tools.
 '''.strip().split())
 __email__ = "paulissoft@gmail.com"
-__version_info__ = ('1', '0', '0')
+__version_info__ = ('1', '1', '0')
 __version__ = '.'.join(__version_info__)
 __license__ = "MIT License"
 __copyright__ = 'Copyright (c) 2021 Gert-Jan Paulissen'
