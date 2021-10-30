@@ -1,6 +1,8 @@
 # oracle-tools-gui
 
-A Python GUI as an alternative to the Maven command line.
+A Python GUI for [Oracle tools](https://github.com/paulissoft/oracle-tools) as an alternative to the Maven command line.
+
+First you probably need to clone Oracle tools so you use its POM files or other POM files having them as parent.
 
 # Installation
 
