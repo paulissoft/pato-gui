@@ -51,9 +51,11 @@ def initialize():
 
 def check_environment():
     programs = [
-        ['mvn', '-version', '3.3.1', r'Apache Maven ([0-9.]+)'],
-        ['perl', '--version', '5.16.0', r'\(v([0-9.]+)\)'],
-        ['sql', '-V', '18.0.0.0', r'SQLcl: Release ([0-9.]+)']
+        ['mvn', '-version', '3.3.1', r'Apache Maven ([0-9.]+)', True],
+        ['perl', '--version', '5.16.0', r'\(v([0-9.]+)\)', True],
+        ['sql', '-V', '18.0.0.0', r'SQLcl: Release ([0-9.]+)', True],
+        ['java', '-version', '1.8.0', r'(?:java|openjdk) version "([0-9.]+).*"', False], # version is printed to stderr (!#$?)
+        ['javac', '-version', '1.8.0', r'javac ([0-9.]+)', True],
     ]
 
     for i, p in enumerate(programs):
@@ -62,8 +64,9 @@ def check_environment():
         logger.debug('proc: {}'.format(proc))
         expected_version = p[2]
         regex = p[3]
-        m = re.search(regex, proc.stdout)
-        assert m, 'Could not find {} in {}'.format(regex, proc.stdout)
+        output = proc.stdout if p[4] else proc.stderr
+        m = re.search(regex, output)
+        assert m, 'Could not find {} in {}'.format(regex, output)
         actual_version = m.group(1)
         assert pkg_resources.packaging.version.parse(actual_version) >= pkg_resources.packaging.version.parse(expected_version), f'Version of program "{p[0]}" is "{actual_version}" which is less than the expected version "{expected_version}"'
         logger.info('Version of "{}" is "{}" and its location is "{}"'.format(p[0], actual_version, os.path.dirname(which(p[0]))))
