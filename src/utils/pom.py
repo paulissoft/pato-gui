@@ -54,8 +54,8 @@ def check_environment():
         ['mvn', '-version', '3.3.1', r'Apache Maven ([0-9.]+)', True],
         ['perl', '--version', '5.16.0', r'\(v([0-9.]+)\)', True],
         ['sql', '-V', '18.0.0.0', r'SQLcl: Release ([0-9.]+)', True],
-        ['java', '-version', '1.8.0', r'(?:java|openjdk) version "([0-9._]+)"', False], # version is printed to stderr (!#$?)
-        ['javac', '-version', '1.8.0', r'javac ([0-9._]+)', True],
+        ['java', '-version', '1.8.0', r'(?:java|openjdk) version "([0-9.]+).*"', False], # version is printed to stderr (!#$?)
+        ['javac', '-version', '1.8.0', r'javac ([0-9.]+)', True],
     ]
 
     for i, p in enumerate(programs):
