@@ -39,6 +39,10 @@ def initialize():
     parser.add_argument('--db-config-dir', help='The database configuration directory')
     parser.add_argument('file', nargs='?', help='The POM file')
     args, rest = parser.parse_known_args(argv)
+    if args.db_config_dir:
+        args.db_config_dir = os.path.abspath(args.db_config_dir)
+    if args.file:
+        args.file = os.path.abspath(args.file)
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG if args.debug else logging.INFO)
     logger = logging.getLogger()
     if len(rest) == 0 and args.file:
