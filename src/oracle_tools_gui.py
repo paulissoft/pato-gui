@@ -108,7 +108,7 @@ def run_POM_file_gui(pom_file, db_config_dir, mvnd):
     group1.add_argument(ACTION, required=True, choices=profiles, default=profiles[0], help='The action to perform')
     group1.add_argument(EXTRA_MAVEN_COMMAND_LINE_OPTIONS, required=False, help='Extra Maven command line options')
     if mvnd:
-        group1.add_argument(MVND, required=False, widget='CheckBox', default=True, help='Use the Maven daemon for a (possibly) better performance')
+        group1.add_argument(MVND, required=False, widget='CheckBox', default=True, help='Use the Maven daemon for a (possibly) better performance')  # , metavar='Maven daemon'
 
     group2 = parser.add_argument_group('Information to be supplied to Maven', 'DO NOT CHANGE!')
     group2.add_argument(
