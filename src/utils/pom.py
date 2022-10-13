@@ -55,25 +55,36 @@ def initialize():
 
 def check_environment():
     programs = [
-        ['mvn', '-version', '3.3.1', r'Apache Maven ([0-9.]+)', True],
-        ['perl', '--version', '5.16.0', r'\(v([0-9.]+)\)', True],
-        ['sql', '-V', '18.0.0.0', r'SQLcl: Release ([0-9.]+)', True],
-        ['java', '-version', '1.8.0', r'(?:java|openjdk) version "([0-9.]+).*"', False], # version is printed to stderr (!#$?)
-        ['javac', '-version', '1.8.0', r'javac ([0-9.]+)', True],
+        ['mvn', '-version', '3.3.1', r'Apache Maven ([0-9.]+)', True, True],
+        ['perl', '--version', '5.16.0', r'\(v([0-9.]+)\)', True, True],
+        ['sql', '-V', '18.0.0.0', r'SQLcl: Release ([0-9.]+)', True, True],
+        ['java', '-version', '1.8.0', r'(?:java|openjdk) version "([0-9.]+).*"', False, True], # version is printed to stderr (!#$?)
+        ['javac', '-version', '1.8.0', r'javac ([0-9.]+)', True, True],
+        ['mvnd', '--version', '0.8.0', r'mvnd ([0-9.]+)', True, False], # Maven daemon may be there or not
     ]
 
     for i, p in enumerate(programs):
+        # p[0]: program
+        # p[1]: command line option to get the version
+        # p[2]: minimum version
+        # p[3]: regular expression to parse for version
+        # p[4]: print stdout (True) or stderr (False)?
+        # p[5]: program mandatory?
         proc = subprocess.run(p[0] + ' ' + p[1], shell=True, capture_output=True, text=True)
-        assert proc.returncode == 0, proc.stderr
-        logger.debug('proc: {}'.format(proc))
-        expected_version = p[2]
-        regex = p[3]
-        output = proc.stdout if p[4] else proc.stderr
-        m = re.search(regex, output)
-        assert m, 'Could not find {} in {}'.format(regex, output)
-        actual_version = m.group(1)
-        assert pkg_resources.packaging.version.parse(actual_version) >= pkg_resources.packaging.version.parse(expected_version), f'Version of program "{p[0]}" is "{actual_version}" which is less than the expected version "{expected_version}"'
-        logger.info('Version of "{}" is "{}" and its location is "{}"'.format(p[0], actual_version, os.path.dirname(which(p[0]))))
+        assert not(p[5]) or proc.returncode == 0, proc.stderr
+        
+        if proc.returncode == 0:
+            logger.debug('proc: {}'.format(proc))
+            expected_version = p[2]
+            regex = p[3]
+            output = proc.stdout if p[4] else proc.stderr
+            m = re.search(regex, output)
+            assert m, 'Could not find {} in {}'.format(regex, output)
+            actual_version = m.group(1)
+            assert pkg_resources.packaging.version.parse(actual_version) >= pkg_resources.packaging.version.parse(expected_version), f'Version of program "{p[0]}" is "{actual_version}" which is less than the expected version "{expected_version}"'
+            logger.info('Version of "{}" is "{}" and its location is "{}"'.format(p[0], actual_version, os.path.dirname(which(p[0]))))
+        else:
+            logger.info('Command "{0}" failed: {1}'.format(p[0] + ' ' + p[1], proc.stderr))
 
 
 def process_POM(pom_file, db_config_dir):

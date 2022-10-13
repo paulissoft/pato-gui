@@ -4,6 +4,8 @@ A Python GUI for [Oracle tools](https://github.com/paulissoft/oracle-tools) as a
 
 First you probably need to clone Oracle tools so you use its POM files or other POM files having them as parent.
 
+This GUI would not have been possible without [Gooey](https://github.com/chriskiehl/Gooey).
+
 # Installation
 
 This utility needs Python 3. You can install it using the Microsoft Store
