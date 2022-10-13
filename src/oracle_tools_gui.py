@@ -33,7 +33,7 @@ MENU = [{'name': 'Help',
                     'license': about.__license__}]}]
 TERMINAL_FONT_FAMILY = 'Courier New'
 
-MVN = '--mvn'
+MVND = '--mvnd'
 EXTRA_MAVEN_COMMAND_LINE_OPTIONS = '--extra-maven-command-line-options'
 ACTION = '--action'
 DB = '--db'
@@ -87,14 +87,13 @@ def get_POM_file(argv):
        default_size=DEFAULT_SIZE,
        menu=MENU,
        terminal_font_family=TERMINAL_FONT_FAMILY)
-def run_POM_file_gui(pom_file, db_config_dir):
-    logger.debug('run_POM_file_gui(%s)' % (pom_file))
+def run_POM_file_gui(pom_file, db_config_dir, mvnd):
+    logger.debug('run_POM_file_gui({}, {}, {})'.format(pom_file, db_config_dir, mvnd))
 
     db_config_dir, dbs, profiles, db_proxy_username, db_username = process_POM(pom_file, db_config_dir)
     db_proxy_password_help = f'The password for database proxy account {db_proxy_username}'
     db_password_help = f'The password for database account {db_username}'
     dbs_sorted = sorted(dbs, key=db_order)
-    mvn_programs = ['mvn', 'mvnd']
 
     parser = GooeyParser(description='Get the Maven POM settings to work with and run the Maven POM file')
 
@@ -107,8 +106,9 @@ def run_POM_file_gui(pom_file, db_config_dir):
 
     group1 = parser.add_argument_group('Other Information', 'Choose action to perform and (optionally) extra Maven command line options')
     group1.add_argument(ACTION, required=True, choices=profiles, default=profiles[0], help='The action to perform')
-    group1.add_argument(MVN, required=True, choices=mvn_programs, default=mvn_programs[0], help='The Maven program')
     group1.add_argument(EXTRA_MAVEN_COMMAND_LINE_OPTIONS, required=False, help='Extra Maven command line options')
+    if mvnd:
+        group1.add_argument(MVND, required=False, widget='CheckBox', default=True, help='Use the Maven daemon for a (possibly) better performance')
 
     group2 = parser.add_argument_group('Information to be supplied to Maven', 'DO NOT CHANGE!')
     group2.add_argument(
@@ -153,14 +153,14 @@ def run_POM_file(argv):
     parser.add_argument(DB_PASSWORD, default='', required=False, help=db_password_help)
     parser.add_argument(FILE, help='The POM file')
     parser.add_argument(DB_CONFIG_DIR, help='The database configuration directory')
-    parser.add_argument(MVN, help='The Maven program')
+    parser.add_argument(MVND, action='store_true', help='Use the Maven daemon')
     args, extra_maven_command_line_options = parser.parse_known_args(argv)
     logger.debug('args: %s; extra_maven_command_line_options: %s' % (args, extra_maven_command_line_options))
     try:
         extra_maven_command_line_options.remove(EXTRA_MAVEN_COMMAND_LINE_OPTIONS)
     except Exception:
         pass
-    cmd = '{0} {1} {2} -P{3} -Ddb.config.dir={4} -Ddb={5}'.format(args.mvn, FILE, args.file, args.action, args.db_config_dir, args.db)
+    cmd = '{0} {1} {2} -P{3} -Ddb.config.dir={4} -Ddb={5}'.format('mvnd' if args.mvnd else 'mvn', FILE, args.file, args.action, args.db_config_dir, args.db)
     if len(extra_maven_command_line_options) > 0:
         cmd += ' ' + ' '.join(extra_maven_command_line_options)
     sql_home = os.path.dirname(os.path.dirname(which('sql')))
@@ -184,7 +184,7 @@ def main():
     if len(argv) <= 4:
         if not args.file:
             args = get_POM_file(argv)
-        run_POM_file_gui(args.file, args.db_config_dir)
+        run_POM_file_gui(args.file, args.db_config_dir, args.mvnd)
     else:
         run_POM_file(argv)
 
