@@ -41,6 +41,7 @@ clean: ## Cleanup output files.
 install: clean ## Install the Python (test) requirements.
 	$(PIP) install -r requirements.txt
 	$(PIP) install -r test_requirements.txt
+	$(PYTHON) setup.py install
 
 test: mypy pytest ## Test the software.
 

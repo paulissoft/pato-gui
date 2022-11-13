@@ -1,0 +1,4 @@
+#!/usr/bin/env pythonw
+from oracle_tools_gui import main
+
+main()
