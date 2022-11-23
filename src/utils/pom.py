@@ -36,7 +36,6 @@ def initialize():
 
     parser = argparse.ArgumentParser(description='Setup logging')
     parser.add_argument('-d', dest='debug', action='store_true', help='Enable debugging')
-    parser.add_argument('--mvnd', action='store_true', help='Use the Maven daemon')
     parser.add_argument('--db-config-dir', help='The database configuration directory')
     parser.add_argument('file', nargs='?', help='The POM file')
     args, rest = parser.parse_known_args(argv)
@@ -46,8 +45,10 @@ def initialize():
         args.file = os.path.abspath(args.file)
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG if args.debug else logging.INFO)
     logger = logging.getLogger()
-    if args.mvnd and len(rest) == 0 and args.file:
+    if len(rest) == 0 and args.file:
         args.mvnd = 'mvnd' in check_environment()
+    else:
+        args.mvnd = False
     if '-d' in argv:
         argv.remove('-d')
     logger.debug('argv: %s; logger: %s; args: %s' % (argv, logger, args))

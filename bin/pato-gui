@@ -1,4 +1,4 @@
 #!/usr/bin/env pythonw
-from pato import main
+from pato_gui import main
 
 main()

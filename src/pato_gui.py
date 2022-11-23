@@ -4,6 +4,7 @@ The PATO GUI for launching Maven builds based on PATO.
 
 # Python modules
 import os
+import sys
 import argparse
 import subprocess
 from gooey import Gooey, GooeyParser
@@ -24,7 +25,7 @@ MENU = [{'name': 'Help',
                     'url': about.__help_url__},
                    {'type': 'AboutDialog',
                     'menuTitle': 'About',
-                    'name': 'PATO',
+                    'name': 'Paulissoft Application Tools for Oracle (PATO)',
                     'description': 'Run the various PATO commands',
                     'version': about.__version__,
                     'copyright': about.__copyright__,
@@ -44,6 +45,7 @@ DB_CONFIG_DIR = '--db-config-dir'
 
 
 @Gooey(program='Get POM file',
+       target=f"pythonw -u {__file__}",
        show_success_modal=False,
        show_failure_modal=True,
        show_restart_button=True,

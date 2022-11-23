@@ -132,3 +132,5 @@ dmypy.json
 
 # Flycheck generated files
 flycheck_*.py
+
+tmp.txt
