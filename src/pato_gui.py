@@ -1,5 +1,5 @@
 """
-The Oracle Tools GUI for launching Maven builds based on Oracle Tools.
+The PATO GUI for launching Maven builds based on PATO.
 """
 
 # Python modules
@@ -24,8 +24,8 @@ MENU = [{'name': 'Help',
                     'url': about.__help_url__},
                    {'type': 'AboutDialog',
                     'menuTitle': 'About',
-                    'name': 'Oracle Tools',
-                    'description': 'Run the various Oracle Tools commands',
+                    'name': 'PATO',
+                    'description': 'Run the various PATO commands',
                     'version': about.__version__,
                     'copyright': about.__copyright__,
                     'website': about.__url__,

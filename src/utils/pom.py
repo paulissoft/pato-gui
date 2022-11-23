@@ -1,5 +1,5 @@
 """
-The Oracle Tools GUI for launching Maven builds based on Oracle Tools.
+The PATO GUI for launching Maven builds based on PATO.
 """
 
 # Python modules
@@ -36,6 +36,7 @@ def initialize():
 
     parser = argparse.ArgumentParser(description='Setup logging')
     parser.add_argument('-d', dest='debug', action='store_true', help='Enable debugging')
+    parser.add_argument('--mvnd', action='store_true', help='Use the Maven daemon')
     parser.add_argument('--db-config-dir', help='The database configuration directory')
     parser.add_argument('file', nargs='?', help='The POM file')
     args, rest = parser.parse_known_args(argv)
@@ -45,10 +46,8 @@ def initialize():
         args.file = os.path.abspath(args.file)
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG if args.debug else logging.INFO)
     logger = logging.getLogger()
-    if len(rest) == 0 and args.file:        
+    if args.mvnd and len(rest) == 0 and args.file:
         args.mvnd = 'mvnd' in check_environment()
-    else:
-        args.mvnd = False
     if '-d' in argv:
         argv.remove('-d')
     logger.debug('argv: %s; logger: %s; args: %s' % (argv, logger, args))
@@ -60,12 +59,12 @@ def check_environment():
         ['mvn', '-version', '3.3.1', r'Apache Maven ([0-9.]+)', True, True],
         ['perl', '--version', '5.16.0', r'\(v([0-9.]+)\)', True, True],
         ['sql', '-V', '18.0.0.0', r'SQLcl: Release ([0-9.]+)', True, True],
-        ['java', '-version', '1.8.0', r'(?:java|openjdk) version "([0-9.]+).*"', False, True], # version is printed to stderr (!#$?)
+        ['java', '-version', '1.8.0', r'(?:java|openjdk) version "([0-9.]+).*"', False, True],  # version is printed to stderr (!#$?)
         ['javac', '-version', '1.8.0', r'javac ([0-9.]+)', True, True],
-        ['mvnd', '--version', '0.8.0', r'mvnd ([0-9.]+)', True, False], # Maven daemon may be there or not
+        ['mvnd', '--version', '0.8.0', r'mvnd ([0-9.]+)', True, False],  # Maven daemon may be there or not
     ]
     programs_found = []
-    
+
     for i, p in enumerate(programs):
         # p[0]: program
         # p[1]: command line option to get the version
@@ -75,7 +74,7 @@ def check_environment():
         # p[5]: program mandatory?
         proc = subprocess.run(p[0] + ' ' + p[1], shell=True, capture_output=True, text=True)
         assert not(p[5]) or proc.returncode == 0, proc.stderr
-        
+
         if proc.returncode == 0:
             logger.debug('proc: {}'.format(proc))
             expected_version = p[2]
@@ -89,14 +88,14 @@ def check_environment():
             programs_found.append(p[0])
         else:
             logger.info('Command "{0}" failed: {1}'.format(p[0] + ' ' + p[1], proc.stderr))
-            
+
     return programs_found
 
 
 def process_POM(pom_file, db_config_dir):
     """
     Process a single POM file and setup the GUI.
-    The POM file must be either based on an Oracle Tools parent POM for the database or Apex.
+    The POM file must be either based on an PATO parent POM for the database or Apex.
     """
     def determine_POM_settings(pom_file, db_config_dir):
         properties = {}

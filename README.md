@@ -1,8 +1,8 @@
-# oracle-tools-gui
+# pato-gui
 
-A Python GUI for [Oracle tools](https://github.com/paulissoft/oracle-tools) as an alternative for the Maven command line.
+A Python GUI for [PATO](https://github.com/paulissoft/oracle-tools) as an alternative for the Maven command line.
 
-First you probably need to clone Oracle tools so you use its POM files or other POM files having them as parent.
+First you probably need to clone PATO so you use its POM files or other POM files having them as parent.
 
 This GUI would not have been possible without [Gooey](https://github.com/chriskiehl/Gooey).
 
@@ -31,7 +31,7 @@ You may need to use pip3 instead of pip if pip does not point to a Python 3 inst
 
 # Usage
 
-## Launch the Python script src/oracle_tools_gui.py
+## Launch the Python script src/pato_gui.py
 
 This can be done directory from a command prompt or by creating a (Windows)
 shortcut on your Desktop (right mouse click, choose New) or an alias on Unix/Mac OS X.
@@ -40,7 +40,7 @@ Using the command prompt:
 
 ```
 $ cd src
-$ python oracle_tools_gui.py
+$ python pato_gui.py
 ```
 
 Please note that you may need to use python3 when `python --version` displays the Python 2 version.

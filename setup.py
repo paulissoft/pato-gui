@@ -65,7 +65,7 @@ if __name__ == '__main__':
         description=about['__description__'],
         url=about['__url__'],
         license=about['__license__'],
-        keywords=["Oracle", "Tools", "GUI"],
+        keywords=["Oracle", "PATO", "GUI"],
         packages=find_packages('src'),
         package_dir={'': 'src'},
         #namespace_packages=[about['__package_name__']],

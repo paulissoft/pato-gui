@@ -14,17 +14,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2022-11-23
+
+### Added
+
+- [Remove all references to Oracle Tools in documentation.](https://github.com/paulissoft/pato-gui/issues/7)
+
 ## [1.2.0] - 2022-10-13
 
 ### Added
 
-- [It must be possible to use the Maven daemon.](https://github.com/paulissoft/oracle-tools-gui/issues/6)
+- [It must be possible to use the Maven daemon.](https://github.com/paulissoft/pato-gui/issues/6)
 
 ## [1.1.1] - 2022-07-22
 
 ### Fixed
 
-- [When you supply the database configuration directory as a relative path, the execution fails.](https://github.com/paulissoft/oracle-tools-gui/issues/5)
+- [When you supply the database configuration directory as a relative path, the execution fails.](https://github.com/paulissoft/pato-gui/issues/5)
 
 ## [1.1.0] - 2021-09-10
 

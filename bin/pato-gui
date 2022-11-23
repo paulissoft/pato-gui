@@ -1,4 +1,4 @@
 #!/usr/bin/env pythonw
-from oracle_tools_gui import main
+from pato import main
 
 main()

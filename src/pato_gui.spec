@@ -3,8 +3,8 @@
 block_cipher = None
 
 
-a = Analysis(['oracle_tools_gui.py'],
-             pathex=['C:\\dev\\bc\\oracle-tools-gui\\src'],
+a = Analysis(['pato_gui.py'],
+             pathex=['C:\\dev\\bc\\pato-gui\\src'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -21,7 +21,7 @@ exe = EXE(pyz,
           a.scripts,
           [],
           exclude_binaries=True,
-          name='oracle_tools_gui',
+          name='pato_gui',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
@@ -34,4 +34,4 @@ coll = COLLECT(exe,
                strip=False,
                upx=True,
                upx_exclude=[],
-               name='oracle_tools_gui')
+               name='pato_gui')

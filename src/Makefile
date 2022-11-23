@@ -1,4 +1,4 @@
-# Oracle Tools GUI Makefile
+# PATO GUI Makefile
 
 # Just a snippet to stop executing under other make(1) commands
 # that won't understand these lines
@@ -35,7 +35,7 @@ else
 endif
 
 PYINSTALLER_OPTIONS := --clean --noconfirm
-PROGRAM := oracle_tools_gui
+PROGRAM := pato_gui
 
 help: ## This help.
 	@perl -ne 'printf(qq(%-30s  %s\n), $$1, $$2) if (m/^([a-zA-Z_-]+):.*##\s*(.*)$$/)' $(MAKEFILE_LIST)
