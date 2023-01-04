@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [APEX seed and publish.](https://github.com/paulissoft/oracle-tools/issues/107)
+
 ## [2.0.0] - 2022-11-23
 
 ### Added
