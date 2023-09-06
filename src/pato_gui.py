@@ -4,7 +4,7 @@ The PATO GUI for launching Maven builds based on PATO.
 
 # Python modules
 import os
-import sys
+# import sys
 import argparse
 import subprocess
 from gooey import Gooey, GooeyParser
