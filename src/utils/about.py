@@ -6,10 +6,10 @@ __description__ = ' '.join('''
 Paulissoft Application Tools for Oracle (PATO) GUI.
 '''.strip().split())
 __email__ = "paulissoft@gmail.com"
-__version_info__ = ('2', '0', '0')
+__version_info__ = ('2', '1', '0')
 __version__ = '.'.join(__version_info__)
 __license__ = "MIT License"
-__copyright__ = 'Copyright (c) 2021-2022 Gert-Jan Paulissen'
+__copyright__ = 'Copyright (c) 2021-2023 Gert-Jan Paulissen'
 __url__ = "https://github.com/paulissoft/pato-gui"
 __help_url__ = "https://paulissoft.github.io/pato-gui"
 

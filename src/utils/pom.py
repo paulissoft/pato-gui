@@ -74,7 +74,7 @@ def check_environment():
         # p[4]: print stdout (True) or stderr (False)?
         # p[5]: program mandatory?
         proc = subprocess.run(p[0] + ' ' + p[1], shell=True, capture_output=True, text=True)
-        assert not(p[5]) or proc.returncode == 0, proc.stderr
+        assert not (p[5]) or proc.returncode == 0, proc.stderr
 
         if proc.returncode == 0:
             logger.debug('proc: {}'.format(proc))
@@ -129,7 +129,9 @@ def process_POM(pom_file, db_config_dir):
                     logger.debug("adding profile: %s" % (m.group(1)))
                     profiles.add(m.group(1))
                 else:
-                    m = re.match(r'\[echoproperties\] ([a-zA-Z0-9_.-]+)=(.+)$', line)
+                    # GJP 2023-09-06 https://github.com/paulissoft/pato-gui/issues/8
+                    # Change re.match() into re.search() so we can match not only from the beginning but also in the middle.
+                    m = re.search(r'\[echoproperties\] ([a-zA-Z0-9_.-]+)=(.+)$', line)
                     if m:
                         logger.debug("adding property %s = %s" % (m.group(1), m.group(2)))
                         properties[m.group(1)] = m.group(2)

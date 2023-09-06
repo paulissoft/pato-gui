@@ -14,7 +14,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2023-09-06
+
+### Added
+
 - [APEX seed and publish.](https://github.com/paulissoft/oracle-tools/issues/107)
+
+### Fixed
+
+- [The GUI does not start with a message that the property db.config.dir must have been set.](https://github.com/paulissoft/pato-gui/issues/8)
 
 ## [2.0.0] - 2022-11-23
 
