@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 __title__ = 'Paulissoft Application Tools for Oracle (PATO) GUI'
-__package_name__ = 'pato'
+__package_name__ = 'pato-gui'
 __author__ = "Gert-Jan Paulissen"
 __description__ = ' '.join('''
 Paulissoft Application Tools for Oracle (PATO) GUI.

@@ -1,7 +1,7 @@
 ## -*- mode: make -*-
 
 # project specific
-PROJECT  := pato
+PROJECT  := pato-gui
 ABOUT_PY := src/utils/about.py
 BRANCH 	 := main
 
@@ -80,10 +80,10 @@ distclean: ## Runs clean first and then cleans up dependency include files.
 	cd src && $(MAKE) distclean
 
 upload_test: dist ## Upload the package to PyPI test.
-	$(PYTHON) -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+	$(PYTHON) -m twine upload -r pypitest dist/*
 
 upload: dist ## Upload the package to PyPI.
-	$(PYTHON) -m twine upload dist/*
+	$(PYTHON) -m twine upload -r pypi dist/*
 
 tag: ## Tag the package on GitHub.
 	$(GIT) tag -a $(TAG) -m "$(TAG)"
