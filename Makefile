@@ -63,7 +63,7 @@ clean: ## Cleanup the package and remove it from the Python installation path.
 	cd src && $(MAKE) clean
 
 install: ## Install the package to the Python installation path.
-	$(PIP) install -r requirements.txt
+	$(PIP) install -r requirements.txt -r src/requirements.txt
 	$(PIP) install -e .
 
 test: ## Test the package.
@@ -76,7 +76,7 @@ dist: install test ## Prepare the distribution the package by installing and tes
 	$(PYTHON) -m twine check dist/*
 	cd src && $(MAKE) dist
 
-distclean: ## Runs clean first and then cleans up dependency include files. 
+distclean: clean ## Runs clean first and then cleans up dependency include files. 
 	cd src && $(MAKE) distclean
 
 upload_test: dist ## Upload the package to PyPI test.

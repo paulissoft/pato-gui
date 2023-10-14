@@ -80,6 +80,11 @@ if __name__ == '__main__':
         zip_safe=True,
         cmdclass={'test': PyTest},
         extras_require={'test': tests_require},
+        entry_points = {
+            'console_scripts': [
+                'pato-gui = pato_gui:main',
+            ],
+        },
         classifiers=[
             'Development Status :: 6 - Mature',
             'Programming Language :: Python :: 3',
