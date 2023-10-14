@@ -44,8 +44,18 @@ FILE = '--file'
 DB_CONFIG_DIR = '--db-config-dir'
 
 
+def find_executable(executables):
+    for executable in executables:
+        if which(executable) is not None:
+            return executable
+    assert False, f"None of the executables ({executables}) can be found on the PATH."
+
+
+PYTHONW = find_executable(['pythonw3', 'pythonw', 'python3', 'python'])
+
+
 @Gooey(program='Get POM file',
-       target=f"pythonw -u {__file__}",
+       target=f"{PYTHONW} -u {__file__}",
        show_success_modal=False,
        show_failure_modal=True,
        show_restart_button=True,

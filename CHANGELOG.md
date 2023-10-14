@@ -14,6 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - 2023-10-14
+
+### Fixed
+
+- [Pato gui script does not run due to missing pythonw executable.](https://github.com/paulissoft/pato-gui/issues/10)
+- [Python executables must be determined at run-time.](https://github.com/paulissoft/pato-gui/issues/11)
+
 ## [2.1.0] - 2023-09-06
 
 ### Added
