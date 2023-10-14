@@ -1,4 +1,22 @@
-#!/usr/bin/env pythonw
+#!/usr/bin/env sh
+
+# most important first
+EXECUTABLES='pythonw3 pythonw python3 python'
+
+for executable in $EXECUTABLES
+do
+  if `which $executable 1>/dev/null 2>/dev/null`
+  then
+    exec $executable - << 'EOF' "$@"
+import sys
 from pato_gui import main
 
+print(f"pato-gui arguments: {sys.argv[1:]}")
 main()
+EOF
+    exit 0
+  fi
+done
+
+echo "Could not find any Python executable from $EXECUTABLES." 1>&2
+exit 1

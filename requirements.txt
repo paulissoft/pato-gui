@@ -1,3 +1,4 @@
 setuptools
-Gooey
 types-setuptools
+pyinstaller
+twine

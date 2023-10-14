@@ -1,50 +1,107 @@
 # pato-gui
 
+## Table of contents
+
+1. [Introduction](#introduction)
+2. [Installation](#installation)
+   1. [Start a command prompt](#start-command-line-prompt)
+   2. [Installing the binary Python package](#installing-from-binary-package)
+   3. [Installing from source](#installing-from-source)
+3. [Usage](#usage)
+   1. [Launch the GUI](#launch-the-gui)
+   2. [Help](#help)
+
+## Introduction <a name="introduction" />
+
 A Python GUI for [PATO](https://github.com/paulissoft/oracle-tools) as an alternative for the Maven command line.
 
-First you probably need to clone PATO so you use its POM files or other POM files having them as parent.
+First you probably need to clone PATO so you use its Maven POM files or other Maven POM files having them as parent.
 
 This GUI would not have been possible without [Gooey](https://github.com/chriskiehl/Gooey).
 
-# Installation
+## Installation <a name="installation" />
 
 This utility needs Python 3. You can install it using the Microsoft Store
-(accessible via the Windows 10 start button) or just Google `download Python 3`.
+(accessible via the Windows start button) or just Google `download Python 3`.
 
-## Start a command prompt
+A Python alternative that is more cross-platform is
+[Miniconda](https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html),
+that allows you to switch between several Python environments.
 
-Please Google it if you don't know how.
+### Start a command prompt <a name="start-command-line-prompt" />
 
-## Install required Python libraries
+Needed for installating and running the PATO GUI. Please Google it if you don't know how.
 
-Go to the src folder and install them from the command line using pip (or pip3 when `pip --version` displays the Python 2 version):
+First please note that the dollar sign you will see below is the command line prompt sign and not a character you have to type.
+The command line prompt will differ between Operating Systems.
 
-```
-$ cd src
-$ pip install -r requirements.txt
-```
-
-First please note that the dollar sign is the prompt sign and not a character you have to type.
-Next, please do move into src first, since the root also contains a (different) `requirements.txt`.
-
-You may need to use pip3 instead of pip if pip does not point to a Python 3 installation.
-
-# Usage
-
-## Launch the Python script src/pato_gui.py
-
-This can be done directory from a command prompt or by creating a (Windows)
-shortcut on your Desktop (right mouse click, choose New) or an alias on Unix/Mac OS X.
-
-Using the command prompt:
+### Installing the binary Python package <a name="installing-from-binary-package" />
 
 ```
-$ cd src
-$ python pato_gui.py
+$ python3 -m pip install pato-gui
 ```
 
-Please note that you may need to use python3 when `python --version` displays the Python 2 version.
+Now `pato-gui` should be available and this command shows you the help:
 
-## Help
+```
+$ pato-gui -h
+```
 
-In the left top corner of the GUI screen there is a Help button.
+Output:
+
+```
+usage: pato-gui [-h] [-d] [--db-config-dir DB_CONFIG_DIR] [file]
+
+Setup logging
+
+positional arguments:
+  file                  The POM file
+
+options:
+  -h, --help            show this help message and exit
+  -d                    Enable debugging
+  --db-config-dir DB_CONFIG_DIR
+                        The database configuration directory
+```
+
+### Installing from source <a name="installing-from-source" />
+
+Only for die-hards having GNU `make` (usually available on Unix). Clone the Git repo [pato-gui](https://github.com/paulissoft/pato-gui) first.
+
+Go to the root folder and issue:
+
+```
+$ make install
+```
+
+For help:
+
+```
+$ make help
+```
+
+## Usage <a name="usage" />
+
+### Launch the GUI <a name="launch-the-gui" />
+
+```
+$ pato-gui
+```
+
+A graphical interface will pop up.
+
+If you know the Maven POM file already:
+
+```
+$ pato-gui <POM file>
+```
+
+### Help <a name="help" />
+
+From the command line:
+
+```
+$ pato-gui -h
+```
+
+And in the left top corner of the GUI screen there is a Help button.

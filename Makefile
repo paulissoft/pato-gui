@@ -1,22 +1,40 @@
 ## -*- mode: make -*-
 
+# project specific
+PROJECT  := pato-gui
+ABOUT_PY := src/utils/about.py
+BRANCH 	 := main
+
 GIT = git
-PYTHON = python
+# least important first (can not stop easily in foreach)
+PYTHON_EXECUTABLES = python python3 
 MYPY = mypy
 PIP = $(PYTHON) -m pip
-PROJECT = pato
 # Otherwise perl may complain on a Mac
 LANG = C
+# This is GNU specific I guess
+VERSION = $(shell $(PYTHON) $(ABOUT_PY))
+TAG = v$(VERSION)
 
 # OS specific section
 ifeq '$(findstring ;,$(PATH))' ';'
     detected_OS := Windows
     HOME = $(USERPROFILE)
+	  DEVNUL := NUL
+	  WHICH := where
 else
     detected_OS := $(shell uname 2>/dev/null || echo Unknown)
     detected_OS := $(patsubst CYGWIN%,Cygwin,$(detected_OS))
     detected_OS := $(patsubst MSYS%,MSYS,$(detected_OS))
     detected_OS := $(patsubst MINGW%,MSYS,$(detected_OS))
+	  DEVNUL := /dev/null
+	  WHICH := which
+endif
+
+$(foreach e,$(PYTHON_EXECUTABLES),$(if $(shell ${WHICH} ${e} 2>${DEVNUL}),$(eval PYTHON := ${e}),))
+
+ifndef PYTHON
+    $(error Could not find any Python executable from ${PYTHON_EXECUTABLES}.)
 endif
 
 ifdef CONDA_PREFIX
@@ -31,10 +49,10 @@ else
     RM_EGGS = { cd $(home) && find . \( -name $(PROJECT).egg-link -o -name $(PROJECT)-nspkg.pth \) -print -exec rm -i "{}" \; ; }
 endif
 
-.PHONY: clean install test test dist distclean tag
+.PHONY: clean install test dist distclean upload_test upload tag
 
 help: ## This help.
-	@perl -ne 'printf(qq(%-30s  %s\n), $$1, $$2) if (m/^([a-zA-Z_-]+):.*##\s*(.*)$$/)' $(MAKEFILE_LIST)
+	@perl -ne 'printf(qq(%-30s  %s\n), $$1, $$2) if (m/^((?:\w|[.%-])+):.*##\s*(.*)$$/)' $(MAKEFILE_LIST)
 
 clean: ## Cleanup the package and remove it from the Python installation path.
 	$(PYTHON) setup.py clean --all
@@ -45,7 +63,7 @@ clean: ## Cleanup the package and remove it from the Python installation path.
 	cd src && $(MAKE) clean
 
 install: ## Install the package to the Python installation path.
-	$(PIP) install -r requirements.txt
+	$(PIP) install -r requirements.txt -r src/requirements.txt
 	$(PIP) install -e .
 
 test: ## Test the package.
@@ -53,20 +71,21 @@ test: ## Test the package.
 	$(MYPY) --show-error-codes src
 	$(PYTHON) -m pytest --exitfirst
 
-dist: install test ## Build distribution.
+dist: install test ## Prepare the distribution the package by installing and testing it.
+	$(PYTHON) setup.py sdist bdist_wheel
+	$(PYTHON) -m twine check dist/*
 	cd src && $(MAKE) dist
 
-distclean: ## Runs clean first and then cleans up dependency include files. 
+distclean: clean ## Runs clean first and then cleans up dependency include files. 
 	cd src && $(MAKE) distclean
 
-# This is GNU specific I guess
-VERSION = $(shell $(PYTHON) src/utils/about.py)
+upload_test: dist ## Upload the package to PyPI test.
+	$(PYTHON) -m twine upload -r pypitest dist/*
 
-TAG = v$(VERSION)
+upload: dist ## Upload the package to PyPI.
+	$(PYTHON) -m twine upload -r pypi dist/*
 
-BRANCH = main
-
-tag:
+tag: ## Tag the package on GitHub.
 	$(GIT) tag -a $(TAG) -m "$(TAG)"
 	$(GIT) push origin $(TAG)
 	gh release create $(TAG) --target $(BRANCH) --title "Release $(TAG)" --notes "See CHANGELOG"
