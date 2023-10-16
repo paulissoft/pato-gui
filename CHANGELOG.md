@@ -14,7 +14,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.0] - 2023-10-16
+
+### Fixed
+
+- [pip complains about SSL not enabled for Miniconda Python.](https://github.com/paulissoft/pato-gui/issues/14)
+- [Development build does not work on Windows.](https://github.com/paulissoft/pato-gui/issues/15)
+
+### Deprecated
+
+- [Pato GUI must run on Python 3.6 or higher.](https://github.com/paulissoft/pato-gui/issues/13)
+
 ## [3.0.1] - 2023-10-15
+
+### Fixed
 
 - [Pato GUI must run on Python 3.6 or higher.](https://github.com/paulissoft/pato-gui/issues/13)
 
