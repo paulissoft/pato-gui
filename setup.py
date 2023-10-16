@@ -30,17 +30,20 @@ class PyTest(TestCommand):
         errno = pytest.main(shlex.split(self.pytest_args))
         sys.exit(errno)
 
-
+# copy of src/program/requirements.txt
 install_requires = [
-    'bs4',
+    'wxpython>=4.1.0',
+    'Gooey>=1.0.8'
 ]
 
+# copy of test_requirements.txt
 tests_require = [
     'pytest',
     'pytest-cov',
     'pytest-flakes',
     'pytest-pycodestyle',
     'flake8',
+    'mypy'
 ]
 
 
@@ -81,8 +84,8 @@ if __name__ == '__main__':
         cmdclass={'test': PyTest},
         extras_require={'test': tests_require},
         entry_points = {
-            'console_scripts': [
-                'pato-gui = pato_gui:main',
+            'gui_scripts': [
+                'pato-gui = program.pato_gui:main',
             ],
         },
         classifiers=[

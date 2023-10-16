@@ -9,7 +9,7 @@ do
   then
     exec $executable - << 'EOF' "$@"
 import sys
-from pato_gui import main
+from program.pato_gui import main
 
 print(f"pato-gui arguments: {sys.argv[1:]}")
 main()
