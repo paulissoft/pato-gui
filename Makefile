@@ -11,7 +11,8 @@ PYTHON_EXECUTABLES = python python3
 MYPY = mypy
 # The -O flag is used to suppress error messages related to eggs.
 # See also https://stackoverflow.com/questions/43177200/assertionerror-egg-link-does-not-match-installed-location-of-reviewboard-at.
-PIP = $(PYTHON) -O -m pip
+VERBOSE := 
+PIP = $(PYTHON) -O -m pip $(VERBOSE)
 # Otherwise perl may complain on a Mac
 LANG = C
 # This is GNU specific I guess
@@ -62,14 +63,14 @@ help: ## This help.
 #	@echo home: $(home)
 
 init: ## Fulfill the requirements
-	$(PIP) install -r requirements.txt -r src/requirements.txt
+	$(PIP) install -r development_requirements.txt -r src/program/requirements.txt
 
 clean: init ## Cleanup the package and remove it from the Python installation path.
 	$(PYTHON) setup.py clean --all
 	$(PYTHON) -Bc "import pathlib; [p.unlink() for p in pathlib.Path('.').rglob('*.py[co]')]"
 	$(PYTHON) -Bc "import pathlib; [p.rmdir() for p in pathlib.Path('.').rglob('__pycache__')]"
 	$(PYTHON) -Bc "import shutil; import os; [shutil.rmtree(d) for d in ['.pytest_cache', '.mypy_cache', 'dist', 'htmlcov', '.coverage'] if os.path.isdir(d)]"
-	cd src && $(MAKE) clean
+	cd src && cd program && $(MAKE) clean
 
 install: init ## Install the package to the Python installation path.
 	$(PIP) install -e .
@@ -82,10 +83,10 @@ test: init ## Test the package.
 dist: install test ## Prepare the distribution the package by installing and testing it.
 	$(PYTHON) setup.py sdist bdist_wheel
 	$(PYTHON) -m twine check dist/*
-	cd src && $(MAKE) dist
+	cd src && cd program && $(MAKE) dist
 
 distclean: clean ## Runs clean first and then cleans up dependency include files. 
-	cd src && $(MAKE) distclean
+	cd src && cd program && $(MAKE) distclean
 
 upload_test: dist ## Upload the package to PyPI test.
 	$(PYTHON) -m twine upload -r pypitest dist/*
