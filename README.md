@@ -5,8 +5,7 @@
 1. [Introduction](#introduction)
 2. [Installation](#installation)
    1. [Start a command prompt](#start-command-line-prompt)
-   2. [Installing the binary Python package](#installing-from-binary-package)
-   3. [Installing from source](#installing-from-source)
+   2. [Installing from source](#installing-from-source)
 3. [Usage](#usage)
    1. [Launch the GUI](#launch-the-gui)
    2. [Help](#help)
@@ -35,6 +34,21 @@ Needed for installating and running the PATO GUI. Please Google it if you don't 
 First please note that the dollar sign you will see below is the command line prompt sign and not a character you have to type.
 The command line prompt will differ between Operating Systems.
 
+### Installing from source <a name="installing-from-source" />
+
+Clone the Git repo [pato-gui](https://github.com/paulissoft/pato-gui) first.
+
+Go to the root folder and issue:
+
+```
+$ python3 -O -m pip install -r src/program/requirements.txt
+$ python3 -O -m pip install -e .
+```
+
+You may need to use `python`instead of `python3`
+
+<!-- 
+
 ### Installing the binary Python package <a name="installing-from-binary-package" />
 
 ```
@@ -47,45 +61,14 @@ Now `pato-gui` should be available and this command shows you the help:
 $ pato-gui -h
 ```
 
-Output:
-
-```
-usage: pato-gui [-h] [-d] [--db-config-dir DB_CONFIG_DIR] [file]
-
-Setup logging
-
-positional arguments:
-  file                  The POM file
-
-options:
-  -h, --help            show this help message and exit
-  -d                    Enable debugging
-  --db-config-dir DB_CONFIG_DIR
-                        The database configuration directory
-```
-
-### Installing from source <a name="installing-from-source" />
-
-Only for die-hards having GNU `make` (usually available on Unix). Clone the Git repo [pato-gui](https://github.com/paulissoft/pato-gui) first.
-
-Go to the root folder and issue:
-
-```
-$ make install
-```
-
-For help:
-
-```
-$ make help
-```
+-->
 
 ## Usage <a name="usage" />
 
 ### Launch the GUI <a name="launch-the-gui" />
 
 ```
-$ pato-gui
+$ python3 <pato-gui root>/src/program/pato_gui.py
 ```
 
 A graphical interface will pop up.
@@ -93,7 +76,7 @@ A graphical interface will pop up.
 If you know the Maven POM file already:
 
 ```
-$ pato-gui <POM file>
+$ python3 <pato-gui root>/src/program/pato_gui.py <POM file>
 ```
 
 ### Help <a name="help" />
@@ -101,7 +84,7 @@ $ pato-gui <POM file>
 From the command line:
 
 ```
-$ pato-gui -h
+$ python3 <pato-gui root>/src/program/pato_gui.py -h
 ```
 
 And in the left top corner of the GUI screen there is a Help button.
