@@ -176,7 +176,7 @@ def run_POM_file(argv):
         extra_maven_command_line_options.remove(EXTRA_MAVEN_COMMAND_LINE_OPTIONS)
     except Exception:
         pass
-    cmd = '{0} {1} {2} -P{3} -Ddb.config.dir={4} -Ddb={5}'.format('mvnd' if args.mvnd else 'mvn', FILE, args.file, args.action, args.db_config_dir, args.db)
+    cmd = '{0} {1} {2} -B -P{3} -Ddb.config.dir={4} -Ddb={5}'.format('mvnd' if args.mvnd else 'mvn', FILE, args.file, args.action, args.db_config_dir, args.db)
     if len(extra_maven_command_line_options) > 0:
         cmd += ' ' + ' '.join(extra_maven_command_line_options)
     sql_home = os.path.dirname(os.path.dirname(which('sql')))
