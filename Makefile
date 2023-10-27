@@ -2,7 +2,7 @@
 
 # project specific
 PROJECT  := pato-gui
-ABOUT_PY := src/utils/about.py
+ABOUT_PY := src/program/about.py
 BRANCH 	 := main
 
 GIT = git
@@ -49,7 +49,7 @@ ifdef CONDA_PYTHON_EXE
 PYTHON := $(subst \,/,$(CONDA_PYTHON_EXE))
 else
 # On Windows those executables may exist but not functional yet (can be used to install) so use Python -V
-$(foreach e,$(PYTHON_EXECUTABLES),$(if $(shell ${e}${EXE} -V 3>${DEVNUL}),$(eval PYTHON := ${e}${EXE}),))
+$(foreach e,$(PYTHON_EXECUTABLES),$(if $(shell ${e}${EXE} -V),$(eval PYTHON := ${e}${EXE}),))
 endif
 
 ifndef PYTHON
@@ -75,7 +75,7 @@ clean: init ## Cleanup the package and remove it from the Python installation pa
 install: init ## Install the package to the Python installation path.
 	$(PIP) install -e .
 
-test: init ## Test the package.
+test: ## Test the package.
 	$(PIP) install -r test_requirements.txt
 	$(MYPY) --show-error-codes src
 	$(PYTHON) -m pytest --exitfirst

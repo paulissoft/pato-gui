@@ -1,5 +1,5 @@
-from utils import about
-from utils.pom import db_order
+import program.about as about
+from program.pom import db_order
 
 
 def test_about():
@@ -16,6 +16,10 @@ def test_db_order():
     dbs = ['d', 'a', 'b', 'c']
     dbs_sorted_actual = sorted(dbs, key=db_order)
     dbs_sorted_expected = ['a', 'b', 'c', 'd']
+    assert dbs_sorted_actual == dbs_sorted_expected
+    dbs = ['orcl', 'tst']
+    dbs_sorted_actual = sorted(dbs, key=db_order)
+    dbs_sorted_expected = ['tst', 'orcl']  # dev, tst|test, acc, prd|prod have numbers 1 thru 4, the rest 256 + ascii first character
     assert dbs_sorted_actual == dbs_sorted_expected
 
 

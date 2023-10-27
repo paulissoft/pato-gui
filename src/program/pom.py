@@ -22,11 +22,13 @@ __all__ = ['db_order', 'initialize', 'check_environment', 'process_POM']
 logger = None
 
 
+DB_ORDER = {'dev': 1, 'tst': 2, 'test': 2, 'acc': 3, 'prod': 4, 'prd': 4}
+
+
 def db_order(db):
-    for i, e in enumerate(['dev', 'tst', 'test', 'acc', 'prod', 'prd']):
-        if e in db.lower():
-            return i
-    return db.lower()
+    if db.lower() in DB_ORDER:
+        return DB_ORDER[db.lower()]
+    return 256 + ord(db.lower()[0])
 
 
 def initialize():
