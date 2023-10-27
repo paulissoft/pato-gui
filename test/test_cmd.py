@@ -1,5 +1,5 @@
-import program.about as about
-from program.pom import db_order
+from utils import about
+from utils.pom import db_order
 
 
 def test_about():

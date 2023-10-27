@@ -2,7 +2,7 @@
 
 # project specific
 PROJECT  := pato-gui
-ABOUT_PY := src/program/about.py
+ABOUT_PY := src/utils/about.py
 BRANCH 	 := main
 
 GIT = git

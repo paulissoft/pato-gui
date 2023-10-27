@@ -12,7 +12,7 @@ from distutils.core import setup
 # To prevent importing about and thereby breaking the coverage info we use this
 # exec hack
 about = {}
-with open('src/program/about.py', mode='r', encoding="utf-8") as fp:
+with open('src/utils/about.py', mode='r', encoding="utf-8") as fp:
     exec(fp.read(), about)
 
 
