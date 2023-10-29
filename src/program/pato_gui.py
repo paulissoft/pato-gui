@@ -56,6 +56,7 @@ def find_executable(executables):
 
 
 PYTHONW = find_executable(['pythonw3', 'pythonw', 'python3', 'python'])
+PYTHON = find_executable(['python3', 'python'])
 
 
 @Gooey(program='Get POM file',
