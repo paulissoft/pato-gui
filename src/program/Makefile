@@ -14,24 +14,25 @@ MAKEFLAGS += --no-builtin-variables
 
 # OS specific section (see https://stackoverflow.com/questions/714100/os-detecting-makefile/52062069#52062069)
 ifeq '$(findstring ;,$(PATH))' ';'
-    detected_OS := Windows
+detected_OS := Windows
 else
-    detected_OS := $(shell uname 2>/dev/null || echo Unknown)
-    detected_OS := $(patsubst CYGWIN%,Cygwin,$(detected_OS))
-    detected_OS := $(patsubst MSYS%,MSYS,$(detected_OS))
-    detected_OS := $(patsubst MINGW%,MSYS,$(detected_OS))
+detected_OS := $(shell uname 2>/dev/null || echo Unknown)
+detected_OS := $(patsubst CYGWIN%,Cygwin,$(detected_OS))
+detected_OS := $(patsubst MSYS%,MSYS,$(detected_OS))
+detected_OS := $(patsubst MINGW%,MSYS,$(detected_OS))
 endif
 
 ifeq ($(detected_OS),Windows)
-    CAT := type
-    RM_F := del /q
-    RM_FR := rmdir /q/s
-    NOWHERE := nul
+CAT     := type
+RM_F    := del /q
+SHELL   := cmd
+RM_FR   := rmdir /q/s
+NOWHERE := nul
 else
-    CAT := cat
-    RM_F := rm -f
-    RM_FR := rm -fr
-    NOWHERE := /dev/null
+CAT     := cat
+RM_F    := rm -f
+RM_FR   := rm -fr
+NOWHERE := /dev/null
 endif
 
 PYINSTALLER_OPTIONS := --clean --noconfirm
