@@ -1,5 +1,5 @@
-from utils import about
-from utils.pom import db_order
+import pato_gui.about as about
+from pato_gui.pom import db_order
 
 
 def test_about():
