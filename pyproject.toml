@@ -1,6 +1,99 @@
-[build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
+# This project was generated with 0.3.16 using template: https://github.com/beeware/briefcase-template@v0.3.16
+[tool.briefcase]
+project_name = "Pato GUI"
+bundle = "com.paulissoft.pato-gui"
+version = "0.0.1"
+url = "https://github.com/paulissoft/pato-gui"
+license = "Other"
+author = "Gert-Jan Paulissen"
+author_email = "paulissoft@gmail.com"
+
+[tool.briefcase.app.pato-gui]
+formal_name = "Pato GUI"
+description = "A GUI for installing Oracle database applications"
+long_description = """More details about the app should go here.
+"""
+icon = "src/pato_gui/resources/pato-gui"
+sources = [
+    "src/pato_gui",
 ]
-build-backend = "setuptools.build_meta"
+test_sources = [
+    "tests",
+]
+
+requires = [
+    "wxpython>=4.1.0",
+    "Gooey>=1.0.8",
+]
+test_requires = [
+    "pytest",
+		"pytest-cov",
+		"pytest-flakes",
+		"pytest-pycodestyle",
+		"flake8",
+		"mypy",
+]
+
+[tool.briefcase.app.pato-gui.macOS]
+universal_build = true
+requires = [
+    "std-nslog~=1.0.0"
+]
+
+[tool.briefcase.app.pato-gui.linux]
+requires = [
+]
+
+[tool.briefcase.app.pato-gui.linux.system.debian]
+system_requires = [
+]
+
+system_runtime_requires = [
+]
+
+[tool.briefcase.app.pato-gui.linux.system.rhel]
+system_requires = [
+]
+
+system_runtime_requires = [
+]
+
+[tool.briefcase.app.pato-gui.linux.system.suse]
+system_requires = [
+]
+
+system_runtime_requires = [
+]
+
+[tool.briefcase.app.pato-gui.linux.system.arch]
+system_requires = [
+]
+
+system_runtime_requires = [
+]
+
+[tool.briefcase.app.pato-gui.linux.appimage]
+manylinux = "manylinux2014"
+
+system_requires = [
+]
+linuxdeploy_plugins = []
+
+[tool.briefcase.app.pato-gui.linux.flatpak]
+flatpak_runtime = "org.freedesktop.Platform"
+flatpak_runtime_version = "22.08"
+flatpak_sdk = "org.freedesktop.Sdk"
+
+[tool.briefcase.app.pato-gui.windows]
+requires = []
+
+# Mobile deployments
+[tool.briefcase.app.pato-gui.iOS]
+supported = false
+
+[tool.briefcase.app.pato-gui.android]
+supported = false
+
+# Web deployments
+[tool.briefcase.app.pato-gui.web]
+supported = false
