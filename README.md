@@ -68,7 +68,7 @@ $ pato-gui -h
 ### Launch the GUI <a name="launch-the-gui" />
 
 ```
-$ python3 <pato-gui root>/src/program/pato_gui.py
+$ python3 <pato-gui root>/src/pato_gui/program.py
 ```
 
 A graphical interface will pop up.
@@ -76,7 +76,7 @@ A graphical interface will pop up.
 If you know the Maven POM file already:
 
 ```
-$ python3 <pato-gui root>/src/program/pato_gui.py <POM file>
+$ python3 <pato-gui root>/src/pato_gui/program.py <POM file>
 ```
 
 ### Help <a name="help" />
@@ -84,7 +84,7 @@ $ python3 <pato-gui root>/src/program/pato_gui.py <POM file>
 From the command line:
 
 ```
-$ python3 <pato-gui root>/src/program/pato_gui.py -h
+$ python3 <pato-gui root>/src/pato_gui/program.py -h
 ```
 
 And in the left top corner of the GUI screen there is a Help button.
