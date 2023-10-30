@@ -9,7 +9,9 @@ except ImportError:
 
 
 # Find the name of the module that was used to start the app
-app_module = sys.modules['__main__'].__package__
+# Hard code value for app_module, otherwise "briefcase dev --test" gives
+# E importlib.metadata.PackageNotFoundError: No package metadata was found for tests
+app_module = 'pato_gui'  # sys.modules['__main__'].__package__
 # Retrieve the app's metadata
 metadata = importlib_metadata.metadata(app_module)
 
