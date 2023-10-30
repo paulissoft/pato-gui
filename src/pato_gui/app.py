@@ -5,27 +5,32 @@ The PATO GUI for launching Maven builds based on PATO.
 # Python modules
 import os
 import sys
+
 try:
     from importlib import metadata as importlib_metadata
 except ImportError:
     # Backwards compatibility - importlib.metadata was added in Python 3.8
     import importlib_metadata
+    
 import argparse
 import subprocess
 from gooey import Gooey, GooeyParser
 from shutil import which
 
-# f"" syntax
+# f"" syntax: Python 3.6
 if sys.version_info < (3, 6):
     sys.exit("Please use Python 3.6+")
 
-
-    # Find the name of the module that was used to start the app
-# Hard code value for app_module, otherwise "briefcase dev --test" gives
-# E importlib.metadata.PackageNotFoundError: No package metadata was found for tests
-app_module = 'pato_gui'  # sys.modules['__main__'].__package__
-# Retrieve the app's metadata
-metadata = importlib_metadata.metadata(app_module)
+#     
+for app_module in [sys.modules['__main__'].__package__ , 'pato_gui']:
+    # Retrieve the app's metadata
+    try:
+        metadata = importlib_metadata.metadata(app_module)
+        if 'Formal-Name' in metadata:
+            break
+    except importlib_metadata.PackageNotFoundError as err:
+        pass
+    
 
 __title__ = metadata['Formal-Name'] if metadata['Formal-Name'] else "PatoGui"
 # __package_name__ = 'pato-gui'

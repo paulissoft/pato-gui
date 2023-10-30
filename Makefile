@@ -29,8 +29,7 @@ ifdef CONDA_PYTHON_EXE
 # look no further
 PYTHON := $(subst \,/,$(CONDA_PYTHON_EXE))
 else
-# On Windows those executables may exist but not functional yet (can be used to install) so use Python -V
-$(foreach e,$(PYTHON_EXECUTABLES),$(if $(shell ${e}${EXE} -V),$(eval PYTHON := ${e}${EXE}),))
+PYTHON := $(shell perl -MFile::Which -e 'foreach (@ARGV) { if (which($$_)) { print; exit 0; } }' $(PYTHON_EXECUTABLES))
 endif
 
 ifndef PYTHON
