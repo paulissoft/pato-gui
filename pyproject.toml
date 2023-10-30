@@ -4,13 +4,15 @@ project_name = "Pato GUI"
 bundle = "com.paulissoft.pato-gui"
 version = "0.0.1"
 url = "https://github.com/paulissoft/pato-gui"
-license = "Other"
+help_url = "https://paulissoft.github.io/pato-gui"
+copyright = 'Copyright (c) 2021-2023 Gert-Jan Paulissen'
+license = "MIT License"
 author = "Gert-Jan Paulissen"
 author_email = "paulissoft@gmail.com"
 
 [tool.briefcase.app.pato-gui]
 formal_name = "Pato GUI"
-description = "A GUI for installing Oracle database applications"
+description = "Paulissoft Application Tools for Oracle (PATO) GUI"
 long_description = """More details about the app should go here.
 """
 icon = "src/pato_gui/resources/pato-gui"
@@ -35,7 +37,7 @@ test_requires = [
 ]
 
 [tool.briefcase.app.pato-gui.macOS]
-universal_build = true
+universal_build = false
 requires = [
     "std-nslog~=1.0.0"
 ]
