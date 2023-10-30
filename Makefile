@@ -58,7 +58,6 @@ test: init ## Test the package.
 dist: test ## Prepare the distribution package by building, testing and running it.
 	briefcase create --no-input
 	briefcase build -u -r
-	briefcase run --test
 	briefcase run
 	briefcase package --adhoc-sign
 
