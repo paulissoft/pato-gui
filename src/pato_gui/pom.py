@@ -26,8 +26,9 @@ DB_ORDER = {'dev': 1, 'tst': 2, 'test': 2, 'acc': 3, 'prod': 4, 'prd': 4}
 
 
 def db_order(db):
-    if db.lower() in DB_ORDER:
-        return DB_ORDER[db.lower()]
+    for key in DB_ORDER.keys():
+        if db.lower().endswith(key):
+            return DB_ORDER[key]
     return 256 + ord(db.lower()[0])
 
 
@@ -143,7 +144,7 @@ def process_POM(pom_file, db_config_dir):
     logger.debug('process_POM()')
     properties, profiles = determine_POM_settings(pom_file, db_config_dir)
     apex_profiles = ['apex-seed-publish', 'apex-export', 'apex-import']
-    db_profiles = ['db-info', 'db-install', 'db-code-check', 'db-test', 'db-generate-ddl-full', 'db-generate-ddl-incr']
+    db_profiles = ['db-info', 'db-install', 'db-code-check', 'db-test', 'db-generate-ddl-full']  # , 'db-generate-ddl-incr']
     if profiles.issuperset(set(apex_profiles)):
         profiles = apex_profiles
     elif profiles.issuperset(set(db_profiles)):

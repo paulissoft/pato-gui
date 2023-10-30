@@ -2,7 +2,8 @@
 [tool.briefcase]
 project_name = "Pato GUI"
 bundle = "com.paulissoft.pato-gui"
-version = "0.0.1"
+# keep in sync with src/pato_gui/about.py
+version = "3.2.0"
 url = "https://github.com/paulissoft/pato-gui"
 help_url = "https://paulissoft.github.io/pato-gui"
 copyright = 'Copyright (c) 2021-2023 Gert-Jan Paulissen'
