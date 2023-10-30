@@ -11,7 +11,8 @@ author = "Gert-Jan Paulissen"
 author_email = "paulissoft@gmail.com"
 
 [tool.briefcase.app.pato-gui]
-formal_name = "Pato GUI"
+# no spaces in formal_name (!)
+formal_name = "pato-gui"
 description = "Paulissoft Application Tools for Oracle (PATO) GUI"
 long_description = """More details about the app should go here.
 """
@@ -26,14 +27,15 @@ test_sources = [
 requires = [
     "wxpython>=4.1.0",
     "Gooey>=1.0.8",
+    "setuptools>=42",  # for pkg_resources in pom.py
 ]
 test_requires = [
     "pytest",
-		"pytest-cov",
-		"pytest-flakes",
-		"pytest-pycodestyle",
-		"flake8",
-		"mypy",
+    "pytest-cov",
+    "pytest-flakes",
+    "pytest-pycodestyle",
+    "flake8",
+    "mypy",
 ]
 
 [tool.briefcase.app.pato-gui.macOS]
