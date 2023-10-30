@@ -25,9 +25,9 @@ test_sources = [
 ]
 
 requires = [
-    "wxpython>=4.1.0",
+    "wxpython",
     "Gooey>=1.0.8",
-    "setuptools>=42",  # for pkg_resources in pom.py
+    "setuptools>=42,<=65.6.3",  # for pkg_resources in pom.py (not too old and not too young since deprecated after 65.6.3)
 ]
 test_requires = [
     "pytest",
