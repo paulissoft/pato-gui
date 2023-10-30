@@ -2,7 +2,7 @@
 
 # project specific
 PROJECT  := pato-gui
-ABOUT_PY := src/pato_gui/about.py
+ABOUT_PY := src/pato_gui/app.py
 BRANCH 	 := main
 
 GIT = git
@@ -12,7 +12,7 @@ PYTHON_EXECUTABLES = python python3
 # Otherwise perl may complain on a Mac
 LANG = C
 # This is GNU specific I guess
-VERSION = $(shell $(PYTHON) $(ABOUT_PY))
+VERSION = $(shell $(PYTHON) $(ABOUT_PY) version)
 TAG = v$(VERSION)
 
 # OS specific section

@@ -1,5 +1,6 @@
 import sys
-from pato_gui.program import main
+
+from pato_gui.app import main
 
 
 if __name__ == '__main__':
