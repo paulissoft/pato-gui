@@ -12,8 +12,8 @@ author = "Gert-Jan Paulissen"
 author_email = "paulissoft@gmail.com"
 
 [tool.briefcase.app.pato-gui]
-# no spaces in formal_name (!)
-formal_name = "pato-gui"
+# no spaces in formal_name and no dashes neither since this will turn up as PatoGui.app in /Applications for the Mac (!)
+formal_name = "PatoGui"
 description = "Paulissoft Application Tools for Oracle (PATO) GUI"
 long_description = """More details about the app should go here.
 """
