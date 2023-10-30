@@ -65,4 +65,4 @@ tag: ## Tag the package on GitHub.
 	$(GIT) tag -a $(TAG) -m "$(TAG)"
 	$(GIT) push origin $(TAG)
 	gh release create $(TAG) --target $(BRANCH) --title "Release $(TAG)" --notes "See CHANGELOG"
-	find dist -name pato-gui-$(VERSION).dmg -exec gh release upload $(TAG) {} --clobber \;
+	-find dist -name pato-gui-$(VERSION).dmg -exec gh release upload $(TAG) {} --clobber \;
