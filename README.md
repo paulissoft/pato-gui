@@ -276,6 +276,8 @@ A graphical interface will pop up.
 
 ### Problems <a name="problems" />
 
+#### PATH problems <a name="path-problems" />
+
 You may encounter problems in the GUI like:
 
 ```
@@ -334,6 +336,27 @@ $ sudo launchctl config user path /usr/bin:/bin:/usr/sbin:/sbin:/opt/oracle/sqlc
 ```
 
 You must reboot for changes to take effect.
+
+#### Python problems
+
+```
+Traceback (most recent call last):
+  File "/Applications/PatoGui.app/Contents/Resources/app/pato_gui/app.py", line 413, in <module>
+    main()
+  File "/Applications/PatoGui.app/Contents/Resources/app/pato_gui/app.py", line 404, in main
+    run_POM_file_gui(args.file, args.db_config_dir, args.mvnd)
+  File "/Users/gpaulissen/Library/Python/3.9/lib/python/site-packages/gooey/python_bindings/gooey_decorator.py", line 128, in inner2
+    return payload(*args, **kwargs)
+  File "/Applications/PatoGui.app/Contents/Resources/app/pato_gui/app.py", line 356, in run_POM_file_gui
+    args = parser.parse_args(list(pom_file))
+  File "/Users/gpaulissen/Library/Python/3.9/lib/python/site-packages/gooey/python_bindings/gooey_parser.py", line 125, in parse_args
+    return self.parser.parse_args(args, namespace)
+  File "/Users/gpaulissen/Library/Python/3.9/lib/python/site-packages/gooey/python_bindings/gooey_decorator.py", line 95, in run_gooey
+    from gooey.gui import application
+  File "/Users/gpaulissen/Library/Python/3.9/lib/python/site-packages/gooey/gui/application.py", line 5, in <module>
+    import wx
+ModuleNotFoundError: No module named 'wx'
+```
 
 ### Help <a name="help" />
 
