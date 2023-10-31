@@ -1,9 +1,12 @@
 ## -*- mode: make -*-
 
 # project specific
-PROJECT  := pato-gui
-VERSION_PY := src/pato_gui/version.py
-BRANCH 	 := main
+PROJECT    := pato-gui
+BRANCH 	   := main
+VERSION_PY := src/pato_gui/app.py
+
+# PYTHON is determined later so use = and not :=
+VERSION     = $(shell $(PYTHON) $(VERSION_PY) __version__)
 
 GIT = git
 # least important first (can not stop easily in foreach)
@@ -12,7 +15,6 @@ PYTHON_EXECUTABLES = python python3
 # Otherwise perl may complain on a Mac
 LANG = C
 # This is GNU specific I guess
-VERSION = $(shell $(PYTHON) $(VERSION_PY))
 TAG = v$(VERSION)
 
 # OS specific section
@@ -59,7 +61,6 @@ test: init ## Test the package.
 dist: test ## Prepare the distribution package by building, testing and running it.
 	briefcase create --no-input
 	briefcase build -u -r
-	briefcase run
 	briefcase package --adhoc-sign
 
 tag: ## Tag the package on GitHub.

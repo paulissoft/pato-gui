@@ -15,8 +15,36 @@ import logging
 # from pkg_resources import packaging
 import pkg_resources
 
-# local import
-import pato_gui as about
+try:
+    from importlib import metadata as importlib_metadata
+except ImportError:
+    # Backwards compatibility - importlib.metadata was added in Python 3.8
+    import importlib_metadata
+    
+# pato_gui needed for testing
+for app_module in [sys.modules['__main__'].__package__ , 'pato_gui']:
+    # Retrieve the app's metadata
+    try:
+        metadata = importlib_metadata.metadata(app_module)
+        if 'Formal-Name' in metadata:
+            break
+    except importlib_metadata.PackageNotFoundError as err:
+        pass
+    
+
+__title__ = metadata['Formal-Name'] if metadata['Formal-Name'] else "PatoGui"
+# __package_name__ = 'pato-gui'
+__author__ = metadata['Author']
+__description__ = metadata['Summary']
+__email__ = metadata['Author-email']
+__version__ = '3.2.0'
+__version_info__ = tuple(__version__.split("."))
+__license__ = 'MIT License'
+__copyright__ = 'Copyright (c) 2021-2023 Gert-Jan Paulissen'
+__url__ = metadata['Home-page']
+__help_url__ = "https://paulissoft.github.io/pato-gui"
+
+
 
 # f"" syntax: Python 3.6
 if sys.version_info < (3, 6):
@@ -24,23 +52,36 @@ if sys.version_info < (3, 6):
 
 logger = None
 
-__all__ = ['db_order', 'initialize', 'check_environment', 'process_POM', 'main']
+__all__ = ['db_order',
+           'initialize',
+           'check_environment',
+           'process_POM',
+           'main',
+           '__title__',
+           '__author__',
+           '__email__',
+           '__version_info__',
+           '__version__',
+           '__license__',
+           '__copyright__',
+           '__url__',
+           '__help_url__']
 
 
 DEFAULT_SIZE = (1200, 800)
 MENU = [{'name': 'Help',
          'items': [{'type': 'Link',
                     'menuTitle': 'Documentation',
-                    'url': about.__help_url__},
+                    'url': __help_url__},
                    {'type': 'AboutDialog',
                     'menuTitle': 'About',
                     'name': 'Paulissoft Application Tools for Oracle (PATO)',
                     'description': 'Run the various PATO commands',
-                    'version': about.__version__,
-                    'copyright': about.__copyright__,
-                    'website': about.__url__,
-                    'author(s)': about.__author__,
-                    'license': about.__license__}]}]
+                    'version': __version__,
+                    'copyright': __copyright__,
+                    'website': __url__,
+                    'author(s)': __author__,
+                    'license': __license__}]}]
 TERMINAL_FONT_FAMILY = 'Courier New'
 
 MVND = '--mvnd'
@@ -363,4 +404,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    if sys.argv[-1] == '__version__':
+        print(__version__)
+    else:
+        main()

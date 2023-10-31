@@ -1,4 +1,4 @@
-import pato_gui as about
+import pato_gui.app as about
 from pato_gui.app import db_order
 
 
