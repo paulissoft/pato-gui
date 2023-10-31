@@ -140,6 +140,8 @@ def check_environment():
     ]
     programs_found = []
 
+    logger.info(f"Environment variable PATH: {os.environ['PATH']}")
+    logger.info(f"Environment variable PYTHONPATH: {os.environ['PYTHONPATH']}")
     for i, p in enumerate(programs):
         # p[0]: program
         # p[1]: command line option to get the version
