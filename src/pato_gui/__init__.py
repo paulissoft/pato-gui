@@ -28,11 +28,3 @@ __copyright__ = 'Copyright (c) 2021-2023 Gert-Jan Paulissen'
 __url__ = metadata['Home-page']
 __help_url__ = "https://paulissoft.github.io/pato-gui"
 
-def create_dict(*args):
-    d = dict()
-    for i in args:
-        d[i] = eval(i)
-    return d
-
-about = create_dict('__title__', '__author__', '__email__', '__version_info__', '__version__', '__license__', '__copyright__', '__url__', '__help_url__')
-

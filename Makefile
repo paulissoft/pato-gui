@@ -2,7 +2,7 @@
 
 # project specific
 PROJECT  := pato-gui
-ABOUT_PY := src/pato_gui/app.py
+VERSION_PY := src/pato_gui/version.py
 BRANCH 	 := main
 
 GIT = git
@@ -12,22 +12,23 @@ PYTHON_EXECUTABLES = python python3
 # Otherwise perl may complain on a Mac
 LANG = C
 # This is GNU specific I guess
-VERSION = $(shell $(PYTHON) $(ABOUT_PY) version)
+VERSION = $(shell $(PYTHON) $(VERSION_PY))
 TAG = v$(VERSION)
 
 # OS specific section
 ifeq '$(findstring ;,$(PATH))' ';'
 detected_OS := Windows
+GREP        := find
 else
 detected_OS := $(shell uname 2>/dev/null || echo Unknown)
 detected_OS := $(patsubst CYGWIN%,Cygwin,$(detected_OS))
 detected_OS := $(patsubst MSYS%,MSYS,$(detected_OS))
 detected_OS := $(patsubst MINGW%,MSYS,$(detected_OS))
+GREP        := grep
 endif
 
 ifdef CONDA_PYTHON_EXE
-# look no further
-PYTHON := $(subst \,/,$(CONDA_PYTHON_EXE))
+$(error Can not use a conda (Miniconda or Anaconda) environment: please use a default Python distribution)
 else
 PYTHON := $(shell perl -MFile::Which -e 'foreach (@ARGV) { if (which($$_)) { print; exit 0; } }' $(PYTHON_EXECUTABLES))
 endif
@@ -43,6 +44,7 @@ help: ## This help.
 #	@echo home: $(home)
 
 init: ## Just install the requirements
+	python3 -m pip install --upgrade --quiet briefcase
 	briefcase dev --no-run
 
 clean: ## Cleanup the package and remove it from the Python installation path.
@@ -63,5 +65,7 @@ dist: test ## Prepare the distribution package by building, testing and running 
 tag: ## Tag the package on GitHub.
 	$(GIT) tag -a $(TAG) -m "$(TAG)"
 	$(GIT) push origin $(TAG)
+
+upload: ## Upload the package to GitHub.
 	gh release create $(TAG) --target $(BRANCH) --title "Release $(TAG)" --notes "See CHANGELOG"
 	-find dist -name pato-gui-$(VERSION).dmg -exec gh release upload $(TAG) {} --clobber \;
