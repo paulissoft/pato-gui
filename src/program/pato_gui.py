@@ -22,7 +22,8 @@ if sys.version_info < (3, 6):
 logger = None
 
 
-DEFAULT_SIZE = (1200, 800)
+DEFAULT_SIZE1 = (1200, 600)
+DEFAULT_SIZE2 = (1500, 750)
 MENU = [{'name': 'Help',
          'items': [{'type': 'Link',
                     'menuTitle': 'Documentation',
@@ -66,7 +67,7 @@ PYTHON = find_executable(['python3', 'python'])
        show_restart_button=True,
        disable_progress_bar_animation=True,
        clear_before_run=True,
-       default_size=DEFAULT_SIZE,
+       default_size=DEFAULT_SIZE1,
        menu=MENU,
        terminal_font_family=TERMINAL_FONT_FAMILY)
 def get_POM_file(argv):
@@ -101,7 +102,7 @@ def get_POM_file(argv):
        disable_progress_bar_animation=False,
        clear_before_run=True,
        required_cols=3,
-       default_size=DEFAULT_SIZE,
+       default_size=DEFAULT_SIZE2,
        menu=MENU,
        terminal_font_family=TERMINAL_FONT_FAMILY)
 def run_POM_file_gui(pom_file, db_config_dir, mvnd):
