@@ -26,8 +26,9 @@ DB_ORDER = {'dev': 1, 'tst': 2, 'test': 2, 'acc': 3, 'prod': 4, 'prd': 4}
 
 
 def db_order(db):
-    if db.lower() in DB_ORDER:
-        return DB_ORDER[db.lower()]
+    for key in DB_ORDER.keys():
+        if db.lower().endswith(key):
+            return DB_ORDER[key]
     return 256 + ord(db.lower()[0])
 
 
