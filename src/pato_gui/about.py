@@ -6,7 +6,7 @@ import re
 __all__ = ['__package_name__', '__version__', '__version_info__', '__title__', '__author__', '__email__', '__license__', '__copyright__', '__url__', '__help_url__']
 
 
-toml = pkgutil.get_data(__package__, "../../pyproject.toml").decode("utf-8")
+toml = pkgutil.get_data('pato_gui', "../../pyproject.toml").decode("utf-8")
 
 name_regexp = re.compile(r'''^name = "([^"]*)"''', re.M)
 match = name_regexp.search(toml)
