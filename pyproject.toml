@@ -5,10 +5,22 @@ description = "Paulissoft Application Tools for Oracle (PATO) GUI."
 authors = ["Gert-Jan Paulissen <paulissoft@gmail.com>"]
 license = "MIT"
 readme = "README.md"
+packages = [{include = "pato_gui", from = "src"}]
+include = ["CHANGELOG.md"]
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = ">=3.8.1,<3.13"
+gooey = "^1.0.8.1"
+pyinstaller = "^6.1.0"
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+pytest-cov = "^4.1.0"
+pytest-flakes = "^4.0.5"
+pytest-pycodestyle = "^2.3.1"
+flake8 = "^6.1.0"
+mypy = "^1.6.1"
+twine = "^4.0.2"
 
 [build-system]
 requires = ["poetry-core"]

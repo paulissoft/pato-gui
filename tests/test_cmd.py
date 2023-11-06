@@ -1,5 +1,5 @@
-from utils import about
-from utils.pom import db_order
+import about
+from pom import db_order
 
 
 def test_about():

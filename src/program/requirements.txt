@@ -1,2 +1,0 @@
-wxpython>=4.1.0
-Gooey>=1.0.8
