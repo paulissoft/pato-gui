@@ -9,6 +9,7 @@
 3. [Usage](#usage)
    1. [Launch the GUI](#launch-the-gui)
    2. [Help](#help)
+4. [Links](#links)
 
 ## Introduction <a name="introduction" />
 
@@ -88,3 +89,15 @@ $ python3 <pato-gui root>/src/program/pato_gui.py -h
 ```
 
 And in the left top corner of the GUI screen there is a Help button.
+
+## Links <a name="links" />
+
+- [using python-poetry to publish to test.pypi.org](https://stackoverflow.com/questions/68882603/using-python-poetry-to-publish-to-test-pypi-org)
+
+### Migrate to Poetry
+
+- [Migrating a project to Poetry](https://browniebroke.com/blog/migrating-project-to-poetry/)
+- [Convert Python requirements to Poetry format](https://browniebroke.com/blog/convert-requirements-to-pyproject/)
+- [Specify docs dependency groups with Poetry and Read the Docs](https://browniebroke.com/blog/specify-docs-dependency-groups-with-poetry-and-read-the-docs/)
+- [Convert a Poetry package to the src layout](https://browniebroke.com/blog/convert-existing-poetry-to-src-layout/)
+- [Use poetry to create binary distributable with pyinstaller on package?](https://stackoverflow.com/questions/76145761/use-poetry-to-create-binary-distributable-with-pyinstaller-on-package)

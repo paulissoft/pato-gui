@@ -1,4 +1,19 @@
 # -*- coding: utf-8 -*-
+
+"""
+import pkgutil
+import re
+
+version_regexp = re.compile(r'''^version = "([^"]*)"''', re.M)
+
+data = pkgutil.get_data(__package__, "../pyproject.toml")
+match = version_regexp.search(data.decode("utf-8"))
+if match:
+    __version__ = match.group(1)
+else:  # pragma: no cover
+    raise RuntimeError("Unable to find version string")
+"""
+
 __title__ = 'Paulissoft Application Tools for Oracle (PATO) GUI'
 __package_name__ = 'pato-gui'
 __author__ = "Gert-Jan Paulissen"
