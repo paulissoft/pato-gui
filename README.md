@@ -102,3 +102,6 @@ And in the left top corner of the GUI screen there is a Help button.
 - [Convert a Poetry package to the src layout](https://browniebroke.com/blog/convert-existing-poetry-to-src-layout/)
 - [Use poetry to create binary distributable with pyinstaller on package?](https://stackoverflow.com/questions/76145761/use-poetry-to-create-binary-distributable-with-pyinstaller-on-package)
 - [Setup Guide for Poetry Dev Environment on Apple Silicon.](https://github.com/rybodiddly/Poetry-Pyenv-Homebrew-Numpy-TensorFlow-on-Apple-Silicon-M1)
+- [https://stackoverflow.com/questions/70851048/does-it-make-sense-to-use-conda-poetry](https://stackoverflow.com/questions/70851048/does-it-make-sense-to-use-conda-poetry)
+- [Conda and Poetry: A Harmonious Fusion](https://medium.com/@silvinohenriqueteixeiramalta/conda-and-poetry-a-harmonious-fusion-8116895b6380#:~:text=Conda%20and%20Poetry%20are%20two,dependency%20resolution%2C%20and%20package%20distribution.)
+- [Welcome to Mamba’s documentation!](https://mamba.readthedocs.io/en/latest/index.html)
