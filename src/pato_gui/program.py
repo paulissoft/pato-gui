@@ -11,8 +11,8 @@ from gooey import Gooey, GooeyParser
 from shutil import which
 
 # local module(s)
-import about
-from pom import db_order, initialize, process_POM
+from pato_gui import about
+from pato_gui.pom import db_order, initialize, process_POM
 
 # f"" syntax
 if sys.version_info < (3, 6):
