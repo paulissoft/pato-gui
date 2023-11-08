@@ -13,19 +13,19 @@ pato-gui-build = "pato_gui.pyinstaller:install"
 pato-gui = "pato_gui.program:main"
 
 [tool.poetry.dependencies]
-python = ">=3.8.1,<3.11"
+python = ">=3.8.1,<3.13"
 gooey = "^1.0.8.1"
-pyinstaller = "^6.1.0"
-pillow = "9.0.0"
+pyinstaller = "6.1.0"
+# pillow = "9.0.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.4.3"
-pytest-cov = "^4.1.0"
-pytest-flakes = "^4.0.5"
-pytest-pycodestyle = "^2.3.1"
-flake8 = "^6.1.0"
-mypy = "^1.6.1"
-twine = "^4.0.2"
+# pytest = "^7.4.3"
+# pytest-cov = "^4.1.0"
+# pytest-flakes = "^4.0.5"
+# pytest-pycodestyle = "^2.3.1"
+# flake8 = "^6.1.0"
+# mypy = "^1.6.1"
+# twine = "^4.0.2"
 
 [build-system]
 requires = ["poetry-core"]

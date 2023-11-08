@@ -105,3 +105,5 @@ And in the left top corner of the GUI screen there is a Help button.
 - [https://stackoverflow.com/questions/70851048/does-it-make-sense-to-use-conda-poetry](https://stackoverflow.com/questions/70851048/does-it-make-sense-to-use-conda-poetry)
 - [Conda and Poetry: A Harmonious Fusion](https://medium.com/@silvinohenriqueteixeiramalta/conda-and-poetry-a-harmonious-fusion-8116895b6380#:~:text=Conda%20and%20Poetry%20are%20two,dependency%20resolution%2C%20and%20package%20distribution.)
 - [Welcome to Mamba’s documentation!](https://mamba.readthedocs.io/en/latest/index.html)
+- [How to Use Poetry with Conda for Package Management on a Specific Python Version](https://michhar.github.io/2023-07-poetry-with-conda/)
+- [Examples of using conda + poetry for cross-platform Python package portability](https://shandou.medium.com/examples-of-using-conda-poetry-for-cross-platform-python-package-portability-711a7450a522)

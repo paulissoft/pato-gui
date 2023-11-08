@@ -4,6 +4,7 @@
 PROJECT  := pato-gui
 ABOUT_PY := src/utils/about.py
 BRANCH 	 := main
+PYTHON_VERSION := 3.12
 
 GIT = git
 # least important first (can not stop easily in foreach)
@@ -69,6 +70,18 @@ endif
 help: ## This help.
 	@perl -ne 'printf(qq(%-30s  %s\n), $$1, $$2) if (m/^((?:\w|[.%-])+):.*##\s*(.*)$$/)' $(MAKEFILE_LIST)
 #	@echo home: $(home)
+
+env-bootstrap: ## Bootstrap an environment
+	micromamba env create --yes --name $(PROJECT) python=$(PYTHON_VERSION)
+	micromamba env export --from-history > environment.yml
+
+env-create: ## Create Conda environment (only once)
+	micromamba env create --yes --name $(PROJECT) --file environment.yml
+
+env-update: env-remove env-create ## Update Conda environment
+
+env-remove: ## Remove Conda environment
+	-micromamba env remove --yes --name $(PROJECT)
 
 init: ## Fulfill the requirements
 	$(PIP) install -r development_requirements.txt -r src/program/requirements.txt
