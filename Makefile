@@ -17,7 +17,6 @@ TAG := v$(VERSION)
 
 help: ## This help.
 	@perl -ne 'printf(qq(%-30s  %s\n), $$1, $$2) if (m/^((?:\w|[.%-])+):.*##\s*(.*)$$/)' $(MAKEFILE_LIST)
-#	@echo home: $(home)
 
 env-bootstrap: ## Bootstrap an environment
 	micromamba env create --yes --name $(PROJECT) python=$(PYTHON_VERSION)
@@ -39,6 +38,9 @@ clean: ## Cleanup the environment
 
 install: init ## Install the package to the Python installation path.
 	$(ACTIVATE_ENV) && poetry install
+
+run: install ## Run the PATO GUI
+	$(ACTIVATE_ENV) && poetry run pato-gui
 
 test: install ## Test the package.
 	$(ACTIVATE_ENV) && poetry run pytest
