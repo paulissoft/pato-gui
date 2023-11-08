@@ -9,9 +9,9 @@ GIT = git
 MYPY = mypy
 # Otherwise perl may complain on a Mac
 LANG = C
-ACTIVATE_ENV = micromamba activate $(PROJECT) 
-VERSION = $(shell $(ACTIVATE_ENV) && poetry run pato-gui-version)
-TAG = v$(VERSION)
+ACTIVATE_ENV = eval "$$(micromamba shell hook --shell bash)" && micromamba activate $(PROJECT) 
+VERSION := $(shell $(ACTIVATE_ENV) && poetry run pato-gui-version)
+TAG := v$(VERSION)
 
 .PHONY: clean install test dist distclean upload_test upload tag
 
@@ -35,13 +35,13 @@ init: ## Fulfill the requirements
 	$(ACTIVATE_ENV) && poetry build
 
 clean: ## Cleanup the environment
-	$(GIT) -d -r -x -i
+	$(GIT) clean -d -x -i
 
 install: init ## Install the package to the Python installation path.
-	$(ACTIVATE_ENV) && poetry install --sync
+	$(ACTIVATE_ENV) && poetry install
 
 test: install ## Test the package.
-	$(ACTIVATE_ENV) && poetry pytest
+	$(ACTIVATE_ENV) && poetry run pytest
 
 # dist: install test ## Prepare the distribution the package by installing and testing it.
 
@@ -49,7 +49,7 @@ test: install ## Test the package.
 
 # upload: dist ## Upload the package to PyPI.
 
-# tag: ## Tag the package on GitHub.
-#	$(GIT) tag -a $(TAG) -m "$(TAG)"
-#	$(GIT) push origin $(TAG)
-#	gh release create $(TAG) --target $(BRANCH) --title "Release $(TAG)" --notes "See CHANGELOG"
+tag: ## Tag the package on GitHub.
+	$(GIT) tag -a $(TAG) -m "$(TAG)"
+	$(GIT) push origin $(TAG)
+	gh release create $(TAG) --target $(BRANCH) --title "Release $(TAG)" --notes "See CHANGELOG"

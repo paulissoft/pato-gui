@@ -9,5 +9,5 @@ def install():
         path_to_main,
         '--onefile',
         '--windowed',
-        # other pyinstaller options... 
+        # other pyinstaller options...
     ])
