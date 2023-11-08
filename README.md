@@ -96,6 +96,7 @@ And in the left top corner of the GUI screen there is a Help button.
 
 ### Migrate to Poetry
 
+- [Poetyr Read The Docs](https://python-poetry.org/docs/)
 - [Migrating a project to Poetry](https://browniebroke.com/blog/migrating-project-to-poetry/)
 - [Convert Python requirements to Poetry format](https://browniebroke.com/blog/convert-requirements-to-pyproject/)
 - [Specify docs dependency groups with Poetry and Read the Docs](https://browniebroke.com/blog/specify-docs-dependency-groups-with-poetry-and-read-the-docs/)
