@@ -14,15 +14,15 @@ VERSION         = $(shell poetry run pato-gui-version)
 # Idem
 TAG 	          = v$(VERSION)
 
-# Goals not needing a Conda environment
-GOALS_ENV_NO   := help env-bootstrap env-create env-update env-remove upload_test upload tag
-# Goals needing a Conda environment
-GOALS_ENV_YES  := init clean install run test dist
+# Goals not needing a Mamba (Conda) environment
+GOALS_ENV_NO   := help env-bootstrap env-create env-update env-remove clean upload_test upload tag
+# Goals needing a Mamba (Conda) environment (all the poetry commands)
+GOALS_ENV_YES  := init install run test dist
 
 ifneq '$(filter $(GOALS_ENV_YES),$(MAKECMDGOALS))' ''
 
 ifneq '$(CONDA_DEFAULT_ENV)' '$(PROJECT)'
-$(error Set up Conda environment (conda activate $(PROJECT)))
+$(error Set up Conda environment ($(MAMBA) activate $(PROJECT)))
 endif
 
 endif
@@ -36,13 +36,13 @@ env-bootstrap: ## Bootstrap an environment
 	$(MAMBA) env create --name $(PROJECT) python=$(PYTHON_VERSION)
 	$(MAMBA) env export --from-history > environment.yml
 
-env-create: ## Create Conda environment (only once)
+env-create: ## Create Mamba (Conda) environment (only once)
 	$(MAMBA) env create --name $(PROJECT) --file environment.yml
 
-env-update: ## Update Conda environment
+env-update: ## Update Mamba (Conda) environment
 	$(MAMBA) env update --name $(PROJECT) --file environment.yml --prune
 
-env-remove: ## Remove Conda environment
+env-remove: ## Remove Mamba (Conda) environment
 	-$(MAMBA) env remove --name $(PROJECT)
 
 init: ## Fulfill the requirements

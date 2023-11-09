@@ -21,7 +21,7 @@ This GUI would not have been possible without [Gooey](https://github.com/chriski
 
 ## Installation <a name="installation" />
 
-This utility needs Python 3. T be able to support several Python environments on your computer I prefer [Mamba from Miniforge](https://github.com/conda-forge/miniforge), see the installation instructions there. Mamba is an environment manager similar to Conda variants like Anaconda, [Miniconda](https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html) but much faster.
+This utility needs Python 3. To be able to support several Python environments on your computer I prefer [Mamba from Miniforge](https://github.com/conda-forge/miniforge), see the installation instructions there. Mamba is an environment manager similar to Conda variants like Anaconda, [Miniconda](https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html) but much faster. Together with [Poetry](https://python-poetry.org/docs/) this is a good combination to distribute libraries to PyPi.
 
 ### Start a command prompt <a name="start-command-line-prompt" />
 
@@ -34,14 +34,20 @@ The command line prompt will differ between Operating Systems.
 
 Clone the Git repo [pato-gui](https://github.com/paulissoft/pato-gui) first.
 
-Go to the root folder and issue:
+Go to the root folder and issue this command for more help:
 
 ```
 $ make help
-$ 
 ```
 
-You may need to use `python`instead of `python3`
+To run from the start:
+
+```
+$ make env-create
+$ mambo activate pato-gui
+$ make test
+$ make run
+```
 
 <!-- 
 
@@ -63,8 +69,16 @@ $ pato-gui -h
 
 ### Launch the GUI <a name="launch-the-gui" />
 
+This:
+
 ```
-$ python3 <pato-gui root>/src/program/pato_gui.py
+$ make run
+```
+
+or this:
+
+```
+$ python3 <pato-gui root>/src/pato_gui/pato-gui.py
 ```
 
 A graphical interface will pop up.
@@ -72,7 +86,7 @@ A graphical interface will pop up.
 If you know the Maven POM file already:
 
 ```
-$ python3 <pato-gui root>/src/program/pato_gui.py <POM file>
+$ python3 <pato-gui root>/src/pato_gui/pato-gui.py <POM file>
 ```
 
 ### Help <a name="help" />
@@ -80,7 +94,7 @@ $ python3 <pato-gui root>/src/program/pato_gui.py <POM file>
 From the command line:
 
 ```
-$ python3 <pato-gui root>/src/program/pato_gui.py -h
+$ python3 <pato-gui root>/src/pato_gui/pato-gui.py -h
 ```
 
 And in the left top corner of the GUI screen there is a Help button.
@@ -91,7 +105,7 @@ And in the left top corner of the GUI screen there is a Help button.
 
 ### Migrate to Poetry
 
-- [Poetyr Read The Docs](https://python-poetry.org/docs/)
+- [Poetry Read The Docs](https://python-poetry.org/docs/)
 - [Migrating a project to Poetry](https://browniebroke.com/blog/migrating-project-to-poetry/)
 - [Convert Python requirements to Poetry format](https://browniebroke.com/blog/convert-requirements-to-pyproject/)
 - [Specify docs dependency groups with Poetry and Read the Docs](https://browniebroke.com/blog/specify-docs-dependency-groups-with-poetry-and-read-the-docs/)
