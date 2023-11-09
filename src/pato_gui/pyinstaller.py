@@ -4,10 +4,7 @@ from pathlib import Path
 
 def install():
     HERE = Path(__file__).parent.absolute()
-    path_to_main = str(HERE / "pato-gui.py")
+    spec_file = str(HERE / "PatoGui.spec")
     PyInstaller.__main__.run([
-        path_to_main,
-        '--onefile',
-        '--windowed',
-        # other pyinstaller options...
+        spec_file
     ])

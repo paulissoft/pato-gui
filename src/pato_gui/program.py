@@ -61,7 +61,7 @@ PYTHON = find_executable(['python3', 'python'])
 
 
 @Gooey(program='Get POM file',
-       target=f"{PYTHONW} -u {__file__}",
+#       target=f"{PYTHONW} -u {__file__}",
        show_success_modal=False,
        show_failure_modal=True,
        show_restart_button=True,
@@ -205,7 +205,3 @@ def main():
         run_POM_file_gui(args.file, args.db_config_dir, args.mvnd)
     else:
         run_POM_file(argv)
-
-
-if __name__ == '__main__':
-    main()
