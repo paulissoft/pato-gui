@@ -61,7 +61,6 @@ PYTHON = find_executable(['python3', 'python'])
 
 
 @Gooey(program='Get POM file',
-#       target=f"{PYTHONW} -u {__file__}",
        show_success_modal=False,
        show_failure_modal=True,
        show_restart_button=True,

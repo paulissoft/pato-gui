@@ -6,6 +6,7 @@
 2. [Installation](#installation)
    1. [Start a command prompt](#start-command-line-prompt)
    2. [Installing from source](#installing-from-source)
+   3. [Installing from PyPi](#installing-from-pypi)
 3. [Usage](#usage)
    1. [Launch the GUI](#launch-the-gui)
    2. [Help](#help)
@@ -21,11 +22,11 @@ This GUI would not have been possible without [Gooey](https://github.com/chriski
 
 ## Installation <a name="installation" />
 
-This utility needs Python 3. To be able to support several Python environments on your computer I prefer [Mamba from Miniforge](https://github.com/conda-forge/miniforge), see the installation instructions there. Mamba is an environment manager similar to Conda variants like Anaconda, [Miniconda](https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html) but much faster. Together with [Poetry](https://python-poetry.org/docs/) this is a good combination to distribute libraries to PyPi.
+This utility needs Python 3. In order to support several Python versions/environments on your computer, I prefer [Mamba from the Miniforge project on GitHub](https://github.com/conda-forge/miniforge). See the installation instructions there if you want to use that distribution. Mamba is an environment manager similar to Conda variants like Anaconda and [Miniconda](https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html) but much faster. Together with [Poetry](https://python-poetry.org/docs/) this is a good combination to distribute libraries to PyPi.
 
 ### Start a command prompt <a name="start-command-line-prompt" />
 
-Needed for installating and running the PATO GUI. Please Google it if you don't know how.
+Needed for installing and running the PATO GUI. Please Google it if you don't know how to start a command prompt.
 
 First please note that the dollar sign you will see below is the command line prompt sign and not a character you have to type.
 The command line prompt will differ between Operating Systems.
@@ -49,9 +50,7 @@ $ make test
 $ make run
 ```
 
-<!-- 
-
-### Installing the binary Python package <a name="installing-from-binary-package" />
+### Installing from PyPi <a name="installing-from-pypi" />
 
 ```
 $ python3 -m pip install pato-gui
@@ -63,7 +62,13 @@ Now `pato-gui` should be available and this command shows you the help:
 $ pato-gui -h
 ```
 
--->
+You can also build an executable and put it somewhere in your path:
+
+```
+$ pato-gui-build
+```
+
+In the `dist/PatoGui` folder you will find the `PatoGui` executable.
 
 ## Usage <a name="usage" />
 
@@ -75,10 +80,10 @@ This:
 $ make run
 ```
 
-or this:
+or using the executable this:
 
 ```
-$ python3 <pato-gui root>/src/pato_gui/pato-gui.py
+$ <path to PatoGui>/PatoGui
 ```
 
 A graphical interface will pop up.
@@ -89,12 +94,24 @@ If you know the Maven POM file already:
 $ python3 <pato-gui root>/src/pato_gui/pato-gui.py <POM file>
 ```
 
+or:
+
+```
+$ <path to PatoGui>/PatoGui <POM file>
+```
+
 ### Help <a name="help" />
 
 From the command line:
 
 ```
 $ python3 <pato-gui root>/src/pato_gui/pato-gui.py -h
+```
+
+or:
+
+```
+$ <path to PatoGui>/PatoGui -h
 ```
 
 And in the left top corner of the GUI screen there is a Help button.

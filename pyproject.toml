@@ -19,7 +19,7 @@ classifiers = [
 pato-gui-about = "pato_gui.about:main"
 pato-gui-version = "pato_gui.about:version"
 pato-gui-build = "pato_gui.pyinstaller:install"
-pato-gui = "pato_gui.pato-gui:main"
+pato-gui = "pato_gui.program:main"
 
 [tool.poetry.dependencies]
 python = ">=3.11,<3.13"
