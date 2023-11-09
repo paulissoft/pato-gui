@@ -14,11 +14,20 @@ VERSION         = $(shell poetry run pato-gui-version)
 # Idem
 TAG 	          = v$(VERSION)
 
-gpaulissen@macmini2020 pato-gui % conda activate pato-gui
-(pato-gui) gpaulissen@macmini2020 pato-gui % set | grep CONDA       
-CONDA_DEFAULT_ENV=pato-gui
+# Goals not needing a Conda environment
+GOALS_ENV_NO   := help env-bootstrap env-create env-update env-remove upload_test upload tag
+# Goals needing a Conda environment
+GOALS_ENV_YES  := init clean install run test dist
 
-.PHONY: help env-bootstrap env-create env-update env-remove init clean install run test dist upload_test upload tag
+ifneq '$(filter $(GOALS_ENV_YES),$(MAKECMDGOALS))' ''
+
+ifneq '$(CONDA_DEFAULT_ENV)' '$(PROJECT)'
+$(error Set up Conda environment (conda activate $(PROJECT)))
+endif
+
+endif
+
+.PHONY: $(GOALS_ENV_NO) $(GOALS_ENV_YES)
 
 help: ## This help.
 	@perl -ne 'printf(qq(%-30s  %s\n), $$1, $$2) if (m/^((?:\w|[.%-])+):.*##\s*(.*)$$/)' $(MAKEFILE_LIST)
@@ -30,7 +39,8 @@ env-bootstrap: ## Bootstrap an environment
 env-create: ## Create Conda environment (only once)
 	$(MAMBA) env create --name $(PROJECT) --file environment.yml
 
-env-update: env-remove env-create ## Update Conda environment
+env-update: ## Update Conda environment
+	$(MAMBA) env update --name $(PROJECT) --file environment.yml --prune
 
 env-remove: ## Remove Conda environment
 	-$(MAMBA) env remove --name $(PROJECT)

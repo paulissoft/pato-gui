@@ -13,3 +13,4 @@ dependencies:
   - mypy
   - pytest
   - wxpython
+  - numpy==1.24.4
