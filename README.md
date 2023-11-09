@@ -21,12 +21,7 @@ This GUI would not have been possible without [Gooey](https://github.com/chriski
 
 ## Installation <a name="installation" />
 
-This utility needs Python 3. You can install it using the Microsoft Store
-(accessible via the Windows start button) or just Google `download Python 3`.
-
-A Python alternative that is more cross-platform is
-[Miniconda](https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html),
-that allows you to switch between several Python environments.
+This utility needs Python 3. T be able to support several Python environments on your computer I prefer [Mamba from Miniforge](https://github.com/conda-forge/miniforge), see the installation instructions there. Mamba is an environment manager similar to Conda variants like Anaconda, [Miniconda](https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html) but much faster.
 
 ### Start a command prompt <a name="start-command-line-prompt" />
 
@@ -42,8 +37,8 @@ Clone the Git repo [pato-gui](https://github.com/paulissoft/pato-gui) first.
 Go to the root folder and issue:
 
 ```
-$ python3 -O -m pip install -r src/program/requirements.txt
-$ python3 -O -m pip install -e .
+$ make help
+$ 
 ```
 
 You may need to use `python`instead of `python3`
@@ -108,3 +103,4 @@ And in the left top corner of the GUI screen there is a Help button.
 - [Welcome to Mamba’s documentation!](https://mamba.readthedocs.io/en/latest/index.html)
 - [How to Use Poetry with Conda for Package Management on a Specific Python Version](https://michhar.github.io/2023-07-poetry-with-conda/)
 - [Examples of using conda + poetry for cross-platform Python package portability](https://shandou.medium.com/examples-of-using-conda-poetry-for-cross-platform-python-package-portability-711a7450a522)
+- [Mambaforge/miniforge](https://github.com/conda-forge/miniforge)

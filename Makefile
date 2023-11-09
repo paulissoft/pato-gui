@@ -1,49 +1,54 @@
 ## -*- mode: make -*-
 
 # project specific
-PROJECT  := pato-gui
-BRANCH 	 := main
+PROJECT        := pato-gui
+BRANCH 	 	     := main
 PYTHON_VERSION := 3.12
 
-GIT = git
-MYPY = mypy
+MAMBA          := mamba
+GIT 			     := git
 # Otherwise perl may complain on a Mac
-LANG = C
-ACTIVATE_ENV = eval "$$(micromamba shell hook --shell bash)" && micromamba activate $(PROJECT) 
-VERSION := $(shell $(ACTIVATE_ENV) && poetry run pato-gui-version)
-TAG := v$(VERSION)
+LANG           := C
+# Must be invoked dynamic, i.e. the environment may not be ready yet
+VERSION         = $(shell poetry run pato-gui-version)
+# Idem
+TAG 	          = v$(VERSION)
 
-.PHONY: clean install test dist distclean upload_test upload tag
+gpaulissen@macmini2020 pato-gui % conda activate pato-gui
+(pato-gui) gpaulissen@macmini2020 pato-gui % set | grep CONDA       
+CONDA_DEFAULT_ENV=pato-gui
+
+.PHONY: help env-bootstrap env-create env-update env-remove init clean install run test dist upload_test upload tag
 
 help: ## This help.
 	@perl -ne 'printf(qq(%-30s  %s\n), $$1, $$2) if (m/^((?:\w|[.%-])+):.*##\s*(.*)$$/)' $(MAKEFILE_LIST)
 
 env-bootstrap: ## Bootstrap an environment
-	micromamba env create --yes --name $(PROJECT) python=$(PYTHON_VERSION)
-	micromamba env export --from-history > environment.yml
+	$(MAMBA) env create --name $(PROJECT) python=$(PYTHON_VERSION)
+	$(MAMBA) env export --from-history > environment.yml
 
 env-create: ## Create Conda environment (only once)
-	micromamba env create --yes --name $(PROJECT) --file environment.yml
+	$(MAMBA) env create --name $(PROJECT) --file environment.yml
 
 env-update: env-remove env-create ## Update Conda environment
 
 env-remove: ## Remove Conda environment
-	-micromamba env remove --yes --name $(PROJECT)
+	-$(MAMBA) env remove --name $(PROJECT)
 
 init: ## Fulfill the requirements
-	$(ACTIVATE_ENV) && poetry build
+	poetry build
 
 clean: ## Cleanup the environment
 	$(GIT) clean -d -x -i
 
 install: init ## Install the package to the Python installation path.
-	$(ACTIVATE_ENV) && poetry install
+	poetry install
 
 run: install ## Run the PATO GUI
-	$(ACTIVATE_ENV) && poetry run pato-gui
+	poetry run pato-gui
 
 test: install ## Test the package.
-	$(ACTIVATE_ENV) && poetry run pytest
+	poetry run pytest
 
 # dist: install test ## Prepare the distribution the package by installing and testing it.
 
