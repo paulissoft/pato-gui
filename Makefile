@@ -17,7 +17,7 @@ TAG 	          = v$(VERSION)
 # Goals not needing a Mamba (Conda) environment
 GOALS_ENV_NO   := help env-bootstrap env-create env-update env-remove clean upload_test upload tag
 # Goals needing a Mamba (Conda) environment (all the poetry commands)
-GOALS_ENV_YES  := init install run test dist
+GOALS_ENV_YES  := init install pato-gui pato-gui-build test dist
 
 ifneq '$(filter $(GOALS_ENV_YES),$(MAKECMDGOALS))' ''
 
@@ -54,8 +54,11 @@ clean: ## Cleanup the environment
 install: init ## Install the package to the Python installation path.
 	poetry install
 
-run: install ## Run the PATO GUI
-	poetry run pato-gui
+pato-gui: install ## Run the PATO GUI
+	poetry run $@
+
+pato-gui-build: install ## Build the PATO GUI exectable
+	poetry run $@
 
 test: install ## Test the package.
 	poetry run pytest
