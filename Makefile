@@ -10,14 +10,14 @@ GIT 			     := git
 # Otherwise perl may complain on a Mac
 LANG           := C
 # Must be invoked dynamic, i.e. the environment may not be ready yet
-VERSION         = $(shell poetry run pato-gui-version)
+VERSION         = $(shell poetry version -s)
 # Idem
 TAG 	          = v$(VERSION)
 
 # Goals not needing a Mamba (Conda) environment
-GOALS_ENV_NO   := help env-bootstrap env-create env-update env-remove clean upload_test upload tag
+GOALS_ENV_NO   := help env-bootstrap env-create env-update env-remove clean tag
 # Goals needing a Mamba (Conda) environment (all the poetry commands)
-GOALS_ENV_YES  := init install pato-gui pato-gui-build test dist
+GOALS_ENV_YES  := init install pato-gui pato-gui-build test dist upload_test upload 
 
 ifneq '$(filter $(GOALS_ENV_YES),$(MAKECMDGOALS))' ''
 
@@ -63,11 +63,13 @@ pato-gui-build: install ## Build the PATO GUI exectable
 test: install ## Test the package.
 	poetry run pytest
 
-# dist: install test ## Prepare the distribution the package by installing and testing it.
+dist: install test ## Prepare the distribution the package by installing and testing it.
 
-# upload_test: dist ## Upload the package to PyPI test.
+upload_test: dist ## Upload the package to PyPI test.
+	poetry publish -r test-pypi
 
-# upload: dist ## Upload the package to PyPI.
+upload: dist ## Upload the package to PyPI.
+	poetry publish
 
 tag: ## Tag the package on GitHub.
 	$(GIT) tag -a $(TAG) -m "$(TAG)"
