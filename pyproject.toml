@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pato-gui"
-version = "3.2.1"
+version = "3.2.0"
 description = "Paulissoft Application Tools for Oracle (PATO) GUI."
 authors = ["Gert-Jan Paulissen <paulissoft@gmail.com>"]
 license = "MIT"
@@ -23,10 +23,9 @@ pato-gui = "pato_gui.program:main"
 
 [tool.poetry.dependencies]
 python = ">=3.11,<3.13"
-gooey = ">=1.0.8"
 pyinstaller = "6.1.0"
-numpy = "1.24.4"
 # pillow = "9.0.0"
+gooey = "^1.0.8.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"

@@ -10,7 +10,4 @@ dependencies:
   - mamba
   - pip # pip must be mentioned explicitly, or conda-lock will fail
   - poetry
-  - mypy
-  - pytest
   - wxpython
-  - numpy==1.24.4
