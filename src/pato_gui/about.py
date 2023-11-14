@@ -1,38 +1,20 @@
 # -*- coding: utf-8 -*-
-from pathlib import Path
-
-try:
-    import tomllib
-except ImportError:
-    import tomli as tomllib
+from importlib.metadata import metadata
 
 __all__ = ['__package_name__', '__version__', '__title__', '__author__', '__email__', '__license__', '__copyright__', '__url__', '__help_url__']
 
 
-def read_toml(f):
-    global __package_name__, __version__, __title__, __author__, __email__, __license__, __copyright__, __url__, __help_url__
-    data = tomllib.load(f)
-    __package_name__ = data['tool']['poetry']['name']
-    __version__ = data['tool']['poetry']['version']
-    __title__ = data['tool']['poetry']['description']
-    author_email = data['tool']['poetry']['authors'][0]
-    __author__ = author_email[0:author_email.find(' <')]
-    __email__ = author_email[author_email.find(' <') + 2:-1]
-    __license__ = data['tool']['poetry']['license']
-    # Can not be set in pyproject.toml
-    __copyright__ = "Copyright (c) 2021-2023 Gert-Jan Paulissen"
-    __url__ = data['tool']['poetry']['repository']
-    __help_url__ = data['tool']['poetry']['homepage']
-
-
-try:
-    root_dir = Path(__file__).parent.parent.absolute()
-    with open(root_dir / "pyproject.toml", "rb") as f:
-        read_toml(f)
-except FileNotFoundError:
-    root_dir = Path(__file__).parent.parent.parent.absolute()
-    with open(root_dir / "pyproject.toml", "rb") as f:
-        read_toml(f)
+pato_gui_metadata = metadata('pato-gui')
+__package_name__ = pato_gui_metadata["Name"]
+__version__ = pato_gui_metadata["Version"]
+__title__ = pato_gui_metadata["Summary"]
+__author__ = pato_gui_metadata["Author"]
+__email__ = pato_gui_metadata["Author-email"]
+__license__ = pato_gui_metadata["License"]
+__url__ = pato_gui_metadata["Project-URL"][len("Repository, "):]
+__help_url__ = pato_gui_metadata["Home-page"]
+# Can not be set via metadata
+__copyright__ = "Copyright (c) 2021-2023 Gert-Jan Paulissen"
 
 
 def version():

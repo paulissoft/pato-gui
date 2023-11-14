@@ -53,6 +53,7 @@ clean: ## Cleanup the environment
 
 install: init ## Install the package to the Python installation path.
 	poetry install
+	poetry lock
 
 pato-gui: install ## Run the PATO GUI
 	poetry run $@
@@ -61,6 +62,7 @@ pato-gui-build: install ## Build the PATO GUI exectable
 	poetry run $@
 
 test: install ## Test the package.
+	poetry check
 	poetry run pytest
 
 dist: install test ## Prepare the distribution the package by installing and testing it.
