@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from pathlib import Path
 
 try:
     import tomllib
@@ -7,7 +8,9 @@ except ImportError:
 
 __all__ = ['__package_name__', '__version__', '__title__', '__author__', '__email__', '__license__', '__copyright__', '__url__', '__help_url__']
 
-with open("pyproject.toml", "rb") as f:
+
+def read_toml(f):
+    global __package_name__, __version__, __title__, __author__, __email__, __license__, __copyright__, __url__, __help_url__
     data = tomllib.load(f)
     __package_name__ = data['tool']['poetry']['name']
     __version__ = data['tool']['poetry']['version']
@@ -20,6 +23,16 @@ with open("pyproject.toml", "rb") as f:
     __copyright__ = "Copyright (c) 2021-2023 Gert-Jan Paulissen"
     __url__ = data['tool']['poetry']['repository']
     __help_url__ = data['tool']['poetry']['homepage']
+
+
+try:
+    root_dir = Path(__file__).parent.parent.absolute()
+    with open(root_dir / "pyproject.toml", "rb") as f:
+        read_toml(f)
+except FileNotFoundError:
+    root_dir = Path(__file__).parent.parent.parent.absolute()
+    with open(root_dir / "pyproject.toml", "rb") as f:
+        read_toml(f)
 
 
 def version():
