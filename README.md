@@ -5,8 +5,8 @@
 1. [Introduction](#introduction)
 2. [Installation](#installation)
    1. [Start a command prompt](#start-command-line-prompt)
-   2. [Installing from source](#installing-from-source)
-   3. [Installing from PyPi](#installing-from-pypi)
+   2. [Installing from PyPi](#installing-from-pypi)
+   3. [Installing from source](#installing-from-source)
 3. [Usage](#usage)
    1. [Launch the GUI](#launch-the-gui)
    2. [Help](#help)
@@ -22,7 +22,7 @@ This GUI would not have been possible without [Gooey](https://github.com/chriski
 
 ## Installation <a name="installation" />
 
-This utility needs Python 3. In order to support several Python versions/environments on your computer, I prefer [Mamba from the Miniforge project on GitHub](https://github.com/conda-forge/miniforge). See the installation instructions there if you want to use that distribution. Mamba is an environment manager similar to Conda variants like Anaconda and [Miniconda](https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html) but much faster. Together with [Poetry](https://python-poetry.org/docs/) this is a good combination to distribute libraries to PyPi.
+This utility needs Python 3. In order to support several Python versions and/or (virtual) environments on your computer, I prefer [Mamba from the Miniforge project on GitHub](https://github.com/conda-forge/miniforge). See the installation instructions there if you want to use that distribution. Mamba is an environment manager similar to Conda variants like Anaconda and [Miniconda](https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html) but much faster. Together with [Poetry](https://python-poetry.org/docs/) this is a good combination to distribute libraries to PyPi.
 
 ### Start a command prompt <a name="start-command-line-prompt" />
 
@@ -30,6 +30,40 @@ Needed for installing and running the PATO GUI. Please Google it if you don't kn
 
 First please note that the dollar sign you will see below is the command line prompt sign and not a character you have to type.
 The command line prompt will differ between Operating Systems.
+
+### Installing from PyPi <a name="installing-from-pypi" />
+
+First set up a virtual environment using your preferred method:
+
+Using Mamba (see above) you can create (and activate) such an environment via:
+
+```
+$ mamba create --name <environment> python
+$ mamba activate <environment>
+```
+
+Now continue with:
+
+```
+$ python3 -m pip install pato-gui
+```
+
+Now `pato-gui` should be available and this command shows you the help:
+
+```
+$ pato-gui -h
+```
+
+You can also build an executable:
+
+```
+$ cd <temporary directory>
+$ pato-gui-build
+```
+
+In the `dist/PatoGui` folder you will find the `PatoGui` executable.
+
+Of course you can put the executable in `dist/PatoGui` somewhere in your path.
 
 ### Installing from source <a name="installing-from-source" />
 
@@ -50,37 +84,13 @@ $ make test
 $ make run
 ```
 
-### Installing from PyPi <a name="installing-from-pypi" />
-
-```
-$ python3 -m pip install pato-gui
-```
-
-Now `pato-gui` should be available and this command shows you the help:
-
-```
-$ pato-gui -h
-```
-
-You can also build an executable and put it somewhere in your path:
-
-```
-$ pato-gui-build
-```
-
-In the `dist/PatoGui` folder you will find the `PatoGui` executable.
-
 ## Usage <a name="usage" />
 
 ### Launch the GUI <a name="launch-the-gui" />
 
-This:
+I assume that you have built the executable.
 
-```
-$ make run
-```
-
-or using the executable this:
+Launch it via:
 
 ```
 $ <path to PatoGui>/PatoGui
@@ -91,24 +101,12 @@ A graphical interface will pop up.
 If you know the Maven POM file already:
 
 ```
-$ python3 <pato-gui root>/src/pato_gui/pato-gui.py <POM file>
-```
-
-or:
-
-```
 $ <path to PatoGui>/PatoGui <POM file>
 ```
 
 ### Help <a name="help" />
 
 From the command line:
-
-```
-$ python3 <pato-gui root>/src/pato_gui/pato-gui.py -h
-```
-
-or:
 
 ```
 $ <path to PatoGui>/PatoGui -h
@@ -118,10 +116,9 @@ And in the left top corner of the GUI screen there is a Help button.
 
 ## Links <a name="links" />
 
+These links have been helpful to convert a setuptools based project to Poetry and Mamba.
+
 - [using python-poetry to publish to test.pypi.org](https://stackoverflow.com/questions/68882603/using-python-poetry-to-publish-to-test-pypi-org)
-
-### Migrate to Poetry
-
 - [Poetry Read The Docs](https://python-poetry.org/docs/)
 - [Migrating a project to Poetry](https://browniebroke.com/blog/migrating-project-to-poetry/)
 - [Convert Python requirements to Poetry format](https://browniebroke.com/blog/convert-requirements-to-pyproject/)
