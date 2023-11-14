@@ -6,7 +6,7 @@ authors = ["Gert-Jan Paulissen <paulissoft@gmail.com>"]
 license = "MIT"
 readme = ["README.md", "CHANGELOG.md"]
 packages = [{include = "pato_gui", from = "src"}]
-include = ["CHANGELOG.md"]
+include = ["pyproject.toml"]
 homepage = "https://paulissoft.github.io/pato-gui"
 repository = "https://github.com/paulissoft/pato-gui"
 keywords = ["packaging", "poetry"]
