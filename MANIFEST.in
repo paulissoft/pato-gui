@@ -1,4 +1,0 @@
-include development_requirements.txt
-include test_requirements.txt
-include Makefile
-include CHANGELOG.md

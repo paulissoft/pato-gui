@@ -12,7 +12,7 @@ from pathlib import Path
 import logging
 from shutil import which
 # from pkg_resources import packaging
-import pkg_resources
+from packaging.version import parse as parse_version
 
 
 # items to test
@@ -22,11 +22,14 @@ __all__ = ['db_order', 'initialize', 'check_environment', 'process_POM']
 logger = None
 
 
+DB_ORDER = {'dev': 1, 'tst': 2, 'test': 2, 'acc': 3, 'prod': 4, 'prd': 4}
+
+
 def db_order(db):
-    for i, e in enumerate(['dev', 'tst', 'test', 'acc', 'prod', 'prd']):
-        if e in db.lower():
-            return i
-    return db.lower()
+    for key in DB_ORDER.keys():
+        if db.lower().endswith(key):
+            return DB_ORDER[key]
+    return 256 + ord(db.lower()[0])
 
 
 def initialize():
@@ -84,7 +87,7 @@ def check_environment():
             m = re.search(regex, output)
             assert m, 'Could not find {} in {}'.format(regex, output)
             actual_version = m.group(1)
-            assert pkg_resources.packaging.version.parse(actual_version) >= pkg_resources.packaging.version.parse(expected_version), f'Version of program "{p[0]}" is "{actual_version}" which is less than the expected version "{expected_version}"'
+            assert parse_version(actual_version) >= parse_version(expected_version), f'Version of program "{p[0]}" is "{actual_version}" which is less than the expected version "{expected_version}"'
             logger.info('Version of "{}" is "{}" and its location is "{}"'.format(p[0], actual_version, os.path.dirname(which(p[0]))))
             programs_found.append(p[0])
         else:

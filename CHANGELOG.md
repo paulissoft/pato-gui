@@ -14,10 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [3.1.0] - 2023-10-16
+## [4.0.0] - 2023-11-14
 
 ### Fixed
 
+- [Two databases named orcl and something like dev, tst or acc does not work.](https://github.com/paulissoft/pato-gui/issues/18)
+- [The PATO GUI must run Maven with the batch switch -B](https://github.com/paulissoft/pato-gui/issues/17)
+- [Development build does not work on Windows](https://github.com/paulissoft/pato-gui/issues/15)
 - [pip complains about SSL not enabled for Miniconda Python.](https://github.com/paulissoft/pato-gui/issues/14)
 - [Development build does not work on Windows.](https://github.com/paulissoft/pato-gui/issues/15)
 

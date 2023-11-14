@@ -1,98 +1,77 @@
 ## -*- mode: make -*-
 
 # project specific
-PROJECT  := pato-gui
-ABOUT_PY := src/utils/about.py
-BRANCH 	 := main
+PROJECT        := pato-gui
+BRANCH 	 	     := main
+PYTHON_VERSION := 3.12
 
-GIT = git
-# least important first (can not stop easily in foreach)
-PYTHON_EXECUTABLES = python python3 
-MYPY = mypy
-# The -O flag is used to suppress error messages related to eggs.
-# See also https://stackoverflow.com/questions/43177200/assertionerror-egg-link-does-not-match-installed-location-of-reviewboard-at.
-VERBOSE := 
-PIP = $(PYTHON) -O -m pip $(VERBOSE)
+MAMBA          := mamba
+GIT 			     := git
 # Otherwise perl may complain on a Mac
-LANG = C
-# This is GNU specific I guess
-VERSION = $(shell $(PYTHON) $(ABOUT_PY))
-TAG = v$(VERSION)
+LANG           := C
+# Must be invoked dynamic, i.e. the environment may not be ready yet
+VERSION         = $(shell poetry version -s)
+# Idem
+TAG 	          = v$(VERSION)
 
-# OS specific section
-ifeq '$(findstring ;,$(PATH))' ';'
-detected_OS := Windows
-HOME = $(USERPROFILE)
-DEVNUL := NUL
-WHICH := where
-GREP := find
-EXE := .exe
-else
-detected_OS := $(shell uname 2>/dev/null || echo Unknown)
-detected_OS := $(patsubst CYGWIN%,Cygwin,$(detected_OS))
-detected_OS := $(patsubst MSYS%,MSYS,$(detected_OS))
-detected_OS := $(patsubst MINGW%,MSYS,$(detected_OS))
-DEVNUL := /dev/null
-WHICH := which
-GREP := grep
-EXE := 
+# Goals not needing a Mamba (Conda) environment
+GOALS_ENV_NO   := help env-bootstrap env-create env-update env-remove clean tag
+# Goals needing a Mamba (Conda) environment (all the poetry commands)
+GOALS_ENV_YES  := init install pato-gui pato-gui-build test dist upload_test upload 
+
+ifneq '$(filter $(GOALS_ENV_YES),$(MAKECMDGOALS))' ''
+
+ifneq '$(CONDA_DEFAULT_ENV)' '$(PROJECT)'
+$(error Set up Conda environment ($(MAMBA) activate $(PROJECT)))
 endif
 
-ifdef CONDA_PREFIX
-home = $(subst \,/,$(CONDA_PREFIX))
-else
-home = $(HOME)
 endif
 
-ifdef CONDA_PYTHON_EXE
-# look no further
-PYTHON := $(subst \,/,$(CONDA_PYTHON_EXE))
-else
-# On Windows those executables may exist but not functional yet (can be used to install) so use Python -V
-$(foreach e,$(PYTHON_EXECUTABLES),$(if $(shell ${e}${EXE} -V 3>${DEVNUL}),$(eval PYTHON := ${e}${EXE}),))
-endif
-
-ifndef PYTHON
-$(error Could not find any Python executable from ${PYTHON_EXECUTABLES}.)
-endif
-
-.PHONY: clean install test dist distclean upload_test upload tag
+.PHONY: $(GOALS_ENV_NO) $(GOALS_ENV_YES)
 
 help: ## This help.
 	@perl -ne 'printf(qq(%-30s  %s\n), $$1, $$2) if (m/^((?:\w|[.%-])+):.*##\s*(.*)$$/)' $(MAKEFILE_LIST)
-#	@echo home: $(home)
+
+env-bootstrap: ## Bootstrap an environment
+	$(MAMBA) env create --name $(PROJECT) python=$(PYTHON_VERSION)
+	$(MAMBA) env export --from-history > environment.yml
+
+env-create: ## Create Mamba (Conda) environment (only once)
+	$(MAMBA) env create --name $(PROJECT) --file environment.yml
+
+env-update: ## Update Mamba (Conda) environment
+	$(MAMBA) env update --name $(PROJECT) --file environment.yml --prune
+
+env-remove: ## Remove Mamba (Conda) environment
+	-$(MAMBA) env remove --name $(PROJECT)
 
 init: ## Fulfill the requirements
-	$(PIP) install -r development_requirements.txt -r src/program/requirements.txt
+	poetry build
 
-clean: init ## Cleanup the package and remove it from the Python installation path.
-	$(PYTHON) setup.py clean --all
-	$(PYTHON) -Bc "import pathlib; [p.unlink() for p in pathlib.Path('.').rglob('*.py[co]')]"
-	$(PYTHON) -Bc "import pathlib; [p.rmdir() for p in pathlib.Path('.').rglob('__pycache__')]"
-	$(PYTHON) -Bc "import shutil; import os; [shutil.rmtree(d) for d in ['.pytest_cache', '.mypy_cache', 'dist', 'htmlcov', '.coverage'] if os.path.isdir(d)]"
-	cd src && cd program && $(MAKE) clean
+clean: ## Cleanup the environment
+	$(GIT) clean -d -x -i
 
 install: init ## Install the package to the Python installation path.
-	$(PIP) install -e .
+	poetry install
+	poetry lock
 
-test: init ## Test the package.
-	$(PIP) install -r test_requirements.txt
-	$(MYPY) --show-error-codes src
-	$(PYTHON) -m pytest --exitfirst
+pato-gui: install ## Run the PATO GUI
+	poetry run $@
+
+pato-gui-build: install ## Build the PATO GUI exectable
+	poetry run $@
+
+test: install ## Test the package.
+	poetry check
+	poetry run pytest
 
 dist: install test ## Prepare the distribution the package by installing and testing it.
-	$(PYTHON) setup.py sdist bdist_wheel
-	$(PYTHON) -m twine check dist/*
-	cd src && cd program && $(MAKE) dist
-
-distclean: clean ## Runs clean first and then cleans up dependency include files. 
-	cd src && cd program && $(MAKE) distclean
 
 upload_test: dist ## Upload the package to PyPI test.
-	$(PYTHON) -m twine upload -r pypitest dist/*
+	poetry publish -r test-pypi
 
 upload: dist ## Upload the package to PyPI.
-	$(PYTHON) -m twine upload -r pypi dist/*
+	poetry publish
 
 tag: ## Tag the package on GitHub.
 	$(GIT) tag -a $(TAG) -m "$(TAG)"

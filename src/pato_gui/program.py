@@ -11,8 +11,8 @@ from gooey import Gooey, GooeyParser
 from shutil import which
 
 # local module(s)
-from utils import about
-from utils.pom import db_order, initialize, process_POM
+from pato_gui import about
+from pato_gui.pom import db_order, initialize, process_POM
 
 # f"" syntax
 if sys.version_info < (3, 6):
@@ -22,7 +22,8 @@ if sys.version_info < (3, 6):
 logger = None
 
 
-DEFAULT_SIZE = (1200, 800)
+DEFAULT_SIZE1 = (1200, 600)
+DEFAULT_SIZE2 = (1500, 750)
 MENU = [{'name': 'Help',
          'items': [{'type': 'Link',
                     'menuTitle': 'Documentation',
@@ -56,16 +57,16 @@ def find_executable(executables):
 
 
 PYTHONW = find_executable(['pythonw3', 'pythonw', 'python3', 'python'])
+PYTHON = find_executable(['python3', 'python'])
 
 
 @Gooey(program='Get POM file',
-       target=f"{PYTHONW} -u {__file__}",
        show_success_modal=False,
        show_failure_modal=True,
        show_restart_button=True,
        disable_progress_bar_animation=True,
        clear_before_run=True,
-       default_size=DEFAULT_SIZE,
+       default_size=DEFAULT_SIZE1,
        menu=MENU,
        terminal_font_family=TERMINAL_FONT_FAMILY)
 def get_POM_file(argv):
@@ -100,7 +101,7 @@ def get_POM_file(argv):
        disable_progress_bar_animation=False,
        clear_before_run=True,
        required_cols=3,
-       default_size=DEFAULT_SIZE,
+       default_size=DEFAULT_SIZE2,
        menu=MENU,
        terminal_font_family=TERMINAL_FONT_FAMILY)
 def run_POM_file_gui(pom_file, db_config_dir, mvnd):
@@ -176,7 +177,7 @@ def run_POM_file(argv):
         extra_maven_command_line_options.remove(EXTRA_MAVEN_COMMAND_LINE_OPTIONS)
     except Exception:
         pass
-    cmd = '{0} {1} {2} -P{3} -Ddb.config.dir={4} -Ddb={5}'.format('mvnd' if args.mvnd else 'mvn', FILE, args.file, args.action, args.db_config_dir, args.db)
+    cmd = '{0} {1} {2} -B -P{3} -Ddb.config.dir={4} -Ddb={5}'.format('mvnd' if args.mvnd else 'mvn', FILE, args.file, args.action, args.db_config_dir, args.db)
     if len(extra_maven_command_line_options) > 0:
         cmd += ' ' + ' '.join(extra_maven_command_line_options)
     sql_home = os.path.dirname(os.path.dirname(which('sql')))
@@ -203,7 +204,3 @@ def main():
         run_POM_file_gui(args.file, args.db_config_dir, args.mvnd)
     else:
         run_POM_file(argv)
-
-
-if __name__ == '__main__':
-    main()
