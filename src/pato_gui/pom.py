@@ -65,7 +65,8 @@ def check_environment():
         ['sql', '-V', '18.0.0.0', r'SQLcl: Release ([0-9.]+)', True, True],
         ['java', '-version', '1.8.0', r'(?:java|openjdk) version "([0-9.]+).*"', False, True],  # version is printed to stderr (!#$?)
         ['javac', '-version', '1.8.0', r'javac ([0-9.]+)', True, True],
-        ['mvnd', '--version', '0.8.0', r'mvnd ([0-9.]+)', True, False],  # Maven daemon may be there or not
+        # Apache Maven Daemon (mvnd) 1.0-m8 darwin-aarch64 native client (0f4bdb6df5e74453d8d558d292789da4e66a7933)
+        ['mvnd', '--version', '0.8.0', r'(?:mvnd|\(mvnd\)) ([0-9.]+)', True, False],  # Maven daemon may be there or not
     ]
     programs_found = []
 

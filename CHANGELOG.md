@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.1] - 2023-12-20
+
+### Fixed
+
+- [Maven daemon on Mac could not be determined.](https://github.com/paulissoft/pato-gui/issues/20)
+
 ## [4.0.0] - 2023-11-14
 
 ### Fixed
