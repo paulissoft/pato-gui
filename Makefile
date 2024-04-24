@@ -33,7 +33,7 @@ help: ## This help.
 	@perl -ne 'printf(qq(%-30s  %s\n), $$1, $$2) if (m/^((?:\w|[.%-])+):.*##\s*(.*)$$/)' $(MAKEFILE_LIST)
 
 env-bootstrap: ## Bootstrap an environment
-	$(MAMBA) env create --name $(PROJECT) python=$(PYTHON_VERSION)
+	$(MAMBA) create --name $(PROJECT) python
 	$(MAMBA) env export --from-history > environment.yml
 
 env-create: ## Create Mamba (Conda) environment (only once)
