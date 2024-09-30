@@ -138,3 +138,6 @@ tmp.txt
 
 # Windows
 NUL
+# pixi environments
+.pixi
+*.egg-info

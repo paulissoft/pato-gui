@@ -46,3 +46,12 @@ twine = "^4.0.2"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pixi.project]
+channels = ["conda-forge"]
+platforms = ["osx-arm64"]
+
+[tool.pixi.pypi-dependencies]
+pato-gui = { path = ".", editable = true }
+
+[tool.pixi.tasks]
