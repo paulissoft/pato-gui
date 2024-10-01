@@ -141,3 +141,6 @@ NUL
 # pixi environments
 .pixi
 *.egg-info
+
+# Devbox
+.devbox/virtenv/python-minimal/
