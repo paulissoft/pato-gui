@@ -13,8 +13,15 @@ VERSION         = $(shell poetry version -s)
 # Idem
 TAG 	          = v$(VERSION)
 
+DOCKER_LOG_LEVEL     := INFO
+DOCKER_OPTIONS       := --log-level $(DOCKER_LOG_LEVEL)
+DOCKER_IMAGE_NAME    := pato-gui
+DOCKER_IMAGE_TAG     := pato-gui
+DOCKER_BUILD_OPTIONS := --file .devcontainer/Dockerfile --tag $(DOCKER_IMAGE_TAG)
+DOCKER_BUILD_FILE    := .
+
 # Goals not needing a virtual environment
-GOALS_ENV_NO   := help env-bootstrap env-create env-update env-remove clean tag
+GOALS_ENV_NO   := help env-bootstrap env-create env-update env-remove clean tag docker-build docker-run
 # Goals needing a virtual environment (all the poetry commands)
 GOALS_ENV_YES  := init install pato-gui pato-gui-build test dist upload_test upload 
 
@@ -42,6 +49,12 @@ clean: ## Cleanup the environment
 install: init ## Install the package to the Python installation path.
 	poetry install
 	poetry lock
+
+docker-build: ## Build the docker image
+	DOCKER_BUILDKIT=1 docker $(DOCKER_OPTIONS) build $(DOCKER_BUILD_OPTIONS) $(DOCKER_BUILD_FILE)
+
+docker-run: docker-build ## Build the docker image
+	docker $(DOCKER_OPTIONS) run --it --rm --name $(DOCKER_IMAGE_NAME) $(DOCKER_IMAGE_TAG)
 
 pato-gui: install ## Run the PATO GUI
 	poetry run $@
