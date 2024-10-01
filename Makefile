@@ -51,7 +51,7 @@ install: init ## Install the package to the Python installation path.
 	poetry lock
 
 docker-build: ## Build the docker image
-	DOCKER_BUILDKIT=1 docker $(DOCKER_OPTIONS) build $(DOCKER_BUILD_OPTIONS) $(DOCKER_BUILD_FILE)
+	DOCKER_BUILDKIT=1 docker $(DOCKER_OPTIONS) buildx build $(DOCKER_BUILD_OPTIONS) $(DOCKER_BUILD_FILE)
 
 docker-run: docker-build ## Build the docker image
 	docker $(DOCKER_OPTIONS) run --it --rm --name $(DOCKER_IMAGE_NAME) $(DOCKER_IMAGE_TAG)

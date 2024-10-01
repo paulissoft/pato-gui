@@ -143,4 +143,5 @@ NUL
 *.egg-info
 
 # Devbox
-.devbox/virtenv/python-minimal/
+!.devcontainer
+
