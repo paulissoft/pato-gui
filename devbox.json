@@ -3,7 +3,7 @@
   "packages": ["python@latest"],
   "shell": {
     "init_hook": [
-      "echo 'Welcome to devbox!' > /dev/null"
+      "source .venv/bin/activate"
     ],
     "scripts": {
       "test": [

@@ -5,7 +5,6 @@ PROJECT        := pato-gui
 BRANCH 	 	     := main
 PYTHON_VERSION := 3.12
 
-MAMBA          := mamba
 GIT 			     := git
 # Otherwise perl may complain on a Mac
 LANG           := C
@@ -14,15 +13,17 @@ VERSION         = $(shell poetry version -s)
 # Idem
 TAG 	          = v$(VERSION)
 
-# Goals not needing a Mamba (Conda) environment
+# Goals not needing a virtual environment
 GOALS_ENV_NO   := help env-bootstrap env-create env-update env-remove clean tag
-# Goals needing a Mamba (Conda) environment (all the poetry commands)
+# Goals needing a virtual environment (all the poetry commands)
 GOALS_ENV_YES  := init install pato-gui pato-gui-build test dist upload_test upload 
 
 ifneq '$(filter $(GOALS_ENV_YES),$(MAKECMDGOALS))' ''
 
-ifneq '$(CONDA_DEFAULT_ENV)' '$(PROJECT)'
-$(error Set up Conda environment ($(MAMBA) activate $(PROJECT)))
+DEVBOX_PROJECT_ROOT ?=
+
+ifeq '$(VIRTUAL_ENV)' ''
+$(error Set up virtual environment (source .venv/bin/activate))
 endif
 
 endif
@@ -31,19 +32,6 @@ endif
 
 help: ## This help.
 	@perl -ne 'printf(qq(%-30s  %s\n), $$1, $$2) if (m/^((?:\w|[.%-])+):.*##\s*(.*)$$/)' $(MAKEFILE_LIST)
-
-env-bootstrap: ## Bootstrap an environment
-	$(MAMBA) create --name $(PROJECT) python
-	$(MAMBA) env export --from-history > environment.yml
-
-env-create: ## Create Mamba (Conda) environment (only once)
-	$(MAMBA) env create --name $(PROJECT) --file environment.yml
-
-env-update: ## Update Mamba (Conda) environment
-	$(MAMBA) env update --name $(PROJECT) --file environment.yml --prune
-
-env-remove: ## Remove Mamba (Conda) environment
-	-$(MAMBA) env remove --name $(PROJECT)
 
 init: ## Fulfill the requirements
 	poetry build
