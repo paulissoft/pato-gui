@@ -1,6 +1,15 @@
 {
-  "$schema":  "https://raw.githubusercontent.com/jetify-com/devbox/0.13.2/.schema/devbox.schema.json",
-  "packages": ["python@latest"],
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.2/.schema/devbox.schema.json",
+  "packages": {
+    "python":  "latest",
+    "perl":    "latest",
+    "maven":   "latest",
+    "openjdk": "latest",
+    "sqlcl": {
+      "version":            "latest",
+      "excluded_platforms": ["aarch64-darwin"]
+    }
+  },
   "shell": {
     "init_hook": [
       "source .venv/bin/activate"
