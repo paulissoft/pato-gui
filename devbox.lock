@@ -1,6 +1,60 @@
 {
   "lockfile_version": "1",
   "packages": {
+    "jre@latest": {
+      "last_modified": "2024-09-10T15:01:03Z",
+      "resolved": "github:NixOS/nixpkgs/5ed627539ac84809c78b2dd6d26a5cebeb5ae269#jre8",
+      "source": "devbox-search",
+      "version": "8u412-ga",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "path": "/nix/store/2lkkwsl2x67japciss08k10wb13ylsnh-zulu-ca-jdk-8.0.402",
+              "default": true
+            }
+          ]
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "jre",
+              "path": "/nix/store/x1b33yizrg00ivskifcwz752qrdpm5db-openjdk-8u412-ga-jre",
+              "default": true
+            },
+            {
+              "name": "out",
+              "path": "/nix/store/hsxa3rqx0vdwbz352ni18wqn5zawvk0x-openjdk-8u412-ga",
+              "default": true
+            },
+            {
+              "name": "debug",
+              "path": "/nix/store/x0bvxfzygcfy7hfm3h10m7njdgrl5xyf-openjdk-8u412-ga-debug"
+            }
+          ],
+          "store_path": "/nix/store/x1b33yizrg00ivskifcwz752qrdpm5db-openjdk-8u412-ga-jre"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "jre",
+              "path": "/nix/store/kb41c4clzp8c6lr55cwylhjk826zw7if-openjdk-8u412-ga-jre",
+              "default": true
+            },
+            {
+              "name": "out",
+              "path": "/nix/store/rb5iwvk2r54y4hbzxdvxfnfg65rma8gd-openjdk-8u412-ga",
+              "default": true
+            },
+            {
+              "name": "debug",
+              "path": "/nix/store/1rhfqsbzfmxaxafvqk4vhcfzs423s2pa-openjdk-8u412-ga-debug"
+            }
+          ],
+          "store_path": "/nix/store/kb41c4clzp8c6lr55cwylhjk826zw7if-openjdk-8u412-ga-jre"
+        }
+      }
+    },
     "maven@latest": {
       "last_modified": "2024-09-10T15:01:03Z",
       "resolved": "github:NixOS/nixpkgs/5ed627539ac84809c78b2dd6d26a5cebeb5ae269#maven",
@@ -130,6 +184,71 @@
             }
           ],
           "store_path": "/nix/store/ww69rb7srifikvilg39q4v8n9h1zcssf-perl-5.38.2"
+        }
+      }
+    },
+    "poetry@latest": {
+      "last_modified": "2024-09-23T10:58:17Z",
+      "plugin_version": "0.0.4",
+      "resolved": "github:NixOS/nixpkgs/568bfef547c14ca438c56a0bece08b8bb2b71a9c#poetry",
+      "source": "devbox-search",
+      "version": "1.8.3",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/nycf0kbsd4mhqcppdai1cj3vwik2vmic-python3.12-poetry-1.8.3",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/7ll0b0qsg8272qfdzr24kiy493mm9ay5-python3.12-poetry-1.8.3-dist"
+            }
+          ],
+          "store_path": "/nix/store/nycf0kbsd4mhqcppdai1cj3vwik2vmic-python3.12-poetry-1.8.3"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/5kgf258lia7vf00k7y8jggwfjvhz820a-python3.12-poetry-1.8.3",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/z0nfiin8a8igi6x3n0gjy9gb440mpyzg-python3.12-poetry-1.8.3-dist"
+            }
+          ],
+          "store_path": "/nix/store/5kgf258lia7vf00k7y8jggwfjvhz820a-python3.12-poetry-1.8.3"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/h0ncgdbb67cj9zg1ywman246bzq3b8s6-python3.12-poetry-1.8.3",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/9sj038vl4x792fr5carna0iyhb723scb-python3.12-poetry-1.8.3-dist"
+            }
+          ],
+          "store_path": "/nix/store/h0ncgdbb67cj9zg1ywman246bzq3b8s6-python3.12-poetry-1.8.3"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/4h1ns7l1fvjs718pjw1bg6wyy01jvpsw-python3.12-poetry-1.8.3",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/c9z3y970nqjgc1n2vllbgn5718rq23ds-python3.12-poetry-1.8.3-dist"
+            }
+          ],
+          "store_path": "/nix/store/4h1ns7l1fvjs718pjw1bg6wyy01jvpsw-python3.12-poetry-1.8.3"
         }
       }
     },

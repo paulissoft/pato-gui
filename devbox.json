@@ -7,7 +7,9 @@
     "sqlcl": {
       "version":            "latest",
       "excluded_platforms": ["aarch64-darwin"]
-    }
+    },
+    "poetry": "latest",
+    "jre":    "latest"
   },
   "shell": {
     "init_hook": [

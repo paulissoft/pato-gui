@@ -7,30 +7,32 @@
 
 FROM jetpackio/devbox:latest as build
 
-ENV TARGET_DEVBOX=/root/.cache/devbox
+
 
 # Installing your devbox project
 WORKDIR /app
 USER root:root
-RUN --mount=type=cache,target=$TARGET_DEVBOX mkdir -p /app && chown ${DEVBOX_USER}:${DEVBOX_USER} /app
+RUN mkdir -p /app && chown ${DEVBOX_USER}:${DEVBOX_USER} /app
 USER ${DEVBOX_USER}:${DEVBOX_USER}
 COPY --link --chown=${DEVBOX_USER}:${DEVBOX_USER} devbox.json devbox.lock ./
 
-RUN --mount=type=cache,target=$TARGET_DEVBOX devbox install
+ENV GIT_CACHE=/tmp/git_cache/
+# RUN --mount=type=cache,target=${GIT_CACHE} DEVBOX_DEBUG=1 devbox run -- echo "Installed Packages."
 
 COPY --link --chown=${DEVBOX_USER}:${DEVBOX_USER} . .
 
+USER root:root
+RUN find / -print
+USER ${DEVBOX_USER}:${DEVBOX_USER}
+
 # See output of make all in a devbox shell
-RUN --mount=type=cache,target=$TARGET_DEVBOX \
-		poetry build && \
-		poetry install && \
-		poetry lock && \
-		poetry run pato-gui-build
+# RUN . /app/.venv/bin/activate && type -p poetry && poetry build && poetry install && poetry lock && poetry run pato-gui-build
 
-FROM scratch
+# FROM scratch
 
-COPY --link --from=build /app/.venv /app/.venv
+# COPY --link --from=build /app /app
+# RUN find /app -print
 
 ENV PATH=/app/.venv/bin:$PATH
 
-ENTRYPOINT ["./.venv/bin/pato-gui"]
+ENTRYPOINT ["/bin/sh"]
