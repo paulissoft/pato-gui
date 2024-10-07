@@ -28,9 +28,14 @@ RUN touch README.md
 COPY pixi.toml pixi.lock ./
 RUN --mount=type=cache,target=/root/.cache/rattler/cache,sharing=private pixi install
 
-# Build all
+# Build all: make all -n
 COPY . .
-RUN make all
+RUN pixi exec poetry build
+RUN pixi exec poetry install
+RUN pixi exec poetry lock
+RUN pixi exec poetry check
+RUN pixi exec poetry run pytest
+RUN pixi exec poetry run pato-gui-build
 
 ENV ENV=default
 

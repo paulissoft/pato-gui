@@ -19,7 +19,7 @@ DOCKER_LOG_LEVEL     := INFO
 DOCKER_OPTIONS       := --log-level $(DOCKER_LOG_LEVEL)
 DOCKER_IMAGE_NAME    := pato-gui
 DOCKER_IMAGE_TAG     := pato-gui
-DOCKER_BUILD_OPTIONS := --tag $(DOCKER_IMAGE_TAG)
+DOCKER_BUILD_OPTIONS := --platform linux/amd64 --tag $(DOCKER_IMAGE_TAG)
 DOCKER_BUILD_FILE    := .
 
 help: ## This help.
