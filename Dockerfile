@@ -31,13 +31,12 @@ RUN --mount=type=cache,target=/root/.cache/rattler/cache,sharing=private pixi in
 RUN apt-get update && \
 		apt-get install -y libgtk-4-dev
 
-COPY pyproject.toml poetry.lock ./
 # Build all: make all -n
+COPY . .
 RUN pixi exec poetry build
 RUN pixi exec poetry install
 RUN pixi exec poetry lock
 RUN pixi exec poetry check
-COPY . .
 RUN pixi exec poetry run pytest
 RUN pixi exec poetry run pato-gui-build
 
