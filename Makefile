@@ -9,7 +9,9 @@ GIT 			     := git
 # Otherwise perl may complain on a Mac
 LANG           := C
 # Must be invoked dynamic, i.e. the environment may not be ready yet
-VERSION         = $(shell poetry version -s)
+PIXI           := pixi
+POETRY         := $(PIXI) exec poetry
+VERSION         = $(shell $(POETRY) version -s)
 # Idem
 TAG 	          = v$(VERSION)
 
@@ -23,15 +25,32 @@ DOCKER_BUILD_FILE    := .
 help: ## This help.
 	@perl -ne 'printf(qq(%-30s  %s\n), $$1, $$2) if (m/^((?:\w|[.%-])+):.*##\s*(.*)$$/)' $(MAKEFILE_LIST)
 
+all: init install test pato-gui-build
+
 init: ## Fulfill the requirements
-	pixi install
-	poetry build
+	$(PIXI) install
+	$(POETRY) build
+
+install: init ## Install the package to the Python installation path.
+	$(POETRY) install
+	$(POETRY) lock
+
+test: install ## Test the package.
+	$(PIXI) exec pytest
+
+pato-gui-build: install ## Build the PATO GUI exectable
+	$(POETRY) run $@
+
+pato-gui: install ## Run the PATO GUI
+	$(POETRY) run $@
+
+tag: ## Tag the package on GitHub.
+	$(GIT) tag -a $(TAG) -m "$(TAG)"
+	$(GIT) push origin $(TAG)
+	gh release create $(TAG) --target $(BRANCH) --title "Release $(TAG)" --notes "See CHANGELOG"
 
 clean: ## Cleanup the environment
 	$(GIT) clean -d -x -i
-
-install: init ## Install the package to the Python installation path.
-	pixi 
 
 docker-build: ## Build the docker image
 	DOCKER_BUILDKIT=1 docker $(DOCKER_OPTIONS) buildx build $(DOCKER_BUILD_OPTIONS) $(DOCKER_BUILD_FILE)
@@ -39,18 +58,5 @@ docker-build: ## Build the docker image
 docker-run: docker-build ## Build the docker image
 	docker $(DOCKER_OPTIONS) run -it --rm --name $(DOCKER_IMAGE_NAME) $(DOCKER_IMAGE_TAG)
 
-pato-gui: install ## Run the PATO GUI
-	pixi run $@
+.PHONY: help all init install test pato-gui-build pato-gui tag clean docker-build docker-run
 
-pato-gui-build: install ## Build the PATO GUI exectable
-	pixi run $@
-
-test: install ## Test the package.
-	pixi run  --environment dev pytest
-
-tag: ## Tag the package on GitHub.
-	$(GIT) tag -a $(TAG) -m "$(TAG)"
-	$(GIT) push origin $(TAG)
-	gh release create $(TAG) --target $(BRANCH) --title "Release $(TAG)" --notes "See CHANGELOG"
-
-.PHONY: help init clean install docker-build docker-run pato-gui pato-gui-build test tag
