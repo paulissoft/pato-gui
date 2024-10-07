@@ -1,7 +1,10 @@
 {
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.2/.schema/devbox.schema.json",
   "packages": {
-    "python": "latest",
+    "python": {
+      "version": "latest",
+      "patch": "never"
+    },
     "maven":  "latest",
     "sqlcl": {
       "version":            "latest",

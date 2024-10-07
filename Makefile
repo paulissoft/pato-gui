@@ -93,4 +93,4 @@ docker-build: ## Build the docker image
 	DOCKER_BUILDKIT=1 docker $(DOCKER_OPTIONS) buildx build $(DOCKER_BUILD_OPTIONS) $(DOCKER_BUILD_FILE)
 
 docker-run: docker-build ## Build the docker image
-	docker $(DOCKER_OPTIONS) run --it --rm --name $(DOCKER_IMAGE_NAME) $(DOCKER_IMAGE_TAG)
+	docker $(DOCKER_OPTIONS) run -it --rm --name $(DOCKER_IMAGE_NAME) $(DOCKER_IMAGE_TAG)
