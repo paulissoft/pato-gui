@@ -1,28 +1,50 @@
-FROM python:3.11-buster as builder
+# Access denied while getting this image from ghcr.
+#
+# FROM ghcr.io/prefix-dev/pixi:0.28.2 AS install
 
-RUN pip install poetry==1.7.0
+ARG PIXI_VERSION=0.31.0
+ARG BASE_IMAGE=debian:bookworm-slim
 
-ENV POETRY_NO_INTERACTION=1 \
-    POETRY_VIRTUALENVS_IN_PROJECT=1 \
-    POETRY_VIRTUALENVS_CREATE=1 \
-    POETRY_CACHE_DIR=/tmp/poetry_cache
+FROM --platform=$TARGETPLATFORM ubuntu:24.04 AS pixi_builder
+# need to specify the ARG again to make it available in this stage
+ARG PIXI_VERSION
+RUN apt-get update && apt-get install -y curl
+# download the musl build since the gnu build is not available on aarch64
+RUN curl -Ls \
+    "https://github.com/prefix-dev/pixi/releases/download/v${PIXI_VERSION}/pixi-$(uname -m)-unknown-linux-musl" \
+    -o /pixi && chmod +x /pixi
+RUN /pixi --version
 
+FROM --platform=$TARGETPLATFORM $BASE_IMAGE as builder
+COPY --from=pixi_builder --chown=root:root --chmod=0555 /pixi /usr/local/bin/pixi
+
+# Create a dummy blank project
+WORKDIR /app/src
+RUN touch __init__.py
+
+# Install dependencies
 WORKDIR /app
-
-COPY pyproject.toml poetry.lock ./
 RUN touch README.md
+COPY pixi.toml pixi.lock ./
+RUN --mount=type=cache,target=/root/.cache/rattler/cache,sharing=private pixi install
 
-RUN --mount=type=cache,target=$POETRY_CACHE_DIR poetry install --without dev --no-root
+# Build all
+COPY . .
+RUN make all
 
-FROM python:3.11-slim-buster as runtime
+ENV ENV=default
 
-ENV VIRTUAL_ENV=/app/.venv \
-    PATH="/app/.venv/bin:$PATH"
+# Create an "entrypoint.sh" script which activates the pixi environment
+RUN printf '#!/bin/sh\n%s\nexec "$@"' "$(pixi shell-hook -e ${ENV})" > /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
+# Final minimal production image
+FROM scratch AS production
 
-COPY src ./src
-
-RUN poetry run pato-gui-build
-
-ENTRYPOINT ["dist/PatoGui/PatoGui"]
+# only copy the production environment into prod container
+COPY --from=builder /app/.pixi/envs/${ENV} /app/.pixi/envs/${ENV}
+COPY --from=builder /entrypoint.sh /entrypoint.sh
+COPY --from=builder /app/dist/PatoGui/PatoGui /app/bin/PatoGui
+WORKDIR /app
+ENTRYPOINT ["/entrypoint.sh"]  # uses the pixi environment
+CMD ["/app/bin/PatoGui"]
