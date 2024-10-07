@@ -1,0 +1,1 @@
+/Users/gpaulissen/dev/pato-gui/.devbox/virtenv/python/bin/venvShellHook.sh

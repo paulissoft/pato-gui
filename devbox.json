@@ -2,14 +2,18 @@
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.2/.schema/devbox.schema.json",
   "packages": {
     "python": "latest",
-    "perl":   "latest",
     "maven":  "latest",
     "sqlcl": {
       "version":            "latest",
       "excluded_platforms": ["aarch64-darwin"]
     },
     "poetry": "latest",
-    "jre":    "latest"
+    "jre":    "latest",
+    "perl":   "latest",
+    "mamba": {
+      "version":            "latest",
+      "excluded_platforms": ["aarch64-darwin"]
+    }
   },
   "shell": {
     "init_hook": [

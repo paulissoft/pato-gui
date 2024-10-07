@@ -55,6 +55,34 @@
         }
       }
     },
+    "mamba@latest": {
+      "last_modified": "2024-09-10T15:01:03Z",
+      "resolved": "github:NixOS/nixpkgs/5ed627539ac84809c78b2dd6d26a5cebeb5ae269#mamba",
+      "source": "devbox-search",
+      "version": "2.6",
+      "systems": {
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/vm5r0n9zdkgpcjaqd3fam08lh091pfvw-mamba-2.6",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/vm5r0n9zdkgpcjaqd3fam08lh091pfvw-mamba-2.6"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/cw0h15j5msi7qq4xxa64zl9w6mzy5lcc-mamba-2.6",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/cw0h15j5msi7qq4xxa64zl9w6mzy5lcc-mamba-2.6"
+        }
+      }
+    },
     "maven@latest": {
       "last_modified": "2024-09-10T15:01:03Z",
       "resolved": "github:NixOS/nixpkgs/5ed627539ac84809c78b2dd6d26a5cebeb5ae269#maven",
