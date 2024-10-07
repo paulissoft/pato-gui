@@ -24,12 +24,11 @@ RUN touch __init__.py
 
 # Install dependencies
 WORKDIR /app
-RUN touch README.md
+RUN touch README.md CHANGELOG.md
 COPY pixi.toml pixi.lock ./
 RUN --mount=type=cache,target=/root/.cache/rattler/cache,sharing=private pixi install
 
-RUN uname -a && \
-		apt-get update && \
+RUN apt-get update && \
 		apt-get install -y libgtk-4-dev
 
 COPY pyproject.toml poetry.lock ./
