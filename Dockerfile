@@ -3,7 +3,7 @@
 # FROM ghcr.io/prefix-dev/pixi:0.28.2 AS install
 
 ARG PIXI_VERSION=0.31.0
-ARG BASE_IMAGE=debian:bookworm
+ARG BASE_IMAGE=debian:bookworm-slim
 
 FROM --platform=$TARGETPLATFORM ubuntu:24.04 AS pixi_builder
 # need to specify the ARG again to make it available in this stage
@@ -31,7 +31,9 @@ RUN --mount=type=cache,target=/root/.cache/rattler/cache,sharing=private pixi in
 # Build all: make all -n
 COPY . .
 RUN pixi exec poetry build
-RUN pixi exec pip wheel --no-cache-dir --use-pep517 "wxpython (==4.2.2)"
+RUN apt-get update && \
+    apt-get -y install gcc && \
+		type gcc
 RUN pixi exec poetry install
 RUN pixi exec poetry lock
 RUN pixi exec poetry check
