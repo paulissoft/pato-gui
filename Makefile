@@ -36,7 +36,8 @@ install: init ## Install the package to the Python installation path.
 	$(POETRY) lock
 
 test: install ## Test the package.
-	$(PIXI) exec pytest
+	$(POETRY) check
+	$(POETRY) run pytest
 
 pato-gui-build: install ## Build the PATO GUI exectable
 	$(POETRY) run $@
