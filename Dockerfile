@@ -5,34 +5,31 @@
 # * RUN --mount=type=cache
 # See also https://medium.com/datamindedbe/how-we-reduced-our-docker-build-times-by-40-afea7b7f5fe7.
 
-FROM jetpackio/devbox:latest as build
+# FROM debian:bookworm as builder
+FROM python:3.11-bookworm as builder
 
+RUN pip install poetry==1.7.0
 
+ENV POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_IN_PROJECT=1 \
+    POETRY_VIRTUALENVS_CREATE=1 \
+    POETRY_CACHE_DIR=/tmp/poetry_cache
 
-# Installing your devbox project
 WORKDIR /app
-USER root:root
-RUN mkdir -p /app && chown ${DEVBOX_USER}:${DEVBOX_USER} /app
-USER ${DEVBOX_USER}:${DEVBOX_USER}
-COPY --link --chown=${DEVBOX_USER}:${DEVBOX_USER} devbox.json devbox.lock ./
 
-ENV GIT_CACHE=/tmp/git_cache/
-# RUN --mount=type=cache,target=${GIT_CACHE} DEVBOX_DEBUG=1 devbox run -- echo "Installed Packages."
+COPY pyproject.toml poetry.lock ./
+RUN touch README.md
 
-COPY --link --chown=${DEVBOX_USER}:${DEVBOX_USER} . .
+RUN --mount=type=cache,target=$POETRY_CACHE_DIR poetry install --without dev --no-root
 
-USER root:root
-RUN find / -print
-USER ${DEVBOX_USER}:${DEVBOX_USER}
+FROM python:3.11-slim-bookworm as runtime
 
-# See output of make all in a devbox shell
-# RUN . /app/.venv/bin/activate && type -p poetry && poetry build && poetry install && poetry lock && poetry run pato-gui-build
+ENV VIRTUAL_ENV=/app/.venv \
+    PATH="/app/.venv/bin:$PATH"
 
-# FROM scratch
+COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
-# COPY --link --from=build /app /app
-# RUN find /app -print
+COPY src ./src
 
-ENV PATH=/app/.venv/bin:$PATH
-
-ENTRYPOINT ["/bin/sh"]
+RUN poetry run pato-gui-build
+ENTRYPOINT ["dist/PatoGui/PatoGui"]
