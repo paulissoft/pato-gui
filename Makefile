@@ -9,7 +9,7 @@ GIT 			     := git
 # Otherwise perl may complain on a Mac
 LANG           := C
 # Must be invoked dynamic, i.e. the environment may not be ready yet
-VERSION         = $(shell pixi project version get)
+VERSION         = $(shell poetry version -s)
 # Idem
 TAG 	          = v$(VERSION)
 
@@ -25,12 +25,13 @@ help: ## This help.
 
 init: ## Fulfill the requirements
 	pixi install
+	poetry build
 
 clean: ## Cleanup the environment
 	$(GIT) clean -d -x -i
 
 install: init ## Install the package to the Python installation path.
-	pixi install --environment dev
+	pixi 
 
 docker-build: ## Build the docker image
 	DOCKER_BUILDKIT=1 docker $(DOCKER_OPTIONS) buildx build $(DOCKER_BUILD_OPTIONS) $(DOCKER_BUILD_FILE)
