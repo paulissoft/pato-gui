@@ -46,7 +46,7 @@ help: ## This help.
 all: env-create init install test pato-gui-build
 
 env-create: ## Create Mamba (Conda) environment (only once)
-	$(MAMBA) env list | grep -E '^$(PROJECT)\s+' || $(MAMBA) env create --name $(PROJECT) --file environment.yml --yes
+	$(MAMBA) env list | grep -E '^\s*$(PROJECT)\s+' || $(MAMBA) env create --name $(PROJECT) --file environment.yml --yes
 
 env-export: ## Export an environment
 	$(MAMBA) create --name $(PROJECT) python
