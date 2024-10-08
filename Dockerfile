@@ -8,6 +8,6 @@ USER ${DEVBOX_USER}:${DEVBOX_USER}
 COPY --chown=${DEVBOX_USER}:${DEVBOX_USER} devbox.json devbox.lock ./
 RUN devbox install
 COPY --chown=${DEVBOX_USER}:${DEVBOX_USER} pyproject.toml poetry.lock ./
-RUN poetry install
+# RUN devbox run --pure -- poetry install -vvv
 
 CMD ["devbox", "shell"]
