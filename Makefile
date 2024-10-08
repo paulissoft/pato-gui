@@ -10,7 +10,7 @@ GIT 			     := git
 # Otherwise perl may complain on a Mac
 LANG           := C
 # Must be invoked dynamic, i.e. the environment may not be ready yet
-POETRY         := poetry
+POETRY         := $(MAMBA) run poetry
 VERSION         = $(shell $(POETRY) version -s)
 # Idem
 TAG 	          = v$(VERSION)
@@ -22,6 +22,23 @@ DOCKER_IMAGE_TAG     := pato-gui
 PLATFORM             := --platform linux/amd64
 DOCKER_BUILD_OPTIONS := $(PLATFORM) --tag $(DOCKER_IMAGE_TAG)
 DOCKER_BUILD_FILE    := .
+
+CONDA_DEFAULT_ENV=pato-gui
+
+# Goals not needing a Mamba (Conda) environment
+GOALS_ENV_NO   := help env-create env-export env-update env-remove tag clean docker-build docker-run
+# Goals needing a Mamba (Conda) environment (all the poetry commands)
+GOALS_ENV_YES  := all init install test dist pato-gui pato-gui-build upload_test upload 
+
+#ifneq '$(filter $(GOALS_ENV_YES),$(MAKECMDGOALS))' ''
+#
+#ifneq '$(CONDA_DEFAULT_ENV)' '$(PROJECT)'
+#$(error Set up Conda environment ($(MAMBA) activate $(PROJECT)))
+#endif
+#
+#endif
+
+.PHONY: $(GOALS_ENV_NO) $(GOALS_ENV_YES)
 
 help: ## This help.
 	@perl -ne 'printf(qq(%-30s  %s\n), $$1, $$2) if (m/^((?:\w|[.%-])+):.*##\s*(.*)$$/)' $(MAKEFILE_LIST)
@@ -51,6 +68,14 @@ test: install ## Test the package.
 	$(POETRY) check
 	$(POETRY) run pytest
 
+dist: install test ## Prepare the distribution the package by installing and testing it.
+
+upload_test: dist ## Upload the package to PyPI test.
+	$(POETRY) publish -r test-pypi
+
+upload: dist ## Upload the package to PyPI.
+	$(POETRY) publish
+
 pato-gui-build: install ## Build the PATO GUI exectable
 	$(POETRY) run $@
 
@@ -70,6 +95,3 @@ docker-build: ## Build the docker image
 
 docker-run: docker-build ## Build the docker image
 	docker $(DOCKER_OPTIONS) run -it --rm --name $(DOCKER_IMAGE_NAME) $(DOCKER_IMAGE_TAG)
-
-.PHONY: help all env-create env-export env-update env-remove init install test pato-gui-build pato-gui tag clean docker-build docker-run
-
