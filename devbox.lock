@@ -1,0 +1,178 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "nix@latest": {
+      "last_modified": "2024-10-03T15:28:05Z",
+      "resolved": "github:NixOS/nixpkgs/75b209227dff3cbfac19f510a62f9446c92beac4#nix",
+      "source": "devbox-search",
+      "version": "2.18.8",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/s4ansjcc1dd63yn040ssw8qjrawl28ai-nix-2.18.8",
+              "default": true
+            },
+            {
+              "name": "man",
+              "path": "/nix/store/c5ims8zf91g9pzwc2li841nqghnlqjjj-nix-2.18.8-man",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/bfdkdv6nxi8jq7y6qk6svq6dm6z2hw61-nix-2.18.8-dev"
+            },
+            {
+              "name": "doc",
+              "path": "/nix/store/vjr9i8kfzapnddqdl8h8ig6b40nppma7-nix-2.18.8-doc"
+            }
+          ],
+          "store_path": "/nix/store/s4ansjcc1dd63yn040ssw8qjrawl28ai-nix-2.18.8"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/ly8j0kdh01cwv0ad88zsavki6g4iavhn-nix-2.18.8",
+              "default": true
+            },
+            {
+              "name": "man",
+              "path": "/nix/store/3q8780wxciwz30isbl11b38r61xjszcv-nix-2.18.8-man",
+              "default": true
+            },
+            {
+              "name": "debug",
+              "path": "/nix/store/jf9jd2p45dcbyyf19aj10blj8bzhvl5q-nix-2.18.8-debug"
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/4d508ddzsfk4gl9r9z1b3q68w0fnj9lh-nix-2.18.8-dev"
+            },
+            {
+              "name": "doc",
+              "path": "/nix/store/rhq4cgzs44wgcdijhjf6qb93irgwh312-nix-2.18.8-doc"
+            }
+          ],
+          "store_path": "/nix/store/ly8j0kdh01cwv0ad88zsavki6g4iavhn-nix-2.18.8"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/89l32qgq7y79474plhclw8mfpwzgdi7i-nix-2.18.8",
+              "default": true
+            },
+            {
+              "name": "man",
+              "path": "/nix/store/ll7j4mj94iw5iqcgmjz02rsrxzgnpcsl-nix-2.18.8-man",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/aspc64mpgh800w93qajl66wqwry0x9lc-nix-2.18.8-dev"
+            },
+            {
+              "name": "doc",
+              "path": "/nix/store/y628dsc4wk3sn751rqbdk1klabibxv2p-nix-2.18.8-doc"
+            }
+          ],
+          "store_path": "/nix/store/89l32qgq7y79474plhclw8mfpwzgdi7i-nix-2.18.8"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/1fp0ggfyfgn6ydsgc8sdwqv5n5gn9nal-nix-2.18.8",
+              "default": true
+            },
+            {
+              "name": "man",
+              "path": "/nix/store/fikfx21cpj74v5kaamc2mn11gm9y8w54-nix-2.18.8-man",
+              "default": true
+            },
+            {
+              "name": "debug",
+              "path": "/nix/store/hady306s80zjl8avq98czpv0lg5dw5ad-nix-2.18.8-debug"
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/8kd9pq400l2qyl2sxx819fr8slff5n5a-nix-2.18.8-dev"
+            },
+            {
+              "name": "doc",
+              "path": "/nix/store/8n45k4i68vvql5mr6cks7yxj45v2z7k9-nix-2.18.8-doc"
+            }
+          ],
+          "store_path": "/nix/store/1fp0ggfyfgn6ydsgc8sdwqv5n5gn9nal-nix-2.18.8"
+        }
+      }
+    },
+    "poetry@latest": {
+      "last_modified": "2024-09-23T10:58:17Z",
+      "plugin_version": "0.0.4",
+      "resolved": "github:NixOS/nixpkgs/568bfef547c14ca438c56a0bece08b8bb2b71a9c#poetry",
+      "source": "devbox-search",
+      "version": "1.8.3",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/nycf0kbsd4mhqcppdai1cj3vwik2vmic-python3.12-poetry-1.8.3",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/7ll0b0qsg8272qfdzr24kiy493mm9ay5-python3.12-poetry-1.8.3-dist"
+            }
+          ],
+          "store_path": "/nix/store/nycf0kbsd4mhqcppdai1cj3vwik2vmic-python3.12-poetry-1.8.3"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/5kgf258lia7vf00k7y8jggwfjvhz820a-python3.12-poetry-1.8.3",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/z0nfiin8a8igi6x3n0gjy9gb440mpyzg-python3.12-poetry-1.8.3-dist"
+            }
+          ],
+          "store_path": "/nix/store/5kgf258lia7vf00k7y8jggwfjvhz820a-python3.12-poetry-1.8.3"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/h0ncgdbb67cj9zg1ywman246bzq3b8s6-python3.12-poetry-1.8.3",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/9sj038vl4x792fr5carna0iyhb723scb-python3.12-poetry-1.8.3-dist"
+            }
+          ],
+          "store_path": "/nix/store/h0ncgdbb67cj9zg1ywman246bzq3b8s6-python3.12-poetry-1.8.3"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/4h1ns7l1fvjs718pjw1bg6wyy01jvpsw-python3.12-poetry-1.8.3",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/c9z3y970nqjgc1n2vllbgn5718rq23ds-python3.12-poetry-1.8.3-dist"
+            }
+          ],
+          "store_path": "/nix/store/4h1ns7l1fvjs718pjw1bg6wyy01jvpsw-python3.12-poetry-1.8.3"
+        }
+      }
+    }
+  }
+}
