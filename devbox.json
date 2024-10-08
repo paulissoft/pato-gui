@@ -6,7 +6,6 @@
   ],
   "shell": {
     "init_hook": [
-      "poetry shell"
     ],
     "scripts": {
       "test": [
