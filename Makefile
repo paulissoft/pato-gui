@@ -26,10 +26,10 @@ DOCKER_BUILD_FILE    := .
 help: ## This help.
 	@perl -ne 'printf(qq(%-30s  %s\n), $$1, $$2) if (m/^((?:\w|[.%-])+):.*##\s*(.*)$$/)' $(MAKEFILE_LIST)
 
-all: init env-create install test pato-gui-build
+all: env-create init install test pato-gui-build
 
 env-create: ## Create Mamba (Conda) environment (only once)
-	$(MAMBA) env list | grep -E '^$(PROJECT)\s+' || $(MAMBA) env create --name $(PROJECT) --file environment.yml
+	$(MAMBA) env list | grep -E '^$(PROJECT)\s+' || $(MAMBA) env create --name $(PROJECT) --file environment.yml --yes
 
 env-export: ## Export an environment
 	$(MAMBA) create --name $(PROJECT) python
