@@ -6,6 +6,7 @@
   ],
   "shell": {
     "init_hook": [
+      "echo 'Started devbox shell'"
     ],
     "scripts": {
       "test": [
