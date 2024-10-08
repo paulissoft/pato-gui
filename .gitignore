@@ -145,3 +145,4 @@ NUL
 # Devbox
 !.devcontainer
 
+*.bak

@@ -2,11 +2,13 @@
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.3/.schema/devbox.schema.json",
   "packages": [
     "nix@latest",
-    "poetry@latest"
+    "poetry@latest",
+    "ps@latest",
+    "python@latest"
   ],
   "shell": {
     "init_hook": [
-      "echo 'Started devbox shell'"
+      "poetry shell"
     ],
     "scripts": {
       "test": [
