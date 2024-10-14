@@ -8,7 +8,7 @@ CONDA          := conda
 MAMBA          := mamba
 POETRY         := poetry
 POETRY_OPTIONS :=
-POETRY_CMD     := $(CONDA) run -n $(PROJECT) && $(POETRY) $(POETRY_OPTIONS)
+POETRY_CMD     := $(CONDA) run -n $(PROJECT) $(POETRY) $(POETRY_OPTIONS)
 GIT 			     := git
 # Otherwise perl may complain on a Mac
 LANG           := C
