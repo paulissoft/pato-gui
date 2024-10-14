@@ -18,10 +18,11 @@ COPY --chown=${DEVBOX_USER}:${DEVBOX_USER} devbox.json devbox.lock ./
 COPY --chown=${DEVBOX_USER}:${DEVBOX_USER} pyproject-minimal.toml ./pyproject.toml
 RUN touch README.md CHANGELOG.md
 RUN devbox install
-COPY --chown=${DEVBOX_USER}:${DEVBOX_USER} environment.yml pyproject.toml poetry.lock ./
+COPY --chown=${DEVBOX_USER}:${DEVBOX_USER} pyproject.toml poetry.lock ./
 RUN devbox run -- echo "Installed Packages."
 
 COPY --chown=${DEVBOX_USER}:${DEVBOX_USER} . .
-RUN devbox run -- poetry pato-gui-build
+RUN devbox run -- make all
 
-CMD ["devbox", "run", "--", "./dist/PatoGui/PatoGui"]
+CMD ["devbox", "run", "--", "micromamba", "run", "-n", "pato-gui", "./dist/PatoGui/PatoGui"]
+# CMD ["devbox", "shell"]
