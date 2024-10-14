@@ -4,10 +4,11 @@
 PROJECT        := pato-gui
 BRANCH 	 	     := main
 PYTHON_VERSION := 3.12
+CONDA          := conda
+MAMBA          := mamba
 POETRY         := poetry
 POETRY_OPTIONS :=
-POETRY_CMD     := $(POETRY) $(POETRY_OPTIONS)
-MAMBA          := mamba
+POETRY_CMD     := $(CONDA) run -n $(PROJECT) && $(POETRY) $(POETRY_OPTIONS)
 GIT 			     := git
 # Otherwise perl may complain on a Mac
 LANG           := C
@@ -21,13 +22,13 @@ GOALS_VIRTUAL_ENV_NO   := help env-create env-update env-export env-remove clean
 # Goals needing a Mamba (Conda) environment (all the poetry commands)
 GOALS_VIRTUAL_ENV_YES  := init install pato-gui pato-gui-build test dist upload_test upload 
 
-ifneq '$(filter $(GOALS_VIRTUAL_ENV_YES),$(MAKECMDGOALS))' ''
-
-ifneq '$(CONDA_DEFAULT_ENV)' '$(PROJECT)'
-$(error Set up Conda environment ($(MAMBA) activate $(PROJECT)))
-endif
-
-endif
+#ifneq '$(filter $(GOALS_VIRTUAL_ENV_YES),$(MAKECMDGOALS))' ''
+#
+#ifneq '$(CONDA_DEFAULT_ENV)' '$(PROJECT)'
+#$(error Set up Conda environment ($(MAMBA) activate $(PROJECT)))
+#endif
+#
+#endif
 
 .PHONY: $(GOALS_VIRTUAL_ENV_NO) $(GOALS_VIRTUAL_ENV_YES)
 
@@ -40,7 +41,7 @@ all: init install pato-gui-build  ## Do it all: initialize, install and build th
 #	$(MAMBA) create --yes --name $(PROJECT) python
 
 env-create: ## Create Mamba (Conda) environment (only once)
-	$(MAMBA) env create --name $(PROJECT) --file environment.yml
+	$(MAMBA) env list | grep -E '^$(PROJECT)\s' 1>/dev/null || $(MAMBA) env create --name $(PROJECT) --file environment.yml
 
 env-update: ## Update Mamba (Conda) environment
 	$(MAMBA) env update --name $(PROJECT) --file environment.yml --prune
