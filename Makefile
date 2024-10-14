@@ -3,16 +3,18 @@
 # project specific
 PROJECT        := pato-gui
 BRANCH 	 	     := main
-PYTHON_VERSION := 3.12
-MAMBA          := mamba
-POETRY         := poetry
-POETRY_OPTIONS :=
-POETRY_CMD     := $(MAMBA) run -n $(PROJECT) $(POETRY) $(POETRY_OPTIONS)
+PYTHON_VERSION := 3.10
+DEVBOX         := devbox
+POETRY_OPTIONS := --no-ansi 
+POETRY         := $(DEVBOX) run -- poetry $(POETRY_OPTIONS)
+PYTHON 	       := $(POETRY) run python
+PIP    	       := $(POETRY) run pip
+PYTEST 	       := $(POETRY) run pytest
 GIT 			     := git
 # Otherwise perl may complain on a Mac
 LANG           := C
 # Must be invoked dynamic, i.e. the environment may not be ready yet
-VERSION         = $(shell $(POETRY_CMD) version -s)
+VERSION         = $(shell $(POETRY) version -s)
 # Idem
 TAG 	          = v$(VERSION)
 
@@ -21,49 +23,37 @@ help: ## This help.
 
 all: init install pato-gui-build  ## Do it all: initialize, install and build the executable
 
-env-create: ## Create Mamba (Conda) environment (only once)
-	$(MAMBA) env list | grep -E '^$(PROJECT)\s' 1>/dev/null || $(MAMBA) env create --name $(PROJECT) --file environment.yml
-
-env-update: ## Update Mamba (Conda) environment
-	$(MAMBA) env update --name $(PROJECT) --file environment.yml --prune
-
-env-export: ## Export the the environment to file environment.yml
-	$(MAMBA) env export -n $(PROJECT) --from-history > environment.yml
-
-env-remove: ## Remove Mamba (Conda) environment
-	-$(MAMBA) env remove --name $(PROJECT)
-
-init: env-create ## Fulfill the requirements
-	$(POETRY_CMD) build
+init: ## Fulfill the requirements
+	$(POETRY) build
 
 install: init ## Install the package to the Python installation path.
-	$(POETRY_CMD) install
-	$(POETRY_CMD) lock
+	$(POETRY) lock
+	$(POETRY) install
 
 pato-gui: install ## Run the PATO GUI
-	$(POETRY_CMD) run $@
+	$(POETRY) run $@
 
 pato-gui-build: install ## Build the PATO GUI exectable
-	$(POETRY_CMD) run $@
+	$(POETRY) run $@
 
 test: install ## Test the package.
-	$(POETRY_CMD) check
-	$(POETRY_CMD) run pytest
+	$(POETRY) check
+	$(POETRY) run pytest
 
 dist: install test ## Prepare the distribution the package by installing and testing it.
 
 upload_test: dist ## Upload the package to PyPI test.
-	$(POETRY_CMD) publish -r test-pypi
+	$(POETRY) publish -r test-pypi
 
 upload: dist ## Upload the package to PyPI.
-	$(POETRY_CMD) publish
+	$(POETRY) publish
 
 tag: ## Tag the package on GitHub.
 	$(GIT) tag -a $(TAG) -m "$(TAG)"
 	$(GIT) push origin $(TAG)
 	gh release create $(TAG) --target $(BRANCH) --title "Release $(TAG)" --notes "See CHANGELOG"
 
-clean: env-remove ## Cleanup the environment
+clean: ## Cleanup the environment
 	$(GIT) clean -d -x -i
 
 .PHONY: help \

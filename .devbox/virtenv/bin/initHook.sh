@@ -1,1 +1,0 @@
-/Users/gpaulissen/dev/pato-gui/.devbox/virtenv/poetry/bin/initHook.sh

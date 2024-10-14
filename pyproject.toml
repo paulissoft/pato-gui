@@ -29,8 +29,8 @@ pato-gui-build = "pato_gui.pyinstaller:install"
 pato-gui = "pato_gui.program:main"
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.13"
-pyinstaller = "6.1.0"
+python = "^3.9"
+# pyinstaller = ">=6.1.0"
 # pillow = "9.0.0"
 gooey = ">1.0.8"
 docutils = "^0.21.2"
