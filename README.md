@@ -49,10 +49,28 @@ Go to the root folder and issue this command for more help:
 $ make help
 ```
 
-To run from the start:
+To run from the start where you can choose the POM and the config directory:
 
 ```
 $ make pato-gui
+```
+
+Or setting up the virtual environment where pato-gui is installed:
+
+```
+$ mamba run -n pato-gui pato-gui
+```
+
+You can alias `pato-gui`:
+
+```
+alias pato-gui='mamba run -n pato-gui pato-gui'
+```
+
+Get some help using the alias:
+
+```
+$ pato-gui -h
 ```
 
 To build the executable:
