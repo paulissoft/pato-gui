@@ -7,7 +7,7 @@ PYTHON_VERSION := 3.12
 POETRY         := poetry
 POETRY_OPTIONS :=
 POETRY_CMD     := $(POETRY) $(POETRY_OPTIONS)
-MAMBA          := mamba
+MAMBA          := micromamba
 GIT 			     := git
 # Otherwise perl may complain on a Mac
 LANG           := C
