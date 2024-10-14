@@ -7,8 +7,7 @@ PYTHON_VERSION := 3.12
 POETRY         := poetry
 POETRY_OPTIONS :=
 POETRY_CMD     := $(POETRY) $(POETRY_OPTIONS)
-CONDA          := conda
-MAMBA          := micromamba
+MAMBA          := mamba
 GIT 			     := git
 # Otherwise perl may complain on a Mac
 LANG           := C
@@ -17,15 +16,8 @@ VERSION         = $(shell $(POETRY_CMD) version -s)
 # Idem
 TAG 	          = v$(VERSION)
 
-DOCKER_LOG_LEVEL     := INFO
-DOCKER_OPTIONS       := --log-level $(DOCKER_LOG_LEVEL)
-DOCKER_IMAGE_NAME    := pato-gui
-DOCKER_IMAGE_TAG     := pato-gui
-DOCKER_BUILD_OPTIONS := --platform linux/amd64 --tag $(DOCKER_IMAGE_TAG)
-DOCKER_BUILD_FILE    := .
-
 # Goals not needing a Mamba (Conda) environment
-GOALS_VIRTUAL_ENV_NO   := help env-bootstrap env-create env-update env-remove clean tag docker-build docker-run
+GOALS_VIRTUAL_ENV_NO   := help env-create env-update env-export env-remove clean tag
 # Goals needing a Mamba (Conda) environment (all the poetry commands)
 GOALS_VIRTUAL_ENV_YES  := init install pato-gui pato-gui-build test dist upload_test upload 
 
@@ -44,8 +36,8 @@ help: ## This help.
 
 all: init install pato-gui-build  ## Do it all: initialize, install and build the executable
 
-env-bootstrap: ## Bootstrap an environment
-	$(CONDA) create --name $(PROJECT) python
+#env-bootstrap: ## Bootstrap an environment
+#	$(MAMBA) create --yes --name $(PROJECT) python
 
 env-create: ## Create Mamba (Conda) environment (only once)
 	$(MAMBA) env create --name $(PROJECT) --file environment.yml
@@ -54,10 +46,10 @@ env-update: ## Update Mamba (Conda) environment
 	$(MAMBA) env update --name $(PROJECT) --file environment.yml --prune
 
 env-export: ## Export the the environment to file environment.yml
-	$(CONDA) env export --from-history > environment.yml
+	$(MAMBA) env export --from-history > environment.yml
 
 env-remove: ## Remove Mamba (Conda) environment
-	-$(CONDA) env remove --name $(PROJECT)
+	-$(MAMBA) env remove --name $(PROJECT)
 
 init: env-create ## Fulfill the requirements
 	$(POETRY_CMD) build
@@ -91,9 +83,3 @@ tag: ## Tag the package on GitHub.
 
 clean: env-remove ## Cleanup the environment
 	$(GIT) clean -d -x -i
-
-docker-build: ## Build the docker image
-	DOCKER_BUILDKIT=1 docker $(DOCKER_OPTIONS) buildx build $(DOCKER_BUILD_OPTIONS) $(DOCKER_BUILD_FILE)
-
-docker-run: docker-build ## Build the docker image
-	docker $(DOCKER_OPTIONS) run -it --rm --name $(DOCKER_IMAGE_NAME) $(DOCKER_IMAGE_TAG)
