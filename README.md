@@ -22,7 +22,15 @@ This GUI would not have been possible without [Gooey](https://github.com/chriski
 
 ## Installation <a name="installation" />
 
-This utility needs Python 3. In order to support several Python versions and/or (virtual) environments on your computer, I prefer [Devbox from Jetify](https://www.jetify.com/devbox/docs/) as the environment manager for O/S tools like Python. See the installation instructions there. Together with [Poetry](https://python-poetry.org/docs/), a Python package manager, this is a good combination to distribute libraries to PyPi.
+You need to install [Conda and Mamba first](https://github.com/conda-forge/miniforge). 
+
+I assume you have already `make`.
+
+Next start a new command prompt and set up a virtual Conda environment with Python and its modules installed:
+
+```
+$ make install
+```
 
 ### Start a command prompt <a name="start-command-line-prompt" />
 
@@ -30,37 +38,6 @@ Needed for installing and running the PATO GUI. Please Google it if you don't kn
 
 First please note that the dollar sign you will see below is the command line prompt sign and not a character you have to type.
 The command line prompt will differ between Operating Systems.
-
-### Installing from PyPi <a name="installing-from-pypi" />
-
-First set up a virtual environment:
-
-```
-$ devbox shell
-```
-
-Now continue with:
-
-```
-$ python3 -m pip install pato-gui
-```
-
-Now `pato-gui` should be available and this command shows you the help:
-
-```
-$ pato-gui -h
-```
-
-You can also build an executable:
-
-```
-$ cd <temporary directory>
-$ pato-gui-build
-```
-
-In the `dist/PatoGui` folder you will find the `PatoGui` executable.
-
-Of course you can put the executable in `dist/PatoGui` somewhere in your path.
 
 ### Installing from source <a name="installing-from-source" />
 
@@ -75,9 +52,13 @@ $ make help
 To run from the start:
 
 ```
-$ devbox shell
-$ make test
-$ make run
+$ make pato-gui
+```
+
+To build the executable:
+
+```
+$ make pato-gui-build
 ```
 
 ## Usage <a name="usage" />
