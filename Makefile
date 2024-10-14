@@ -28,7 +28,7 @@ env-update: ## Update Mamba (Conda) environment
 	$(MAMBA) env update --name $(PROJECT) --file environment.yml --prune
 
 env-export: ## Export the the environment to file environment.yml
-	$(MAMBA) env export --from-history > environment.yml
+	$(MAMBA) env export -n $(PROJECT) --from-history > environment.yml
 
 env-remove: ## Remove Mamba (Conda) environment
 	-$(MAMBA) env remove --name $(PROJECT)
@@ -63,7 +63,7 @@ tag: ## Tag the package on GitHub.
 	$(GIT) push origin $(TAG)
 	gh release create $(TAG) --target $(BRANCH) --title "Release $(TAG)" --notes "See CHANGELOG"
 
-clean: ## Cleanup the environment
+clean: env-remove ## Cleanup the environment
 	$(GIT) clean -d -x -i
 
 .PHONY: help \

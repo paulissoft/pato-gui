@@ -26,7 +26,7 @@ You need to install [Conda and Mamba first](https://github.com/conda-forge/minif
 
 I assume you have already `make`.
 
-Next start a new command prompt and set up a virtual Conda environment with Python and its modules installed:
+Next start a new command prompt and set up a virtual Mamba (Conda) environment with Python and its modules installed:
 
 ```
 $ make install
@@ -64,7 +64,7 @@ $ mamba run -n pato-gui pato-gui
 You can alias `pato-gui`:
 
 ```
-alias pato-gui='mamba run -n pato-gui pato-gui'
+alias pato-gui='conda activate pato-gui && pato-gui'
 ```
 
 Get some help using the alias:

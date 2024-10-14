@@ -6,7 +6,7 @@ channels:
   # be listed explicitly here.
   - nodefaults
 dependencies:
-  - python
+  - python=3.10
   - pip # pip must be mentioned explicitly, or conda-lock will fail
   - poetry
   - wxpython
