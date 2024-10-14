@@ -10,11 +10,12 @@ GIT 			     := git
 # Otherwise perl may complain on a Mac
 LANG           := C
 # Must be invoked dynamic, i.e. the environment may not be ready yet
-POETRY         := $(MAMBA) run poetry
+POETRY         := $(MAMBA) -n $(PROJECT) run poetry
 VERSION         = $(shell $(POETRY) version -s)
 # Idem
 TAG 	          = v$(VERSION)
 
+DOCKER               := podman
 DOCKER_LOG_LEVEL     := INFO
 DOCKER_OPTIONS       := --log-level $(DOCKER_LOG_LEVEL)
 DOCKER_IMAGE_NAME    := pato-gui
@@ -58,7 +59,7 @@ env-update: ## Update Mamba (Conda) environment
 env-remove: ## Remove Mamba (Conda) environment
 	-$(MAMBA) env remove --name $(PROJECT)
 
-init: ## Fulfill the requirements
+init: env-create ## Fulfill the requirements
 	$(POETRY) install
 
 install: init ## Install the package to the Python installation path.
@@ -87,11 +88,11 @@ tag: ## Tag the package on GitHub.
 	$(GIT) push origin $(TAG)
 	gh release create $(TAG) --target $(BRANCH) --title "Release $(TAG)" --notes "See CHANGELOG"
 
-clean: ## Cleanup the environment
+clean: env-remove ## Cleanup the environment
 	$(GIT) clean -d -x -i
 
 docker-build: ## Build the docker image
-	DOCKER_BUILDKIT=1 docker $(DOCKER_OPTIONS) buildx build $(DOCKER_BUILD_OPTIONS) $(DOCKER_BUILD_FILE)
+	$(DOCKER) $(DOCKER_OPTIONS) build $(DOCKER_BUILD_OPTIONS) $(DOCKER_BUILD_FILE)
 
 docker-run: docker-build ## Build the docker image
-	docker $(DOCKER_OPTIONS) run -it --rm --name $(DOCKER_IMAGE_NAME) $(DOCKER_IMAGE_TAG)
+	$(DOCKER) $(DOCKER_OPTIONS) run -it --rm --name $(DOCKER_IMAGE_NAME) $(DOCKER_IMAGE_TAG)
