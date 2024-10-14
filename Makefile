@@ -63,7 +63,7 @@ tag: ## Tag the package on GitHub.
 	$(GIT) push origin $(TAG)
 	gh release create $(TAG) --target $(BRANCH) --title "Release $(TAG)" --notes "See CHANGELOG"
 
-clean: env-remove ## Cleanup the environment
+clean: ## Cleanup the environment
 	$(GIT) clean -d -x -i
 
 .PHONY: help \
