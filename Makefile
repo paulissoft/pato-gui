@@ -7,6 +7,7 @@ PYTHON_VERSION := 3.12
 POETRY         := poetry
 POETRY_OPTIONS :=
 POETRY_CMD     := $(POETRY) $(POETRY_OPTIONS)
+CONDA          := conda
 MAMBA          := micromamba
 GIT 			     := git
 # Otherwise perl may complain on a Mac
@@ -44,8 +45,7 @@ help: ## This help.
 all: init install pato-gui-build  ## Do it all: initialize, install and build the executable
 
 env-bootstrap: ## Bootstrap an environment
-	$(MAMBA) create --name $(PROJECT) python
-	$(MAMBA) env export --from-history > environment.yml
+	$(CONDA) create --name $(PROJECT) python
 
 env-create: ## Create Mamba (Conda) environment (only once)
 	$(MAMBA) env create --name $(PROJECT) --file environment.yml
@@ -53,8 +53,11 @@ env-create: ## Create Mamba (Conda) environment (only once)
 env-update: ## Update Mamba (Conda) environment
 	$(MAMBA) env update --name $(PROJECT) --file environment.yml --prune
 
+env-export: ## Export the the environment to file environment.yml
+	$(CONDA) env export --from-history > environment.yml
+
 env-remove: ## Remove Mamba (Conda) environment
-	-$(MAMBA) env remove --name $(PROJECT)
+	-$(CONDA) env remove --name $(PROJECT)
 
 init: env-create ## Fulfill the requirements
 	$(POETRY_CMD) build
