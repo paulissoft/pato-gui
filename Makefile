@@ -95,4 +95,4 @@ docker-build: ## Build the docker image
 	$(DOCKER) $(DOCKER_OPTIONS) build $(DOCKER_BUILD_OPTIONS) $(DOCKER_BUILD_FILE)
 
 docker-run: docker-build ## Build the docker image
-	$(DOCKER) $(DOCKER_OPTIONS) run -it --rm --name $(DOCKER_IMAGE_NAME) $(DOCKER_IMAGE_TAG)
+	$(DOCKER) $(DOCKER_OPTIONS) run -it --platform linux/amd64 --rm --name $(DOCKER_IMAGE_NAME) $(DOCKER_IMAGE_TAG)
