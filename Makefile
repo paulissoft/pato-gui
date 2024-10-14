@@ -94,5 +94,5 @@ clean: env-remove ## Cleanup the environment
 docker-build: ## Build the docker image
 	$(DOCKER) $(DOCKER_OPTIONS) build $(DOCKER_BUILD_OPTIONS) $(DOCKER_BUILD_FILE)
 
-docker-run: docker-build ## Build the docker image
+docker-run: # docker-build ## Build the docker image
 	$(DOCKER) $(DOCKER_OPTIONS) run -it $(PLATFORM) --rm --name $(DOCKER_IMAGE_NAME) $(DOCKER_IMAGE_TAG)
