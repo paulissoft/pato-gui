@@ -7,7 +7,7 @@ channels:
   - nodefaults
 dependencies:
   - python
-  - mamba
+  - micromamba
   - pip # pip must be mentioned explicitly, or conda-lock will fail
   - poetry
   - wxpython
