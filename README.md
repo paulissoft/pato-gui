@@ -22,7 +22,7 @@ This GUI would not have been possible without [Gooey](https://github.com/chriski
 
 ## Installation <a name="installation" />
 
-You need to install [Conda and Mamba first](https://github.com/conda-forge/miniforge). 
+You need to install [Mamba first](https://github.com/conda-forge/miniforge). 
 
 I assume you have already `make`.
 
@@ -64,7 +64,7 @@ $ mamba run -n pato-gui pato-gui
 You can alias `pato-gui`:
 
 ```
-alias pato-gui='conda activate pato-gui && pato-gui'
+alias pato-gui='mamba run -n pato-gui pato-gui'
 ```
 
 Get some help using the alias:
