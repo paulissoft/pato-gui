@@ -24,5 +24,6 @@ RUN devbox run -- echo "Installed Packages."
 COPY --chown=${DEVBOX_USER}:${DEVBOX_USER} . .
 RUN devbox run -- make all
 
-CMD ["devbox", "run", "--", "make", "pato-gui"]
-# CMD ["devbox", "shell"]
+# micromamba run -n pato-gui poetry run pato-gui
+# CMD ["devbox", "run", "--", "micromamba", "run", "-n", "pato-gui", "poetry", "run", "pato-gui"]
+CMD ["devbox", "shell"]

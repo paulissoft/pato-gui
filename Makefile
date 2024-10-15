@@ -4,13 +4,25 @@
 PROJECT        := pato-gui
 BRANCH 	 	     := main
 PYTHON_VERSION := 3.12
-
-MAMBA          := micromamba
 GIT 			     := git
-# Otherwise perl may complain on a Mac
+DEVBOX         := devbox
+MAMBA          := micromamba
+
+# Otherwise perl may complain on a Mac on "make help"
 LANG           := C
+
+# 1 - always run commands in devshell environment, i.e. devbox run --
+ifneq '$(DEVBOX_SHELL_ENABLED)' '1'
+DEVBOX_RUN     := $(DEVBOX) run --
+else
+DEVBOX_RUN     := 
+endif
+
+# 2 - always run poetry commands in micromamba environment, i.e. $(DEVBOX_RUN) micromamba -n $(PROJECT) run
+MAMBA_RUN      := $(DEVBOX_RUN) $(MAMBA) -n $(PROJECT) run
+POETRY         := $(MAMBA_RUN) poetry
+
 # Must be invoked dynamic, i.e. the environment may not be ready yet
-POETRY         := $(MAMBA) -n $(PROJECT) run poetry
 VERSION         = $(shell $(POETRY) version -s)
 # Idem
 TAG 	          = v$(VERSION)
@@ -25,21 +37,6 @@ DOCKER_BUILD_OPTIONS := $(PLATFORM) --tag $(DOCKER_IMAGE_TAG)
 DOCKER_BUILD_FILE    := .
 
 CONDA_DEFAULT_ENV=pato-gui
-
-# Goals not needing a Mamba (Conda) environment
-GOALS_ENV_NO   := help env-create env-export env-update env-remove tag clean docker-build docker-run
-# Goals needing a Mamba (Conda) environment (all the poetry commands)
-GOALS_ENV_YES  := all init install test dist pato-gui pato-gui-build upload_test upload 
-
-#ifneq '$(filter $(GOALS_ENV_YES),$(MAKECMDGOALS))' ''
-#
-#ifneq '$(CONDA_DEFAULT_ENV)' '$(PROJECT)'
-#$(error Set up Conda environment ($(MAMBA) activate $(PROJECT)))
-#endif
-#
-#endif
-
-.PHONY: $(GOALS_ENV_NO) $(GOALS_ENV_YES)
 
 help: ## This help.
 	@perl -ne 'printf(qq(%-30s  %s\n), $$1, $$2) if (m/^((?:\w|[.%-])+):.*##\s*(.*)$$/)' $(MAKEFILE_LIST)
@@ -95,4 +92,24 @@ docker-build: ## Build the docker image
 	$(DOCKER) $(DOCKER_OPTIONS) build $(DOCKER_BUILD_OPTIONS) $(DOCKER_BUILD_FILE)
 
 docker-run: # docker-build ## Build the docker image
-	$(DOCKER) $(DOCKER_OPTIONS) run -it $(PLATFORM) --rm --name $(DOCKER_IMAGE_NAME) $(DOCKER_IMAGE_TAG)
+	$(DOCKER) $(DOCKER_OPTIONS) run -it --rm $(PLATFORM) --env DISPLAY=host.docker.internal:0 --name $(DOCKER_IMAGE_NAME) $(DOCKER_IMAGE_TAG)
+
+.PHONY: help \
+        all \
+        env-create \
+        env-export \
+        env-update \
+        env-remove \
+        init \
+        install \
+        test \
+        dist \
+        upload_test \
+        upload \
+        pato-gui \
+        pato-gui-build \
+        tag \
+        clean \
+        docker-build \
+        docker-run
+
