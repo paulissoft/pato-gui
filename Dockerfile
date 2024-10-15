@@ -26,6 +26,16 @@ RUN devbox run -- make all
 
 ENV PATH=/home/${DEVBOX_USER}/micromamba/envs/pato-gui:${PATH}
 
+USER root:root
+WORKDIR /tmp
+ENV HICOLOR_ICON_THEME=hicolor-icon-theme-0.18
+RUN curl -O https://icon-theme.freedesktop.org/releases/${HICOLOR_ICON_THEME}.tar.xz && \
+    tar -xvf ${HICOLOR_ICON_THEME}.tar.xz && \
+    cd ${HICOLOR_ICON_THEME} && \
+    meson setup build --prefix /usr && \
+    meson install -C build
+USER ${DEVBOX_USER}:${DEVBOX_USER}
+
 # micromamba run -n pato-gui poetry run pato-gui
 # CMD ["devbox", "run", "--", "micromamba", "run", "-n", "pato-gui", "poetry", "run", "pato-gui"]
 CMD ["devbox", "shell"]
