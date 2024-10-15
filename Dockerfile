@@ -24,6 +24,8 @@ RUN devbox run -- echo "Installed Packages."
 COPY --chown=${DEVBOX_USER}:${DEVBOX_USER} . .
 RUN devbox run -- make all
 
+ENV PATH=/home/${DEVBOX_USER}/micromamba/envs/pato-gui:${PATH}
+
 # micromamba run -n pato-gui poetry run pato-gui
 # CMD ["devbox", "run", "--", "micromamba", "run", "-n", "pato-gui", "poetry", "run", "pato-gui"]
 CMD ["devbox", "shell"]
