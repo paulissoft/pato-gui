@@ -1,68 +1,84 @@
 {
   "lockfile_version": "1",
   "packages": {
-    "poetry@latest": {
-      "last_modified": "2024-10-09T02:21:25Z",
-      "plugin_version": "0.0.4",
-      "resolved": "github:NixOS/nixpkgs/2b58bfe2c0d73341362870a0f1e50b2b8f2e4b84#poetry",
+    "maven3@latest": {
+      "last_modified": "2023-02-24T09:01:09Z",
+      "resolved": "github:NixOS/nixpkgs/7d0ed7f2e5aea07ab22ccb338d27fbe347ed2f11#maven3",
       "source": "devbox-search",
-      "version": "1.8.3",
+      "version": "3.8.6",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "path": "/nix/store/3ckhzjwr0w6szv4l1www71y1p8g6a35x-apache-maven-3.8.6",
+              "default": true
+            }
+          ]
+        }
+      }
+    },
+    "poetry@latest": {
+      "last_modified": "2024-11-28T07:51:56Z",
+      "plugin_version": "0.0.4",
+      "resolved": "github:NixOS/nixpkgs/226216574ada4c3ecefcbbec41f39ce4655f78ef#poetry",
+      "source": "devbox-search",
+      "version": "1.8.4",
       "systems": {
         "aarch64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/ckpa79sy4rj1pbplmp74sjx59nw8r4xp-python3.12-poetry-1.8.3",
+              "path": "/nix/store/fx30df4032vhsqxi3bgfy1wx3sv408x6-python3.12-poetry-1.8.4",
               "default": true
             },
             {
               "name": "dist",
-              "path": "/nix/store/s44zb723g0jxnhxl6llgaz9g9byj5wy5-python3.12-poetry-1.8.3-dist"
+              "path": "/nix/store/b0rf4va6ibp2dj22ckadmp6vxxm67gwh-python3.12-poetry-1.8.4-dist"
             }
           ],
-          "store_path": "/nix/store/ckpa79sy4rj1pbplmp74sjx59nw8r4xp-python3.12-poetry-1.8.3"
+          "store_path": "/nix/store/fx30df4032vhsqxi3bgfy1wx3sv408x6-python3.12-poetry-1.8.4"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/s1liys3nn0sh28k4izwqs1jiirrvnw79-python3.12-poetry-1.8.3",
+              "path": "/nix/store/9xijcii5ka977bvkc6g6kknlpy9k291x-python3.12-poetry-1.8.4",
               "default": true
             },
             {
               "name": "dist",
-              "path": "/nix/store/m7c6ck6h18jxis7l1r4fiw8m0ml16rpq-python3.12-poetry-1.8.3-dist"
+              "path": "/nix/store/y406ixmc63dwwh595qcicz1siag3g7vw-python3.12-poetry-1.8.4-dist"
             }
           ],
-          "store_path": "/nix/store/s1liys3nn0sh28k4izwqs1jiirrvnw79-python3.12-poetry-1.8.3"
+          "store_path": "/nix/store/9xijcii5ka977bvkc6g6kknlpy9k291x-python3.12-poetry-1.8.4"
         },
         "x86_64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/0xffpydiisn36savnslpzsqzrd8hnb08-python3.12-poetry-1.8.3",
+              "path": "/nix/store/lny3bq2k2az14s5h023kkyrgr7a4szpw-python3.12-poetry-1.8.4",
               "default": true
             },
             {
               "name": "dist",
-              "path": "/nix/store/f53fclsrksrbfnk5ss1s5ydqxr52xbs0-python3.12-poetry-1.8.3-dist"
+              "path": "/nix/store/ca0p7vksmjyaawn1r1vq616ai1w1qcic-python3.12-poetry-1.8.4-dist"
             }
           ],
-          "store_path": "/nix/store/0xffpydiisn36savnslpzsqzrd8hnb08-python3.12-poetry-1.8.3"
+          "store_path": "/nix/store/lny3bq2k2az14s5h023kkyrgr7a4szpw-python3.12-poetry-1.8.4"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/nccb1zw832cnd23k1jmv6l3r62njjs6l-python3.12-poetry-1.8.3",
+              "path": "/nix/store/hfkxhka0yhix2zjcn7bwki5a9wfbiczd-python3.12-poetry-1.8.4",
               "default": true
             },
             {
               "name": "dist",
-              "path": "/nix/store/0yz46s47qaq6rph8sv17i7lx2d4vjrrf-python3.12-poetry-1.8.3-dist"
+              "path": "/nix/store/qnld2n4rdgc3bl6id6w45zry2xp19mwb-python3.12-poetry-1.8.4-dist"
             }
           ],
-          "store_path": "/nix/store/nccb1zw832cnd23k1jmv6l3r62njjs6l-python3.12-poetry-1.8.3"
+          "store_path": "/nix/store/hfkxhka0yhix2zjcn7bwki5a9wfbiczd-python3.12-poetry-1.8.4"
         }
       }
     },
