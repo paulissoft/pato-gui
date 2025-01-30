@@ -27,15 +27,6 @@ VERSION         = $(shell $(POETRY) version -s)
 # Idem
 TAG 	          = v$(VERSION)
 
-DOCKER               := podman
-DOCKER_LOG_LEVEL     := INFO
-DOCKER_OPTIONS       := --log-level $(DOCKER_LOG_LEVEL)
-DOCKER_IMAGE_NAME    := pato-gui
-DOCKER_IMAGE_TAG     := pato-gui
-PLATFORM             := --platform linux/amd64
-DOCKER_BUILD_OPTIONS := $(PLATFORM) --tag $(DOCKER_IMAGE_TAG)
-DOCKER_BUILD_FILE    := .
-
 CONDA_DEFAULT_ENV=pato-gui
 
 help: ## This help.
@@ -88,12 +79,6 @@ tag: ## Tag the package on GitHub.
 clean: env-remove ## Cleanup the environment
 	$(GIT) clean -d -x -i
 
-docker-build: ## Build the docker image
-	$(DOCKER) $(DOCKER_OPTIONS) build $(DOCKER_BUILD_OPTIONS) $(DOCKER_BUILD_FILE)
-
-docker-run: # docker-build ## Build the docker image
-	$(DOCKER) $(DOCKER_OPTIONS) run -it --rm $(PLATFORM) --env DISPLAY=host.docker.internal:0 --name $(DOCKER_IMAGE_NAME) $(DOCKER_IMAGE_TAG)
-
 .PHONY: help \
         all \
         env-create \
@@ -109,7 +94,5 @@ docker-run: # docker-build ## Build the docker image
         pato-gui \
         pato-gui-build \
         tag \
-        clean \
-        docker-build \
-        docker-run
+        clean
 
