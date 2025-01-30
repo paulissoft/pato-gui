@@ -2,11 +2,10 @@
 
 # project specific
 PROJECT        := pato-gui
-BRANCH 	 	     := main
+BRANCH         := main
 PYTHON_VERSION := 3.12
-GIT 			     := git
 DEVBOX         := devbox
-MAMBA          := micromamba
+GH             := gh
 
 # Otherwise perl may complain on a Mac on "make help"
 LANG           := C
@@ -19,13 +18,15 @@ DEVBOX_RUN     :=
 endif
 
 # 2 - always run poetry commands in micromamba environment, i.e. $(DEVBOX_RUN) micromamba -n $(PROJECT) run
-MAMBA_RUN      := $(DEVBOX_RUN) $(MAMBA) -n $(PROJECT) run
+MAMBA          := $(DEVBOX_RUN) micromamba
+MAMBA_RUN      := $(MAMBA) -n $(PROJECT) run
 POETRY         := $(MAMBA_RUN) poetry
+GIT            := $(DEVBOX_RUN) git
 
 # Must be invoked dynamic, i.e. the environment may not be ready yet
 VERSION         = $(shell $(POETRY) version -s)
 # Idem
-TAG 	          = v$(VERSION)
+TAG             = v$(VERSION)
 
 CONDA_DEFAULT_ENV=pato-gui
 
@@ -74,7 +75,7 @@ pato-gui: install ## Run the PATO GUI
 tag: ## Tag the package on GitHub.
 	$(GIT) tag -a $(TAG) -m "$(TAG)"
 	$(GIT) push origin $(TAG)
-	gh release create $(TAG) --target $(BRANCH) --title "Release $(TAG)" --notes "See CHANGELOG"
+	$(GH) release create $(TAG) --target $(BRANCH) --title "Release $(TAG)" --notes "See CHANGELOG"
 
 clean: env-remove ## Cleanup the environment
 	$(GIT) clean -d -x -i

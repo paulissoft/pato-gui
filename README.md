@@ -47,11 +47,11 @@ Go to the root folder and issue this command for more help:
 $ make help
 ```
 
-First install the program:
+First install the program by starting a `devbox shell` and running `make install`:
 
 ```
 $ devbox shell
-$ make install
+(devbox) make install
 ```
 
 or:
@@ -85,6 +85,8 @@ I assume that you have the alias `pato-gui` as described above, launch it via:
 $ pato-gui
 ```
 
+Please note that you have to exit devbox shell first, so no (devbox) as prompt is shown. This is because the devbox shell hides aliases.
+ 
 A graphical interface will pop up.
 
 If you know the Maven POM file already:
