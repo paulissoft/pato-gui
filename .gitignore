@@ -146,5 +146,4 @@ NUL
 !.devcontainer
 
 *.bak
-.devbox/virtenv/bin/initHook.sh
-.devbox/virtenv/bin/venvShellHook.sh
+.devbox/
