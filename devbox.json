@@ -1,9 +1,10 @@
 {
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.3/.schema/devbox.schema.json",
   "packages": [
-    "poetry@latest",
-    "python@3.13.1",
-    "maven3@latest"
+    "github:NixOS/nixpkgs/nixos-24.11#ps",
+    "github:NixOS/nixpkgs/nixos-24.11#micromamba",
+    "github:NixOS/nixpkgs/nixos-24.11#meson",
+    "github:NixOS/nixpkgs/nixos-24.11#git"
   ],
   "shell": {
     "init_hook": [

@@ -146,4 +146,4 @@ NUL
 !.devcontainer
 
 *.bak
-.devbox
+.devbox/
