@@ -1,4 +1,56 @@
 {
   "lockfile_version": "1",
-  "packages": {}
+  "packages": {
+    "github:NixOS/nixpkgs/nixos-24.11#git": {
+      "resolved": "github:NixOS/nixpkgs/7819a0d29d1dd2bc331bec4b327f0776359b1fa6?lastModified=1743813633&narHash=sha256-BgkBz4NpV6Kg8XF7cmHDHRVGZYnKbvG0Y4p%2BjElwxaM%3D#git"
+    },
+    "github:NixOS/nixpkgs/nixos-24.11#meson": {
+      "resolved": "github:NixOS/nixpkgs/7819a0d29d1dd2bc331bec4b327f0776359b1fa6?lastModified=1743813633&narHash=sha256-BgkBz4NpV6Kg8XF7cmHDHRVGZYnKbvG0Y4p%2BjElwxaM%3D#meson"
+    },
+    "github:NixOS/nixpkgs/nixos-24.11#micromamba": {
+      "resolved": "github:NixOS/nixpkgs/7819a0d29d1dd2bc331bec4b327f0776359b1fa6?lastModified=1743813633&narHash=sha256-BgkBz4NpV6Kg8XF7cmHDHRVGZYnKbvG0Y4p%2BjElwxaM%3D#micromamba"
+    },
+    "github:NixOS/nixpkgs/nixos-24.11#ps": {
+      "resolved": "github:NixOS/nixpkgs/7819a0d29d1dd2bc331bec4b327f0776359b1fa6?lastModified=1743813633&narHash=sha256-BgkBz4NpV6Kg8XF7cmHDHRVGZYnKbvG0Y4p%2BjElwxaM%3D#ps"
+    },
+    "github:NixOS/nixpkgs/nixpkgs-unstable": {
+      "resolved": "github:NixOS/nixpkgs/74a40410369a1c35ee09b8a1abee6f4acbedc059?lastModified=1743938762&narHash=sha256-UgFYn8sGv9B8PoFpUfCa43CjMZBl1x%2FShQhRDHBFQdI%3D"
+    },
+    "jdk@17.0.13+11": {
+      "last_modified": "2025-03-23T05:31:05Z",
+      "resolved": "github:NixOS/nixpkgs/dd613136ee91f67e5dba3f3f41ac99ae89c5406b#jdk17",
+      "source": "devbox-search",
+      "version": "17.0.13+11",
+      "systems": {
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/6dxc22dm3b24d6msx9i4x5zajvzih4hr-openjdk-17.0.13+11",
+              "default": true
+            },
+            {
+              "name": "debug",
+              "path": "/nix/store/k4s5ykjrb68ibziw3q9vgh6w341n8j6m-openjdk-17.0.13+11-debug"
+            }
+          ],
+          "store_path": "/nix/store/6dxc22dm3b24d6msx9i4x5zajvzih4hr-openjdk-17.0.13+11"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/fxknpwdp7vkmdf7banfvvbx5mqc3q8d1-openjdk-17.0.13+11",
+              "default": true
+            },
+            {
+              "name": "debug",
+              "path": "/nix/store/hsmnvnckbjb724mlw6fpxkfdk5jw2b6r-openjdk-17.0.13+11-debug"
+            }
+          ],
+          "store_path": "/nix/store/fxknpwdp7vkmdf7banfvvbx5mqc3q8d1-openjdk-17.0.13+11"
+        }
+      }
+    }
+  }
 }

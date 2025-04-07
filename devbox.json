@@ -1,19 +1,24 @@
 {
-  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.3/.schema/devbox.schema.json",
-  "packages": [
-    "github:NixOS/nixpkgs/nixos-24.11#ps",
-    "github:NixOS/nixpkgs/nixos-24.11#micromamba",
-    "github:NixOS/nixpkgs/nixos-24.11#meson",
-    "github:NixOS/nixpkgs/nixos-24.11#git"
-  ],
-  "shell": {
-    "init_hook": [
-      "echo 'Welcome'"
+    "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.3/.schema/devbox.schema.json",
+    "packages": [
+        "github:NixOS/nixpkgs/nixos-24.11#ps",
+        "github:NixOS/nixpkgs/nixos-24.11#micromamba",
+        "github:NixOS/nixpkgs/nixos-24.11#meson",
+        "github:NixOS/nixpkgs/nixos-24.11#git",
+        "jdk@17.0.13+11"
     ],
-    "scripts": {
-      "test": [
-        "echo \"Error: no test specified\" && exit 1"
-      ]
+    "shell": {
+        "init_hook": [
+            "echo 'Welcome'"
+        ],
+        "scripts": {
+            "install": [
+                "make install"
+            ],
+            "pato-gui": [
+                "devbox run install",
+                "micromamba -n pato-gui run poetry run pato-gui \"$@\""
+            ]
+        }
     }
-  }
 }
