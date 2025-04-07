@@ -4,15 +4,21 @@
     "github:NixOS/nixpkgs/nixos-24.11#ps",
     "github:NixOS/nixpkgs/nixos-24.11#micromamba",
     "github:NixOS/nixpkgs/nixos-24.11#meson",
-    "github:NixOS/nixpkgs/nixos-24.11#git"
+    "github:NixOS/nixpkgs/nixos-24.11#git",
+    "jdk@17.0.13+11",
+    "bash-completion@2.16.0"
   ],
   "shell": {
     "init_hook": [
       "echo 'Welcome'"
     ],
     "scripts": {
-      "test": [
-        "echo \"Error: no test specified\" && exit 1"
+      "install": [
+        "make install"
+      ],
+      "pato-gui": [
+        "devbox run install",
+        "micromamba -n pato-gui run poetry run pato-gui \"$@\""
       ]
     }
   }
