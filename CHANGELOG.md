@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.2.0] - 2025-04-07
+
+### Changed
+
+- [The development environment should be set up using Devbox.](https://github.com/paulissoft/pato-gui/issues/21)
+
 ## [4.1.0] - 2025-01-30
 
 ### Added
