@@ -7,6 +7,8 @@ import os
 import sys
 import argparse
 import subprocess
+import shlex
+import re
 from gooey import Gooey, GooeyParser
 from shutil import which
 
@@ -20,7 +22,10 @@ if sys.version_info < (3, 6):
 
 
 logger = None
-
+parse_state = ''
+parse_info_expr = re.compile(r'\[INFO\]( (.+))?')
+parse_flyway_info_expr = re.compile(r'\[INFO\] (--- flyway:(\d+\.)*\d+:info .+ ---)')
+parse_summary_expr = re.compile(r'\[INFO\] ((Reactor Summary|BUILD SUCCESS).*)')
 
 DEFAULT_SIZE1 = (1200, 600)
 DEFAULT_SIZE2 = (1500, 750)
@@ -158,6 +163,90 @@ def run_POM_file_gui(pom_file, db_config_dir, mvnd):
     logger.debug('return')
 
 
+def process_output_line(line):
+    """
+Should be able to parse output like this:
+
+[INFO] --- flyway:10.12.0:info (default-cli) @ ORACLE_TOOLS ---
+[INFO] 6 SQL migrations were detected but not run because they did not follow the filename convention.
+[INFO] Set 'validateMigrationNaming' to true to fail fast and see a list of the invalid file names.
+[INFO] Database: jdbc:oracle:thin:@bc_dev (Oracle 19.27)
+[INFO] Schema version: 20210607094700
+[INFO]
+[INFO] +------------+----------------+------------------------------------------------------------+----------+---------------------+------------+----------+
+...
++------------+----------------+------------------------------------------------------------+----------+---------------------+------------+----------+
+
+[INFO]
+
+or:
+
+[INFO] --- flyway:10.12.0:info (default-cli) @ BC_UI ---
+[INFO] 4 SQL migrations were detected but not run because they did not follow the filename convention.
+[INFO] Set 'validateMigrationNaming' to true to fail fast and see a list of the invalid file names.
+[INFO] Database: jdbc:oracle:thin:@bc_dev (Oracle 19.27)
+[INFO] Schema version: 0
+[INFO]
+[INFO] +------------+---------+-----------------------------------------------------+----------+---------------------+------------+----------+
+...
++------------+---------+-----------------------------------------------------+----------+---------------------+------------+----------+
+
+[INFO] ------------------------------------------------------------------------
+
+and return:
+
+--- flyway:10.12.0:info (default-cli) @ BC_UI ---
+4 SQL migrations were detected but not run because they did not follow the filename convention.
+Set 'validateMigrationNaming' to true to fail fast and see a list of the invalid file names.
+Database: jdbc:oracle:thin:@bc_dev (Oracle 19.27)
+Schema version: 0
+
++------------+---------+-----------------------------------------------------+----------+---------------------+------------+----------+
+...
++------------+---------+-----------------------------------------------------+----------+---------------------+------------+----------+
+
+"""
+    global parse_state, parse_info_expr, parse_flyway_info_expr, parse_summary_expr
+
+    debug = False
+
+    if debug:
+        print("parse_state = %r, line = %r" % (parse_state, line))
+
+    output = None
+
+    if parse_state == 'summary':
+        output = line
+    elif parse_state == 'flyway_info':
+        if not line:
+            parse_state = ''
+        else:
+            m = parse_info_expr.match(line)
+            if m:
+                output = m.group(2)
+                if output is not None and output == 'Skipping Flyway execution':
+                    parse_state = 'flyway_info_skip'
+            else:
+                output = line
+    else:
+        m = parse_flyway_info_expr.match(line)
+        if m:
+            output = line  # show whole line
+            parse_state = 'flyway_info'
+        else:
+            m = parse_summary_expr.match(line)
+            if m:
+                output = line  # show whole line
+                parse_state = 'summary'
+
+    if debug:
+        print("parse_state = %r, output = %r" % (parse_state, output))
+    elif output:
+        print(output, flush=True)
+
+    return
+
+
 def run_POM_file(argv):
     logger.debug('run_POM_file(%s)' % (argv))
     parser = argparse.ArgumentParser(description='Get the POM settings to work with and run the POM file')
@@ -177,19 +266,51 @@ def run_POM_file(argv):
         extra_maven_command_line_options.remove(EXTRA_MAVEN_COMMAND_LINE_OPTIONS)
     except Exception:
         pass
-    cmd = '{0} {1} {2} -B -P{3} -Ddb.config.dir={4} -Ddb={5}'.format('mvnd' if args.mvnd else 'mvn', FILE, args.file, args.action, args.db_config_dir, args.db)
+
+    mvn_args = '-B'
+    cmd = '{0} {1} {2} -P{3} {4} -Ddb.config.dir={5} -Ddb={6}'.format('mvnd' if args.mvnd else 'mvn', FILE, args.file, args.action, mvn_args, args.db_config_dir, args.db)
     if len(extra_maven_command_line_options) > 0:
         cmd += ' ' + ' '.join(extra_maven_command_line_options)
     sql_home = os.path.dirname(os.path.dirname(which('sql')))
     logger.debug('sql_home: {}'.format(sql_home))
     cmd += f' -Dsql.home="{sql_home}"'
+#    if args.action == 'db-info':
+#        cmd +='| grep '
     logger.info('Maven command to execute: %s' % (cmd))
     # now add the password
     if args.db_proxy_password:
         os.environ['DB_PASSWORD'] = args.db_proxy_password
     elif args.db_password:
         os.environ['DB_PASSWORD'] = args.db_password
-    subprocess.run(cmd, check=True, shell=True)
+
+    # Run the command as a subprocess so we can process flyway:info output and let other flyway output unchanged
+
+    if args.action != 'db-info':
+        subprocess.run(shlex.split(cmd), check=True, shell=False)
+    else:
+        exit_code = None
+        with subprocess.Popen(shlex.split(cmd),
+                              shell=False,
+                              # We pipe the output to an internal pipe
+                              stdout=subprocess.PIPE,
+                              # Make sure that if this Python program is killed, this gets killed too
+                              preexec_fn=os.setsid) as process:
+            # Poll for output, note: readline() blocks efficiently until there is output with a newline
+            while True:
+                output = process.stdout.readline()
+                # If the output is not empty, feed it to the function, strip the newline first
+                if output:
+                    process_output_line(output.strip().decode("utf-8"))
+                else:
+                    # Polling returns None when the program is still running, exit_code otherwise
+                    exit_code = process.poll()
+                    if exit_code is not None:
+                        break
+
+        # Program ended, get exit/return code
+        if exit_code is not None and exit_code != 0:
+            raise RuntimeError("Command '{}' finished with exit code {}".format(cmd, exit_code))
+
     os.environ['DB_PASSWORD'] = ''
     logger.debug('return')
 
