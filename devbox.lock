@@ -1,0 +1,23 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "github:NixOS/nixpkgs/nixos-24.11#git": {
+      "resolved": "github:NixOS/nixpkgs/26d499fc9f1d567283d5d56fcf367edd815dba1d?lastModified=1744440957&narHash=sha256-FHlSkNqFmPxPJvy%2B6fNLaNeWnF1lZSgqVCl%2FeWaJRc4%3D#git"
+    },
+    "github:NixOS/nixpkgs/nixos-24.11#jdk": {
+      "resolved": "github:NixOS/nixpkgs/26d499fc9f1d567283d5d56fcf367edd815dba1d?lastModified=1744440957&narHash=sha256-FHlSkNqFmPxPJvy%2B6fNLaNeWnF1lZSgqVCl%2FeWaJRc4%3D#jdk"
+    },
+    "github:NixOS/nixpkgs/nixos-24.11#meson": {
+      "resolved": "github:NixOS/nixpkgs/26d499fc9f1d567283d5d56fcf367edd815dba1d?lastModified=1744440957&narHash=sha256-FHlSkNqFmPxPJvy%2B6fNLaNeWnF1lZSgqVCl%2FeWaJRc4%3D#meson"
+    },
+    "github:NixOS/nixpkgs/nixos-24.11#micromamba": {
+      "resolved": "github:NixOS/nixpkgs/26d499fc9f1d567283d5d56fcf367edd815dba1d?lastModified=1744440957&narHash=sha256-FHlSkNqFmPxPJvy%2B6fNLaNeWnF1lZSgqVCl%2FeWaJRc4%3D#micromamba"
+    },
+    "github:NixOS/nixpkgs/nixos-24.11#ps": {
+      "resolved": "github:NixOS/nixpkgs/26d499fc9f1d567283d5d56fcf367edd815dba1d?lastModified=1744440957&narHash=sha256-FHlSkNqFmPxPJvy%2B6fNLaNeWnF1lZSgqVCl%2FeWaJRc4%3D#ps"
+    },
+    "github:NixOS/nixpkgs/nixpkgs-unstable": {
+      "resolved": "github:NixOS/nixpkgs/18dd725c29603f582cf1900e0d25f9f1063dbf11?lastModified=1744536153&narHash=sha256-awS2zRgF4uTwrOKwwiJcByDzDOdo3Q1rPZbiHQg%2FN38%3D"
+    }
+  }
+}
