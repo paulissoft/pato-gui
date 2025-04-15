@@ -14,6 +14,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.3.0] - 2025-04-15
+
+### Added
+
+- [Let the database info action (db-info) display only the most relevant output.](https://github.com/paulissoft/pato-gui/issues/27)
+
+### Fixed
+
+- [Remove the Unix command line error 'complete: command not found'.](https://github.com/paulissoft/pato-gui/issues/25)
+- [Oracle SQL instant client should be at most 21.4.](https://github.com/paulissoft/pato-gui/issues/24)
+- [Do not use the Maven daemon anymore.](https://github.com/paulissoft/pato-gui/issues)
+
 ## [4.2.0] - 2025-04-07
 
 ### Changed

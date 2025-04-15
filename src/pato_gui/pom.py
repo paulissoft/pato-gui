@@ -52,6 +52,8 @@ def initialize():
         args.mvnd = 'mvnd' in check_environment()
     else:
         args.mvnd = False
+    # GJP 2025-04-14 Disable mvnd since generating DDL in parallel does not work
+    args.mvnd = False
     if '-d' in argv:
         argv.remove('-d')
     logger.debug('argv: %s; logger: %s; args: %s' % (argv, logger, args))
@@ -60,35 +62,43 @@ def initialize():
 
 def check_environment():
     programs = [
-        ['mvn', '-version', '3.3.1', r'Apache Maven ([0-9.]+)', True, True],
-        ['perl', '--version', '5.16.0', r'\(v([0-9.]+)\)', True, True],
-        ['sql', '-V', '18.0.0.0', r'SQLcl: Release ([0-9.]+)', True, True],
-        ['java', '-version', '1.8.0', r'(?:java|openjdk) version "([0-9.]+).*"', False, True],  # version is printed to stderr (!#$?)
-        ['javac', '-version', '1.8.0', r'javac ([0-9.]+)', True, True],
+        ['mvn', '-version', '3.3.1', None, r'Apache Maven ([0-9.]+)', True, True],
+        ['perl', '--version', '5.16.0', None, r'\(v([0-9.]+)\)', True, True],
+        # GJP 2025-04-14 sql version 22+ seems to have problems with connecting
+        ['sql', '-V', '18.0.0.0', '22.0.0.0', r'SQLcl: Release ([0-9.]+)', True, True],
+        ['java', '-version', '1.8.0', None, r'(?:java|openjdk) version "([0-9.]+).*"', False, True],  # version is printed to stderr (!#$?)
+        ['javac', '-version', '1.8.0', None, r'javac ([0-9.]+)', True, True],
         # Apache Maven Daemon (mvnd) 1.0-m8 darwin-aarch64 native client (0f4bdb6df5e74453d8d558d292789da4e66a7933)
-        ['mvnd', '--version', '0.8.0', r'(?:mvnd|\(mvnd\)) ([0-9.]+)', True, False],  # Maven daemon may be there or not
+        ['mvnd', '--version', '0.8.0', None, r'(?:mvnd|\(mvnd\)) ([0-9.]+)', True, False],  # Maven daemon may be there or not
     ]
     programs_found = []
 
     for i, p in enumerate(programs):
         # p[0]: program
         # p[1]: command line option to get the version
-        # p[2]: minimum version
-        # p[3]: regular expression to parse for version
-        # p[4]: print stdout (True) or stderr (False)?
-        # p[5]: program mandatory?
+        # p[2]: minimum version (including)
+        # p[3]: maximum version (excluding)
+        # p[4]: regular expression to parse for version
+        # p[5]: print stdout (True) or stderr (False)?
+        # p[6]: program mandatory?
         proc = subprocess.run(p[0] + ' ' + p[1], shell=True, capture_output=True, text=True)
-        assert not (p[5]) or proc.returncode == 0, proc.stderr
+        assert not (p[6]) or proc.returncode == 0, proc.stderr
 
         if proc.returncode == 0:
             logger.debug('proc: {}'.format(proc))
-            expected_version = p[2]
-            regex = p[3]
-            output = proc.stdout if p[4] else proc.stderr
+            regex = p[4]
+            output = proc.stdout if p[5] else proc.stderr
             m = re.search(regex, output)
             assert m, 'Could not find {} in {}'.format(regex, output)
             actual_version = m.group(1)
-            assert parse_version(actual_version) >= parse_version(expected_version), f'Version of program "{p[0]}" is "{actual_version}" which is less than the expected version "{expected_version}"'
+
+            expected_min_version = p[2]
+            assert parse_version(actual_version) >= parse_version(expected_min_version), f'Version of program "{p[0]}" is "{actual_version}" which is less than the expected minimum version (including) "{expected_min_version}"'
+
+            expected_max_version = p[3]
+            if expected_max_version:
+                assert parse_version(actual_version) < parse_version(expected_max_version), f'Version of program "{p[0]}" is "{actual_version}" which is greater or equal to the expected maximum version (excluding) "{expected_max_version}"'
+
             logger.info('Version of "{}" is "{}" and its location is "{}"'.format(p[0], actual_version, os.path.dirname(which(p[0]))))
             programs_found.append(p[0])
         else:

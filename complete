@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+# GOAL
+# ----
+# Get rid of the error below:
+#
+#   micromamba -n pato-gui run poetry install
+#   /var/folders/gl/cjscfwvj2_3_g8j3b8vdbsgc0000gn/T/mambafTres8msPE8: line 92: complete: command not found
+#
+# Tried a lot of things (including adding bash-completion) but then:
+# - just adding this script folder ($DEVBOX_PROJECT_ROOT) as the first item to the $PATH in devbox.json AND
+# - now complete is a known script (so no command not found anymore) AND
+# - stripping $DEVBOX_PROJECT_ROOT (first item) here from the $PATH AND
+# - using the Bash builtin by command complete
+# seems to work well.
+
+set -eu
+
+declare -a array
+
+function split_by {
+    local IFS="$1"
+    
+    read -r -a array <<< "$2"
+}
+
+function join_by {
+    local IFS="$1"
+
+    shift
+    echo "$*"
+}
+
+split_by : $PATH
+# strip first element, i.e. the $DEVBOX_PROJECT_ROOT
+PATH=$(join_by : ${array[@]:1})
+
+# Use bash builtin
+exec command complete "$@"
+
+
