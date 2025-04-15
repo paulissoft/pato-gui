@@ -1,15 +1,15 @@
 {
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.3/.schema/devbox.schema.json",
   "packages": {
-    "github:NixOS/nixpkgs/nixos-24.11#ps": "",
-    "github:NixOS/nixpkgs/nixos-24.11#micromamba": "",
-    "github:NixOS/nixpkgs/nixos-24.11#meson": "",
-    "github:NixOS/nixpkgs/nixos-24.11#git": "",
-    "github:NixOS/nixpkgs/nixos-24.11#jdk": ""
+    "ps":         "4.0.4",
+    "micromamba": "1.5.8",
+    "meson":      "1.7.0",
+    "git":        "2.48.1",
+    "jdk":        "22.0.0"
   },
   "env": {
     "MAMBA_ROOT_PREFIX": "$HOME",
-    "PATH": "$DEVBOX_PROJECT_ROOT:$PATH"
+    "PATH":              "$DEVBOX_PROJECT_ROOT:$PATH"
   },
   "shell": {
     "scripts": {
