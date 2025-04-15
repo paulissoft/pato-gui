@@ -8,12 +8,10 @@
     "github:NixOS/nixpkgs/nixos-24.11#jdk"
   ],
   "env": {
-    "MAMBA_ROOT_PREFIX": "$HOME"
+    "MAMBA_ROOT_PREFIX": "$HOME",
+    "PATH": "$DEVBOX_PROJECT_ROOT:$PATH"
   },
   "shell": {
-    "init_hook": [
-      "test \"`type -f complete`\" = \"complete is a shell builtin\" || export -f complete"
-    ],
     "scripts": {
       "install": [
         "make install"
