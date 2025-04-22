@@ -208,7 +208,7 @@ Schema version: 0
 """
     global parse_state, parse_info_expr, parse_flyway_info_expr, parse_summary_expr
 
-    debug = False
+    debug = True
 
     if debug:
         print("parse_state = %r, line = %r" % (parse_state, line))
