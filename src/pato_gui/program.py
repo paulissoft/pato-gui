@@ -24,7 +24,7 @@ if sys.version_info < (3, 6):
 logger = None
 parse_state = ''
 parse_info_expr = re.compile(r'\[INFO\]( (.+))?')
-parse_flyway_info_expr = re.compile(r'\[INFO\] (--- flyway:(\d+\.)*\d+:info .+ ---)')
+parse_flyway_info_expr = re.compile(r'\[INFO\] (--- (flyway|flyway-maven-plugin):(\d+\.)*\d+:info .+ ---)')
 parse_summary_expr = re.compile(r'\[INFO\] ((Reactor Summary|BUILD SUCCESS).*)')
 
 DEFAULT_SIZE1 = (1200, 600)
@@ -181,7 +181,7 @@ Should be able to parse output like this:
 
 or:
 
-[INFO] --- flyway:10.12.0:info (default-cli) @ BC_UI ---
+[INFO] --- flyway-maven-plugin:10.12.0:info (default-cli) @ BC_UI ---
 [INFO] 4 SQL migrations were detected but not run because they did not follow the filename convention.
 [INFO] Set 'validateMigrationNaming' to true to fail fast and see a list of the invalid file names.
 [INFO] Database: jdbc:oracle:thin:@bc_dev (Oracle 19.27)
@@ -208,7 +208,7 @@ Schema version: 0
 """
     global parse_state, parse_info_expr, parse_flyway_info_expr, parse_summary_expr
 
-    debug = True
+    debug = False
 
     if debug:
         print("parse_state = %r, line = %r" % (parse_state, line))
@@ -283,7 +283,7 @@ def run_POM_file(argv):
     elif args.db_password:
         os.environ['DB_PASSWORD'] = args.db_password
 
-    # Run the command as a subprocess so we can process flyway:info output and let other flyway output unchanged
+    # Run the command as a subprocess so we can process flyway:info (or flyway-maven-plugin:info) output and let other flyway output unchanged
 
     if args.action != 'db-info':
         subprocess.run(shlex.split(cmd), check=True, shell=False)
