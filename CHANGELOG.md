@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.3.1] - 2025-04-25
+
+### Fixed
+
+- [Let the database info action (db-info) display only the most relevant output.](https://github.com/paulissoft/pato-gui/issues/27)
+
 ## [4.3.0] - 2025-04-15
 
 ### Added
